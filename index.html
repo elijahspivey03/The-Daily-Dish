@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>The Daily Dish — Where Every Meal Makes Headlines</title>
+<meta name="description" content="Curated secondhand tableware — plates, bowls, mugs, glassware & more. Shop The Daily Dish."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#f4ecd8;
+  --parchment:#efe4c9;
+  --ink:#1f1b16;
+  --border:2px solid #1f1b16;
+  --border-heavy:4px solid #1f1b16;
+  --shadow:5px 5px 0 #1f1b16;
+  --shadow-sm:3px 3px 0 #1f1b16;
+  --radius:14px;
+  --radius-sm:10px;
+  --serif:'Source Serif 4',Georgia,serif;
+  --display:'Playfair Display',Georgia,serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--cream);background-image:radial-gradient(rgba(0,0,0,0.045) 1px,transparent 1px);background-size:18px 18px;font-family:var(--serif);color:var(--ink);min-height:100vh}
+img{display:block;max-width:100%}
+button{cursor:pointer;font-family:var(--serif)}
+
+/* ── Layout ── */
+.wrap{max-width:1200px;margin:0 auto;padding:20px 16px 100px}
+
+/* ── Masthead ── */
+.masthead{border:var(--border-heavy);border-radius:var(--radius);background:var(--parchment);overflow:hidden;margin-bottom:20px;box-shadow:var(--shadow)}
+.masthead-title{padding:18px 24px;border-bottom:var(--border-heavy);text-align:center}
+.masthead-rule{display:flex;align-items:center;justify-content:center;gap:14px}
+.masthead-rule hr{flex:1;max-width:160px;border:none;border-top:2px solid var(--ink)}
+.masthead-rule h1{font-family:var(--display);font-size:clamp(30px,6vw,62px);font-weight:900;text-transform:uppercase;letter-spacing:.04em;line-height:1;white-space:nowrap}
+.masthead-sub-rule{height:2px;background:var(--ink);margin-top:10px}
+.masthead-tagline{font-style:italic;font-size:13px;margin-top:8px;opacity:.8}
+
+/* ── Nav bar ── */
+.navbar{padding:10px 20px;border-bottom:var(--border-heavy);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
+.nav-links{display:flex;flex-wrap:wrap;gap:7px}
+.nav-btn{padding:5px 14px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;border:2px solid rgba(0,0,0,0.35);border-radius:999px;background:transparent;color:var(--ink);transition:all .15s;font-family:var(--serif);font-weight:400}
+.nav-btn:hover{border-color:var(--ink)}
+.nav-btn.active{border-color:var(--ink);background:var(--cream);font-weight:700}
+.cart-btn{padding:8px 18px;font-size:13px;font-weight:700;border:2px solid var(--ink);border-radius:var(--radius-sm);background:var(--ink);color:var(--cream);transition:opacity .15s}
+.cart-btn:hover{opacity:.85}
+
+/* ── Ticker ── */
+.ticker{overflow:hidden;border-bottom:var(--border-heavy);background:var(--cream);padding:9px 0}
+.ticker-inner{white-space:nowrap;display:inline-block;animation:ticker 32s linear infinite;font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── Page card ── */
+.page-card{border:var(--border-heavy);border-radius:var(--radius);background:var(--parchment);overflow:hidden;box-shadow:var(--shadow)}
+.page-header{padding:20px 24px;border-bottom:var(--border-heavy);display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+.page-kicker{font-size:11px;letter-spacing:.25em;text-transform:uppercase;opacity:.7}
+.page-title{font-family:var(--display);font-size:clamp(22px,4vw,38px);font-weight:900;text-transform:uppercase;line-height:1.1;margin-top:6px}
+.page-subhead{font-style:italic;font-size:14px;margin-top:8px;max-width:600px;line-height:1.5}
+.page-num{font-size:11px;letter-spacing:.2em;text-transform:uppercase;opacity:.65;white-space:nowrap}
+.page-body{padding:24px}
+.page-footer{padding:14px 24px;border-top:var(--border-heavy);background:var(--cream);display:flex;align-items:center;justify-content:space-between}
+.page-nav-btn{padding:8px 18px;font-size:13px;font-weight:700;border:var(--border);border-radius:var(--radius-sm);background:transparent;color:var(--ink);transition:background .15s}
+.page-nav-btn:hover{background:rgba(0,0,0,.06)}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:8px 16px;font-size:13px;font-weight:700;border:var(--border);border-radius:var(--radius-sm);background:var(--ink);color:var(--cream);transition:opacity .15s;white-space:nowrap;font-family:var(--serif)}
+.btn:hover{opacity:.85}
+.btn-outline{background:transparent;color:var(--ink)}
+.btn-outline:hover{background:rgba(0,0,0,.06)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* ── Pill ── */
+.pill{display:inline-flex;align-items:center;padding:3px 10px;font-size:10px;letter-spacing:.15em;text-transform:uppercase;border:1px solid rgba(0,0,0,.65);border-radius:999px;background:var(--cream);white-space:nowrap}
+
+/* ── Product grid ── */
+.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px}
+.product-card{background:var(--parchment);border:var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;transition:transform .15s}
+.product-card:hover{transform:translateY(-2px)}
+.product-card img{width:100%;height:200px;object-fit:cover;border-bottom:var(--border)}
+.product-card-body{padding:18px;flex:1;display:flex;flex-direction:column}
+.product-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
+.product-title{font-family:var(--display);font-size:17px;font-weight:700;text-transform:uppercase;line-height:1.2}
+.product-subtitle{font-style:italic;font-size:13px;margin-bottom:8px;opacity:.8}
+.product-desc{font-size:13px;line-height:1.65;margin-bottom:14px;flex:1}
+.product-price{font-weight:700;font-size:15px;margin-bottom:12px}
+.product-actions{display:flex;flex-wrap:wrap;gap:8px}
+.product-add-btn{padding:7px 13px;font-size:12px;font-weight:700;border:var(--border);border-radius:8px;white-space:nowrap;transition:opacity .15s;font-family:var(--serif)}
+.product-add-btn:hover{opacity:.8}
+.product-add-btn.solid{background:var(--ink);color:var(--cream)}
+.product-add-btn.outline{background:transparent;color:var(--ink)}
+
+/* ── Front page sections ── */
+.fp-section{border:2px solid var(--ink);border-radius:var(--radius);background:var(--cream);overflow:hidden;margin-bottom:22px}
+.fp-section-header{padding:14px 20px;border-bottom:2px solid var(--ink);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.fp-kicker{font-size:11px;letter-spacing:.25em;text-transform:uppercase;opacity:.7}
+.fp-title{font-family:var(--display);font-size:20px;font-weight:900;text-transform:uppercase;margin-top:4px}
+.fp-body{padding:20px}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr}
+@media(max-width:680px){.hero-grid{grid-template-columns:1fr}}
+.hero-img{width:100%;height:270px;object-fit:cover;border-right:2px solid var(--ink)}
+@media(max-width:680px){.hero-img{border-right:none;border-bottom:2px solid var(--ink)}}
+.hero-content{padding:22px}
+.hero-product-title{font-family:var(--display);font-size:22px;font-weight:900;text-transform:uppercase;margin-bottom:8px;line-height:1.2}
+.story-text{font-size:13px;line-height:1.75;margin-bottom:14px}
+.sidebar-item{border-top:2px solid var(--ink);padding-top:14px;margin-top:14px}
+.sidebar-item:first-child{border-top:none;padding-top:0;margin-top:0}
+.sidebar-item-title{font-weight:700;text-transform:uppercase;font-size:13px;line-height:1.3;margin-bottom:4px}
+.sidebar-item-price{font-size:12px;font-style:italic;margin-bottom:6px}
+.sidebar-item-story{font-size:12px;line-height:1.6;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:640px){.two-col{grid-template-columns:1fr}}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:640px){.three-col{grid-template-columns:1fr}}
+
+/* ── About section ── */
+.about-body{font-size:14px;line-height:1.8;margin-bottom:14px}
+.about-divider{border:none;border-top:2px solid var(--ink);margin:18px 0}
+.contact-item{font-size:13px;margin-bottom:4px}
+
+/* ── Cart drawer ── */
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:50}
+.cart-drawer{position:fixed;top:0;right:0;height:100%;width:100%;max-width:420px;background:var(--cream);border-left:var(--border-heavy);box-shadow:-8px 0 40px rgba(0,0,0,.18);z-index:51;display:flex;flex-direction:column;animation:slideIn .3s cubic-bezier(.4,0,.2,1)}
+@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+.cart-header{padding:22px 24px;border-bottom:var(--border-heavy);display:flex;align-items:center;justify-content:space-between}
+.cart-title{font-family:var(--display);font-size:26px;font-weight:900;text-transform:uppercase}
+.cart-count{font-size:13px;font-style:italic;margin-top:2px}
+.cart-close{padding:8px 16px;font-size:13px;font-weight:700;border:var(--border);border-radius:var(--radius-sm);background:transparent;color:var(--ink)}
+.cart-items{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px}
+.cart-empty{border:2px dashed rgba(0,0,0,.35);border-radius:var(--radius);padding:32px;text-align:center}
+.cart-empty-title{font-weight:700;text-transform:uppercase;font-size:14px;margin-bottom:6px}
+.cart-empty-sub{font-size:13px;font-style:italic;opacity:.7}
+.cart-item{background:var(--parchment);border:var(--border);border-radius:var(--radius);padding:14px}
+.cart-item-top{display:flex;justify-content:space-between;gap:10px;margin-bottom:12px}
+.cart-item-name{font-weight:700;text-transform:uppercase;font-size:13px;line-height:1.3}
+.cart-item-opt{font-size:12px;font-style:italic;margin-top:2px;opacity:.75}
+.cart-item-price{font-size:12px;margin-top:4px}
+.cart-item-remove{font-size:12px;text-decoration:underline;background:none;border:none;color:var(--ink);align-self:flex-start;white-space:nowrap}
+.cart-item-bottom{display:flex;align-items:center;justify-content:space-between}
+.qty-controls{display:flex;align-items:center;gap:8px}
+.qty-btn{width:32px;height:32px;border:var(--border);border-radius:8px;background:transparent;font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center;font-family:var(--serif)}
+.qty-num{min-width:28px;text-align:center;font-weight:700;font-size:15px}
+.cart-item-total{font-weight:700;font-size:15px}
+.cart-footer{padding:22px 24px;border-top:var(--border-heavy);background:var(--cream)}
+.cart-subtotal{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.cart-subtotal-label{font-weight:700;text-transform:uppercase;font-size:14px}
+.cart-subtotal-val{font-weight:700;font-size:18px}
+
+/* ── Shipping selector ── */
+.shipping-selector{margin-bottom:16px}
+.shipping-label{font-size:11px;letter-spacing:.15em;text-transform:uppercase;font-weight:700;margin-bottom:8px;display:block}
+.shipping-options{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.shipping-opt{padding:10px 12px;border:2px solid rgba(0,0,0,.35);border-radius:10px;background:transparent;text-align:left;font-family:var(--serif);cursor:pointer;transition:all .15s}
+.shipping-opt:hover{border-color:var(--ink)}
+.shipping-opt.selected{border-color:var(--ink);background:var(--parchment)}
+.shipping-opt-title{font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+.shipping-opt-sub{font-size:11px;opacity:.7;margin-top:2px}
+
+/* ── Checkout btn ── */
+.checkout-btn{width:100%;padding:13px;font-size:14px;font-weight:700;border:var(--border);border-radius:var(--radius);background:var(--ink);color:var(--cream);font-family:var(--serif);transition:opacity .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.checkout-btn:hover:not(:disabled){opacity:.85}
+.checkout-btn:disabled{opacity:.45;cursor:not-allowed}
+.cart-secure{font-size:11px;margin-top:10px;opacity:.65;text-align:center}
+.checkout-err{font-size:12px;color:#b91c1c;margin-bottom:10px;padding:8px 12px;background:#fef2f2;border:1px solid #fca5a5;border-radius:8px}
+
+/* ── Toast ── */
+.toast-wrap{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:8px;pointer-events:none;align-items:center}
+.toast{background:var(--ink);color:var(--cream);padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;font-family:var(--serif);animation:toastIn .25s ease;box-shadow:0 4px 16px rgba(0,0,0,.25);white-space:nowrap}
+@keyframes toastIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Hot deal badge ── */
+.hot-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:#1f1b16;color:#f4ecd8;border-radius:999px}
+
+/* ── Mobile FAB ── */
+.fab{position:fixed;bottom:20px;right:20px;z-index:40;padding:12px 22px;font-size:14px;font-weight:700;border:2px solid var(--ink);border-radius:12px;background:var(--ink);color:var(--cream);box-shadow:4px 4px 0 rgba(0,0,0,.25);display:none}
+@media(max-width:640px){.fab{display:flex;align-items:center;gap:6px}}
+
+/* ── Responsive ── */
+@media(max-width:480px){
+  .wrap{padding:12px 10px 90px}
+  .page-body{padding:16px}
+  .fp-body{padding:14px}
+  .navbar{padding:10px 14px}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- MASTHEAD -->
+  <div class="masthead">
+    <div class="masthead-title">
+      <div class="masthead-rule">
+        <hr/><h1>The Daily Dish</h1><hr/>
+      </div>
+      <div class="masthead-sub-rule"></div>
+      <p class="masthead-tagline">Where Every Meal Makes Headlines</p>
+    </div>
+
+    <!-- NAV -->
+    <div class="navbar">
+      <div class="nav-links" id="nav-links"></div>
+      <button class="cart-btn" onclick="openCart()">Cart (<span id="cart-count">0</span>)</button>
+    </div>
+
+    <!-- TICKER -->
+    <div class="ticker">
+      <div class="ticker-inner">
+        Breaking: vintage romance plate steals the spotlight &nbsp;•&nbsp; new drinkware lands in cups &nbsp;•&nbsp; curated thrifted tableware, one headline at a time &nbsp;•&nbsp; the daily dish newsroom is open for business &nbsp;•&nbsp; lighthouse collection: coastal charm meets your dinner table &nbsp;•&nbsp; red glass set: bold color for everyday meals &nbsp;•&nbsp; Breaking: vintage romance plate steals the spotlight &nbsp;•&nbsp; new drinkware lands in cups &nbsp;•&nbsp; curated thrifted tableware, one headline at a time &nbsp;•&nbsp; the daily dish newsroom is open for business &nbsp;•&nbsp; lighthouse collection: coastal charm meets your dinner table &nbsp;•&nbsp; red glass set: bold color for everyday meals &nbsp;•&nbsp;
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE CARD -->
+  <div class="page-card">
+    <div class="page-header">
+      <div>
+        <p class="page-kicker" id="page-kicker"></p>
+        <h2 class="page-title" id="page-title"></h2>
+        <p class="page-subhead" id="page-subhead"></p>
+      </div>
+      <p class="page-num" id="page-num"></p>
+    </div>
+    <div class="page-body" id="page-body"></div>
+    <div class="page-footer">
+      <button class="page-nav-btn" onclick="prevPage()">← Prev</button>
+      <button class="page-nav-btn" onclick="goToPage('Front Page')">Front Page</button>
+      <button class="page-nav-btn" onclick="nextPage()">Next →</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- MOBILE FAB -->
+<button class="fab" onclick="openCart()">🛒 Cart (<span id="cart-count-mob">0</span>)</button>
+
+<!-- CART DRAWER -->
+<div id="cart-overlay" class="cart-overlay" style="display:none" onclick="closeCart()"></div>
+<div id="cart-drawer" class="cart-drawer" style="display:none">
+  <div class="cart-header">
+    <div>
+      <p class="cart-title">Your Cart</p>
+      <p class="cart-count" id="cart-drawer-count">0 items</p>
+    </div>
+    <button class="cart-close" onclick="closeCart()">Close ✕</button>
+  </div>
+  <div class="cart-items" id="cart-items-list"></div>
+  <div class="cart-footer">
+    <div class="shipping-selector">
+      <span class="shipping-label">Fulfillment Method</span>
+      <div class="shipping-options">
+        <button class="shipping-opt selected" id="ship-opt-pickup" onclick="selectShipping('pickup')">
+          <div class="shipping-opt-title">📦 Local Pickup</div>
+          <div class="shipping-opt-sub">Free · Arrange via email</div>
+        </button>
+        <button class="shipping-opt" id="ship-opt-shipping" onclick="selectShipping('shipping')">
+          <div class="shipping-opt-title">🚚 Ship to Me</div>
+          <div class="shipping-opt-sub">Rates at checkout</div>
+        </button>
+      </div>
+    </div>
+    <div class="cart-subtotal">
+      <span class="cart-subtotal-label">Subtotal</span>
+      <span class="cart-subtotal-val" id="cart-subtotal">$0.00</span>
+    </div>
+    <div id="checkout-err" class="checkout-err" style="display:none"></div>
+    <button class="checkout-btn" id="checkout-btn" onclick="startCheckout()">
+      <span id="checkout-btn-text">Secure Checkout →</span>
+    </button>
+    <p class="cart-secure">🔒 Powered by Stripe · SSL encrypted</p>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+// ─────────────────────────────────────────────
+// DATA
+// ─────────────────────────────────────────────
+const FALLBACK = "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=800&q=70";
+
+const IMGS = {
+  bowl:"https://images.unsplash.com/photo-1603189343302-e603f7add05a?auto=format&fit=crop&w=800&q=70",
+  plate:"https://images.unsplash.com/photo-1589571894960-20bbe2828d0a?auto=format&fit=crop&w=800&q=70",
+  mug:"https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?auto=format&fit=crop&w=800&q=70",
+  glass:"https://images.unsplash.com/photo-1571104508999-893933ded431?auto=format&fit=crop&w=800&q=70",
+  vintage:"https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=800&q=70",
+  fork:"https://images.unsplash.com/photo-1582735689369-4fe89db7114c?auto=format&fit=crop&w=800&q=70",
+  spoon:"https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=800&q=70",
+  knife:"https://images.unsplash.com/photo-1604908811371-4e6a2dff7e94?auto=format&fit=crop&w=800&q=70",
+  charger:"https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=800&q=70",
+  redplate:"https://images.unsplash.com/photo-1514190051997-0f6f39ca5cde?auto=format&fit=crop&w=800&q=70",
+  lighthouse:"https://images.unsplash.com/photo-1516912481808-3406841bd33c?auto=format&fit=crop&w=800&q=70",
+};
+
+// ── IMPORTANT: Replace placeholder image URLs below with your real product photo URLs ──
+const products = [
+  {id:"centerpiece-bowl",collection:"Bowls",section:"Kitchen",title:"Decorative Centerpiece Bowl",subtitle:"Perfect for a table centerpiece or a giant bowl of popcorn.",description:"Ceramic bowl with a colorful decorative band — an easy statement piece for your kitchen or dining table.",image:IMGS.bowl,priceLine:"Single Bowl — $10",options:[{id:"single",label:"Add One",price:10}],hotDeal:true,story:"Witnesses report a sudden spike in popcorn consumption across the city. Investigators confirm the cause: one bold ceramic bowl with a decorative band, spotted making every table look expensive."},
+  {id:"lighthouse-plates",collection:"Lighthouse Collection",section:"Dining",title:"Lighthouse Plates",subtitle:"Coastal glass plates with a lighthouse scene and rim artwork.",description:"Good condition glass plates with a lighthouse centerpiece and a playful nautical border.",image:IMGS.lighthouse,priceLine:"Set of 4 — $24 | Single Plate — $6",options:[{id:"set-4",label:"Add Set of 4",price:24},{id:"single",label:"Add One",price:6,variant:"outline"}],hotDeal:true,story:"Coastal charm lands on the front page. Sources say these glass plates bring lighthouse energy to any dinner — no beach required. Best enjoyed with seafood, pasta, or a confident frozen pizza."},
+  {id:"lighthouse-bowls",collection:"Lighthouse Collection",section:"Kitchen",title:"Lighthouse Bowls",subtitle:"Matching bowls for the lighthouse set.",description:"Glass bowls with the same coastal vibe — great for cereal, soup, snacks, or sides.",image:IMGS.lighthouse,priceLine:"Set of 8 — $30 | Single Bowl — $5",options:[{id:"set-8",label:"Add Set of 8",price:30},{id:"single",label:"Add One",price:5,variant:"outline"}],story:"A calm sea, a steady bowl. These match the lighthouse plates and keep your table looking like a curated coastal editorial."},
+  {id:"red-dinner-plates",collection:"Red Glass Set",section:"Dining",title:"Red Glass Dinner Plates",subtitle:"Bold, clean, and made for everyday dinners.",description:"Large red glass plates with a smooth finish — they fit any dinner and instantly upgrade the table.",image:IMGS.redplate,priceLine:"Set of 3 — $15 | Single Plate — $6",options:[{id:"set-3",label:"Add Set of 3",price:15},{id:"single",label:"Add One",price:6,variant:"outline"}],hotDeal:true,story:"BREAKING: red plates spotted making weeknight dinners look like a magazine shoot. Analysts confirm the color boosts confidence, compliments, and second servings."},
+  {id:"red-appetizer-plates",collection:"Red Glass Set",section:"Dining",title:"Red Glass Appetizer Plates",subtitle:"Smaller companion plates to the red dinner set.",description:"Same glass quality in a smaller size — ideal for desserts, appetizers, and side dishes.",image:IMGS.redplate,priceLine:"Set of 4 — $15 | Single Plate — $4",options:[{id:"set-4",label:"Add Set of 4",price:15},{id:"single",label:"Add One",price:4,variant:"outline"}],story:"Small plate, big impact. Perfect for appetizers, desserts, and that 'just one more snack' moment."},
+  {id:"red-bowls",collection:"Red Glass Set",section:"Kitchen",title:"Red Glass Bowls",subtitle:"The final piece of the red glass dinner set.",description:"Matching red bowls — perfect for soup, cereal, sides, and keeping the set consistent.",image:IMGS.redplate,priceLine:"Set of 3 — $12 | Single Bowl — $5",options:[{id:"set-3",label:"Add Set of 3",price:12},{id:"single",label:"Add One",price:5,variant:"outline"}],story:"A matching bowl is the secret to a table that looks intentional. These finish the red set like a headline finishes a story."},
+  {id:"sleek-soup-bowls",collection:"Bowls",section:"Kitchen",title:"Sleek Glass Soup Bowls",subtitle:"Smooth, modern, and super clean-looking.",description:"Minimalist glass bowls with subtle color rings near the rim — great for soups, pasta, or salads.",image:IMGS.bowl,priceLine:"Set of 2 — $16 | Single Bowl — $9",options:[{id:"pair",label:"Add Both",price:16},{id:"single",label:"Add One",price:9,variant:"outline"}],story:"Tonight's forecast: soup. These bowls keep it sleek, simple, and modern — like a clean front-page layout."},
+  {id:"green-tea-plates",collection:"Small Plates",section:"Dining",title:"Green Tea Plates",subtitle:"Little plates for tea time, snacks, and desserts.",description:"Lightweight small plates with layered green/blue rings and a fun retro look.",image:IMGS.plate,priceLine:"Set of 6 — $6 | Single Plate — $1",options:[{id:"set-6",label:"Add Set of 6",price:6},{id:"single",label:"Add One",price:1,variant:"outline"}],story:"Tea plates filed under: small but mighty. Perfect for desserts, snacks, and whatever you call 'just a little treat.'"},
+  {id:"blue-cream-bowl",collection:"Bowls",section:"Kitchen",title:"Blue & Cream Ceramic Bowl",subtitle:"Great for cereal, noodles, or soup — and it looks super cool.",description:"Rich blue exterior, smooth cream interior, and a rustic rim detail. One-of-one.",image:IMGS.bowl,priceLine:"Single Bowl — $6",options:[{id:"single",label:"Add One",price:6}],story:"A one-of-one bowl with a bold blue exterior — the kind of piece that makes plain noodles feel like a ritual."},
+  {id:"brown-mugs",collection:"Drinkware",section:"Morning Edition",title:"Three-Tone Coffee Mugs",subtitle:"Earthy shades of brown that look amazing together.",description:"A set of 3 ceramic mugs with a clean modern shape and layered tones — perfect for coffee, tea, or cocoa.",image:IMGS.mug,priceLine:"Set of 3 — $15 | Single Mug — $6",options:[{id:"set-3",label:"Add Set of 3",price:15},{id:"single",label:"Add One",price:6,variant:"outline"}],story:"Morning edition: these mugs are warm, earthy, and photogenic. Coffee tastes better when the cup looks like a brand."},
+  {id:"blue-glass-cups",collection:"Drinkware",section:"Morning Edition",title:"Blue Glass Cups",subtitle:"Perfect for wine or water — your call.",description:"Small deep-blue glasses that add a bold pop to the table. Great for daily use or hosting.",image:IMGS.glass,priceLine:"Set of 5 — $15 | Single Cup — $4",options:[{id:"set-5",label:"Add Set of 5",price:15},{id:"single",label:"Add One",price:4,variant:"outline"}],story:"A quiet blue that looks expensive. Perfect for water, wine, or the 'I'm hosting' confidence boost."},
+  {id:"charger-plates",collection:"Hosting Essentials",section:"Dining",title:"Metal Charger Plates",subtitle:"Extra-large base plates that sit under your main dinner plate.",description:"Textured metal chargers that instantly elevate a table setting — great for hosting, holidays, and decor.",image:IMGS.charger,priceLine:"Pair — $12 | Single Charger — $7",options:[{id:"pair",label:"Add Pair",price:12},{id:"single",label:"Add One",price:7,variant:"outline"}],story:"Sources confirm: chargers are the fastest way to make a table look 'event-ready.' These bring texture and shine like a headline brings drama."},
+  {id:"forks",collection:"Silverware",section:"Tableware",title:"Forks",subtitle:"Simple stainless forks for everyday meals.",description:"Standard dinner forks that work with any kitchen setup. Great for apartments, dorms, or starter kitchens.",image:IMGS.fork,priceLine:"Single Fork — $0.75 | 20 Piece Bundle — $10",options:[{id:"bundle-20",label:"Add 20 Fork Bundle",price:10},{id:"single",label:"Add One",price:0.75,variant:"outline"}],story:"Reliable forks ready for action. Perfect for pasta nights, quick lunches, and the occasional late-night snack."},
+  {id:"spoons",collection:"Silverware",section:"Tableware",title:"Spoons",subtitle:"Classic spoons for cereal, soup, or desserts.",description:"Versatile spoons that handle everything from breakfast cereal to evening ice cream.",image:IMGS.spoon,priceLine:"Single Spoon — $0.75 | 20 Piece Bundle — $10",options:[{id:"bundle-20",label:"Add 20 Spoon Bundle",price:10},{id:"single",label:"Add One",price:0.75,variant:"outline"}],story:"Breakfast approved. These spoons are the unsung heroes of cereal, soup, and dessert."},
+  {id:"butter-knives",collection:"Silverware",section:"Tableware",title:"Butter Knives",subtitle:"Perfect for spreading butter, jams, or soft cheeses.",description:"Simple butter knives that complete any table setting and make breakfast toast easier.",image:IMGS.knife,priceLine:"Single Knife — $0.75 | 20 Piece Bundle — $10",options:[{id:"bundle-20",label:"Add 20 Knife Bundle",price:10},{id:"single",label:"Add One",price:0.75,variant:"outline"}],story:"A small tool that makes breakfast better. Ideal for toast, bagels, and weekend brunch."},
+  {id:"vintage-romance-plate",collection:"Vintage Plates",section:"Dining",title:"Vintage Romance Glass Plate",subtitle:"A decorative dinner plate with classic romantic artwork.",description:"A beautiful vintage-style glass dinner plate featuring detailed romantic scenes around the rim and a central illustration.",image:IMGS.vintage,priceLine:"Single Plate — $15",options:[{id:"single",label:"Add One",price:15}],hotDeal:true,story:"Editors confirm: this may be the most charming plate in circulation. With detailed vintage romance scenes around the border, this glass plate turns any dinner into a story worth telling."},
+  {id:"american-eagle-plate",collection:"Vintage Plates",section:"Dining",title:"American Eagle Gold Trim Plate",subtitle:"A bold patriotic glass plate with gold trim.",description:"Vintage-style decorative plate featuring a bald eagle, American flag, drum, and historic imagery.",image:IMGS.vintage,priceLine:"Single Plate — $12",options:[{id:"single",label:"Add One",price:12}],hotDeal:true,story:"Breaking from the patriotic desk: a bold American eagle lands on today's tableware lineup. With a gold trim and historic imagery, this plate feels like something straight out of a collector's cabinet."},
+  {id:"purple-flower-square-plate",collection:"Vintage Plates",section:"Dining",title:"Purple Flower Square Glass Plate",subtitle:"A simple square plate with soft purple flowers.",description:"A square glass plate with a soft yellow background and hand-painted style purple flowers in the center.",image:IMGS.vintage,priceLine:"Single Plate — $10",options:[{id:"single",label:"Add One",price:10}],story:"From the garden desk: a quiet floral plate enters the lineup. With soft purple flowers and a unique square shape, this dish proves simple pieces can still steal the show."},
+  {id:"vintage-fruit-appetizer-plate",collection:"Vintage Plates",section:"Dining",title:"Vintage Fruit Appetizer Plate",subtitle:"A detailed small plate that sits slightly deep like a bowl.",description:"A beautiful vintage square appetizer plate with colorful fruit illustrations and a blue border.",image:IMGS.vintage,priceLine:"Single Plate — $10 | Pair — $15",options:[{id:"pair",label:"Add Both",price:15},{id:"single",label:"Add One",price:10,variant:"outline"}],story:"From the vintage kitchen desk: editors uncovered a beautifully detailed fruit plate hiding in the archives. With raised edges and colorful artwork, it works perfectly for appetizers, salads, or a small dessert worth showing off."},
+  {id:"earth-tone-dinner-plates",collection:"Vintage Plates",section:"Dining",title:"Earth-Tone Heavy Dinner Plates",subtitle:"Large, sleek plates with layered brown tones.",description:"Heavy ceramic dinner plates with layered earth-tone stripes in tan, rust, gray, and chocolate brown.",image:IMGS.plate,priceLine:"Pair — $15 | Single Plate — $9",options:[{id:"pair",label:"Add Both",price:15},{id:"single",label:"Add One",price:9,variant:"outline"}],story:"Design desk report: a pair of bold earth-tone plates have entered circulation. With layered browns and a sleek finish, these heavy dinner plates bring modern design energy to any table."},
+  {id:"minimal-earth-dinner-plates",collection:"Vintage Plates",section:"Dining",title:"Minimal Earth-Tone Dinner Plates",subtitle:"Simple, smooth plates built for big meals.",description:"Smooth ceramic dinner plates with a soft earth-tone gradient and warm brown rim.",image:IMGS.plate,priceLine:"Set of 3 — $16 | Single Plate — $7",options:[{id:"set-3",label:"Add All 3",price:16},{id:"single",label:"Add One",price:7,variant:"outline"}],story:"Kitchen desk update: sometimes the simplest plate is the most useful. These smooth earth-tone dishes are perfect for large meals and everyday dinners."},
+  {id:"coconut-style-glass-bowl",collection:"Bowls",section:"Kitchen",title:"Coconut Style Glass Bowl",subtitle:"A small decorative bowl with tropical style artwork.",description:"A solid glass bowl featuring a colorful plant design and warm orange rim.",image:IMGS.bowl,priceLine:"Single Bowl — $8",options:[{id:"single",label:"Add One",price:8}],story:"From the tropical desk: editors spotted a colorful coconut-style bowl entering the kitchen lineup. Perfect for fruit, snacks, or dessert — a small bowl with island energy."},
+  {id:"fruit-ceramic-creamer",collection:"Drinkware",section:"Morning Edition",title:"Vintage Fruit Ceramic Creamer",subtitle:"A small pouring pitcher for cream, milk, or syrup.",description:"A small ceramic creamer pitcher with colorful fruit designs and a curved handle for easy pouring.",image:IMGS.mug,priceLine:"Pair — $10 | Single Pitcher — $7",options:[{id:"pair",label:"Add Both",price:10},{id:"single",label:"Add One",price:7,variant:"outline"}],story:"Morning desk discovery: a pair of tiny vintage cream pitchers arrived with colorful fruit artwork and a classic pouring spout."},
+  {id:"clear-stem-glasses",collection:"Drinkware",section:"Morning Edition",title:"Clear Stem Drinking Glasses",subtitle:"Simple heavy glass cups that feel great in your hand.",description:"A set of sturdy clear stemmed glasses made from thick, heavy glass.",image:IMGS.glass,priceLine:"Set of 4 — $15 | Single Glass — $5",options:[{id:"set-4",label:"Add Set of 4",price:15},{id:"single",label:"Add One",price:5,variant:"outline"}],story:"Glassware desk report: four clear stem glasses have entered the lineup. Thick, sturdy, and easy to hold — perfect for water, wine, or whatever drink makes dinner feel complete."},
+];
+
+const PAGE_ORDER = ["Front Page","Plates","Bowls","Cups","Tableware","Full Inventory"];
+const PAGE_META = {
+  "Front Page":{kicker:"Breaking News",headline:"The Latest From The Daily Dish",subhead:"Featured stories, fresh finds, and curated tableware from today's edition."},
+  "Plates":{kicker:"Plates",headline:"Plates Worth Setting the Table For",subhead:"Dinner plates, appetizer plates, charger plates, and standout vintage finds."},
+  "Bowls":{kicker:"Bowls",headline:"Bowls That Mean Business",subhead:"Soup, cereal, noodles, snacks, and statement pieces for the center of the table."},
+  "Cups":{kicker:"Cups",headline:"Drinking Glasses & Cups",subhead:"Everyday drinking glasses — perfect for water, juice, wine, or anything you're pouring."},
+  "Tableware":{kicker:"Tableware",headline:"Kitchen Items Seeking New Homes",subhead:"Bundles, basics, and practical pieces that still have personality."},
+  "Full Inventory":{kicker:"Full Inventory",headline:"Everything In Today's Paper",subhead:"Browse every available item in one place, regardless of section."},
+};
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let activePage = "Front Page";
+let cart = {}; // key => {key,title,optionLabel,price,image,qty}
+let shippingMethod = "pickup";
+let checkingOut = false;
+
+// ─────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────
+function money(n){
+  return n.toLocaleString(undefined,{style:"currency",currency:"USD",minimumFractionDigits:n%1===0?0:2});
+}
+function makeKey(pid,oid){return `${pid}__${oid}`;}
+function getPageForProduct(p){
+  const t=p.title.toLowerCase();
+  if(t.includes("plate")||t.includes("charger")) return "Plates";
+  if(t.includes("bowl")) return "Bowls";
+  if(p.collection==="Drinkware") return "Cups";
+  return "Tableware";
+}
+function getPageProducts(page){
+  if(page==="Front Page") return [];
+  if(page==="Full Inventory") return products;
+  if(page==="Plates") return products.filter(p=>{const t=p.title.toLowerCase();return t.includes("plate")||t.includes("charger");});
+  if(page==="Bowls") return products.filter(p=>p.title.toLowerCase().includes("bowl"));
+  if(page==="Cups") return products.filter(p=>p.collection==="Drinkware");
+  return products.filter(p=>p.section===page);
+}
+
+// ─────────────────────────────────────────────
+// TOAST
+// ─────────────────────────────────────────────
+function showToast(msg){
+  const wrap=document.getElementById("toast-wrap");
+  const el=document.createElement("div");
+  el.className="toast";
+  el.textContent=msg;
+  wrap.appendChild(el);
+  setTimeout(()=>{ el.style.opacity="0"; el.style.transition="opacity .3s"; setTimeout(()=>el.remove(),300); },2400);
+}
+
+// ─────────────────────────────────────────────
+// CART
+// ─────────────────────────────────────────────
+function addToCart(productId, optionId){
+  const product = products.find(p=>p.id===productId);
+  const option = product.options.find(o=>o.id===optionId);
+  const key = makeKey(productId,optionId);
+  if(cart[key]){ cart[key].qty++; }
+  else { cart[key]={key,productId,optionId,title:product.title,optionLabel:option.label,price:option.price,image:product.image,qty:1}; }
+  updateCartUI();
+  openCart();
+  showToast(`Added: ${product.title}`);
+}
+
+function removeFromCart(key){ delete cart[key]; updateCartUI(); }
+function incQty(key){ if(cart[key]) cart[key].qty++; updateCartUI(); }
+function decQty(key){ if(!cart[key]) return; cart[key].qty--; if(cart[key].qty<=0) delete cart[key]; updateCartUI(); }
+
+function cartCount(){ return Object.values(cart).reduce((s,it)=>s+it.qty,0); }
+function cartSubtotal(){ return Object.values(cart).reduce((s,it)=>s+it.price*it.qty,0); }
+
+function updateCartUI(){
+  const count = cartCount();
+  document.getElementById("cart-count").textContent = count;
+  document.getElementById("cart-count-mob").textContent = count;
+  document.getElementById("cart-drawer-count").textContent = `${count} item${count!==1?"s":""}`;
+  document.getElementById("cart-subtotal").textContent = money(cartSubtotal());
+
+  const list = document.getElementById("cart-items-list");
+  const items = Object.values(cart);
+  if(items.length===0){
+    list.innerHTML=`<div class="cart-empty"><p class="cart-empty-title">Your cart is empty</p><p class="cart-empty-sub">Add a dish to start your order.</p></div>`;
+  } else {
+    list.innerHTML = items.map(it=>`
+      <div class="cart-item">
+        <div class="cart-item-top">
+          <div>
+            <p class="cart-item-name">${it.title}</p>
+            <p class="cart-item-opt">${it.optionLabel}</p>
+            <p class="cart-item-price">${money(it.price)} each</p>
+          </div>
+          <button class="cart-item-remove" onclick="removeFromCart('${it.key}')">Remove</button>
+        </div>
+        <div class="cart-item-bottom">
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="decQty('${it.key}')">−</button>
+            <span class="qty-num">${it.qty}</span>
+            <button class="qty-btn" onclick="incQty('${it.key}')">+</button>
+          </div>
+          <span class="cart-item-total">${money(it.price*it.qty)}</span>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  const btn = document.getElementById("checkout-btn");
+  btn.disabled = items.length===0 || checkingOut;
+}
+
+function openCart(){ document.getElementById("cart-overlay").style.display="block"; document.getElementById("cart-drawer").style.display="flex"; updateCartUI(); }
+function closeCart(){ document.getElementById("cart-overlay").style.display="none"; document.getElementById("cart-drawer").style.display="none"; }
+
+function selectShipping(method){
+  shippingMethod=method;
+  document.getElementById("ship-opt-pickup").classList.toggle("selected",method==="pickup");
+  document.getElementById("ship-opt-shipping").classList.toggle("selected",method==="shipping");
+}
+
+// ─────────────────────────────────────────────
+// STRIPE CHECKOUT
+// ─────────────────────────────────────────────
+async function startCheckout(){
+  if(checkingOut) return;
+  const items=Object.values(cart);
+  if(items.length===0) return;
+  checkingOut=true;
+  document.getElementById("checkout-btn-text").textContent="Redirecting to Stripe…";
+  document.getElementById("checkout-btn").disabled=true;
+  document.getElementById("checkout-err").style.display="none";
+
+  try {
+    const lineItems = items.map(it=>({
+      name: it.title,
+      description: it.optionLabel,
+      unitAmount: Math.round(it.price*100),
+      quantity: it.qty,
+      image: it.image && it.image.startsWith("http") ? it.image : null,
+    }));
+
+    const res = await fetch("/api/create-checkout-session",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({lineItems, shippingMethod}),
+    });
+
+    if(!res.ok){ const t=await res.text(); throw new Error(t||"Could not start checkout."); }
+    const {url}=await res.json();
+    if(!url) throw new Error("Missing checkout URL.");
+    window.location.href=url;
+  } catch(err){
+    checkingOut=false;
+    document.getElementById("checkout-btn-text").textContent="Secure Checkout →";
+    document.getElementById("checkout-btn").disabled=false;
+    const errEl=document.getElementById("checkout-err");
+    errEl.textContent=err.message||"Checkout failed. Please try again.";
+    errEl.style.display="block";
+  }
+}
+
+// ─────────────────────────────────────────────
+// NAVIGATION
+// ─────────────────────────────────────────────
+function goToPage(page){
+  activePage=page;
+  renderNav();
+  renderPage();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function nextPage(){ const i=PAGE_ORDER.indexOf(activePage); goToPage(PAGE_ORDER[(i+1)%PAGE_ORDER.length]); }
+function prevPage(){ const i=PAGE_ORDER.indexOf(activePage); goToPage(PAGE_ORDER[(i-1+PAGE_ORDER.length)%PAGE_ORDER.length]); }
+
+// ─────────────────────────────────────────────
+// RENDER NAV
+// ─────────────────────────────────────────────
+function renderNav(){
+  const wrap=document.getElementById("nav-links");
+  wrap.innerHTML=PAGE_ORDER.map(p=>`
+    <button class="nav-btn ${p===activePage?"active":""}" onclick="goToPage('${p}')">${p}</button>
+  `).join("");
+}
+
+// ─────────────────────────────────────────────
+// RENDER PAGE
+// ─────────────────────────────────────────────
+function renderPage(){
+  const meta=PAGE_META[activePage];
+  const idx=PAGE_ORDER.indexOf(activePage);
+  document.getElementById("page-kicker").textContent=meta.kicker;
+  document.getElementById("page-title").textContent=meta.headline;
+  document.getElementById("page-subhead").textContent=meta.subhead;
+  document.getElementById("page-num").textContent=`Page ${idx+1} of ${PAGE_ORDER.length}`;
+
+  const body=document.getElementById("page-body");
+  if(activePage==="Front Page"){ body.innerHTML=renderFrontPage(); }
+  else { body.innerHTML=renderSection(); }
+}
+
+// ─────────────────────────────────────────────
+// RENDER FRONT PAGE
+// ─────────────────────────────────────────────
+function renderFrontPage(){
+  const dealOfDay = products.find(p=>p.id==="vintage-romance-plate")||products.find(p=>p.hotDeal)||products[0];
+  const latestArrivals = products.slice(-5).reverse();
+  const vintageSpotlight = products.filter(p=>p.collection==="Vintage Plates").slice(0,3);
+  const editorPicks = products.filter(p=>p.id==="lighthouse-plates"||p.id==="red-dinner-plates");
+
+  return `
+    <!-- HERO -->
+    <div class="fp-section">
+      <div class="fp-section-header">
+        <div>
+          <p class="fp-kicker">Featured Story</p>
+          <h3 class="fp-title">Today's Front Page Pick</h3>
+        </div>
+        <span class="hot-badge">🔥 Hot Deal</span>
+      </div>
+      <div class="hero-grid">
+        <img class="hero-img" src="${dealOfDay.image}" alt="${dealOfDay.title}" onerror="this.src='${FALLBACK}'"/>
+        <div class="hero-content">
+          <h3 class="hero-product-title">${dealOfDay.title}</h3>
+          <p style="font-style:italic;font-size:14px;margin-bottom:10px">${dealOfDay.subtitle}</p>
+          <p class="story-text">${dealOfDay.story}</p>
+          <p style="font-weight:700;margin-bottom:14px">${dealOfDay.priceLine}</p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            ${dealOfDay.options.slice(0,2).map(o=>`
+              <button class="product-add-btn ${o.variant==="outline"?"outline":"solid"}" onclick="addToCart('${dealOfDay.id}','${o.id}')">
+                ${o.label} (${money(o.price)})
+              </button>
+            `).join("")}
+            <button class="product-add-btn outline" onclick="goToPage('${getPageForProduct(dealOfDay)}')">Browse Section →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EDITOR'S PICKS + LATEST ARRIVALS -->
+    <div class="two-col" style="margin-bottom:22px">
+      <div class="fp-section" style="margin-bottom:0">
+        <div class="fp-section-header"><div>
+          <p class="fp-kicker">Editor's Picks</p>
+          <h3 class="fp-title">Today's Top Stories</h3>
+        </div></div>
+        <div class="fp-body">
+          ${editorPicks.map(p=>`
+            <div class="sidebar-item">
+              <p class="sidebar-item-title">${p.title}</p>
+              <p class="sidebar-item-price">${p.priceLine}</p>
+              <p class="sidebar-item-story">${p.story}</p>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button class="product-add-btn solid" onclick="addToCart('${p.id}','${p.options[0].id}')">Add (${money(p.options[0].price)})</button>
+                <button class="product-add-btn outline" onclick="goToPage('${getPageForProduct(p)}')">Open →</button>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+      <div class="fp-section" style="margin-bottom:0">
+        <div class="fp-section-header"><div>
+          <p class="fp-kicker">Latest Arrivals</p>
+          <h3 class="fp-title">Fresh Finds From The Field</h3>
+        </div></div>
+        <div class="fp-body">
+          ${latestArrivals.map(it=>`
+            <div class="sidebar-item">
+              <p class="sidebar-item-title">${it.title}</p>
+              <p class="sidebar-item-price">${it.priceLine}</p>
+              <p class="sidebar-item-story">${it.story}</p>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    </div>
+
+    <!-- COLLECTOR'S SPOTLIGHT -->
+    <div class="fp-section" style="margin-bottom:22px">
+      <div class="fp-section-header"><div>
+        <p class="fp-kicker">Collector's Spotlight</p>
+        <h3 class="fp-title">From The Archive</h3>
+      </div></div>
+      <div class="fp-body">
+        <p style="font-size:13px;line-height:1.7;margin-bottom:16px">A rotating feature of the shop's most eye-catching vintage pieces — the kinds of finds that make the paper worth reading.</p>
+        <div class="three-col">
+          ${vintageSpotlight.map(item=>`
+            <div style="border-top:2px solid var(--ink);padding-top:14px">
+              <p class="sidebar-item-title">${item.title}</p>
+              <p class="sidebar-item-price">${item.priceLine}</p>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+                <button class="product-add-btn solid" onclick="addToCart('${item.id}','${item.options[0].id}')">Add</button>
+                <button class="product-add-btn outline" onclick="goToPage('${getPageForProduct(item)}')">View</button>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    </div>
+
+    <!-- ABOUT -->
+    <div class="fp-section">
+      <div class="fp-section-header"><div>
+        <p class="fp-kicker">About the Paper</p>
+        <h3 class="fp-title">The Story Behind The Daily Dish</h3>
+      </div></div>
+      <div class="fp-body">
+        <p class="about-body">The Daily Dish started as a simple idea: what if a small online shop could feel like reading a newspaper? Instead of headlines about politics or sports, the stories here are about plates, bowls, mugs, and the everyday objects that make a kitchen feel like home.</p>
+        <p class="about-body">I began collecting dishes from thrift stores and secondhand shops because each piece felt unique. Some are colorful, some are simple, but every item has character. Rather than building a typical online store, I wanted to create something fun — a place where browsing dishes feels like flipping through the pages of a newspaper.</p>
+        <p class="about-body">The Daily Dish is a curated kitchen shop built around secondhand finds, character pieces, and a cleaner, more memorable way to browse tableware online.</p>
+        <hr class="about-divider"/>
+        <p style="font-style:italic;font-size:13px;margin-bottom:14px">Written by <strong>Elijah Spivey</strong><br/>Founder, The Daily Dish</p>
+        <p style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:8px">Contact The Daily Dish</p>
+        <p class="contact-item">📷 Instagram: <a href="https://instagram.com/thedailydish.official" target="_blank" style="color:var(--ink)">@thedailydish.official</a></p>
+        <p class="contact-item">📘 Facebook: <a href="https://facebook.com/thedailydish.official" target="_blank" style="color:var(--ink)">@thedailydish.official</a></p>
+        <p class="contact-item">✉️ Email: <a href="mailto:thedailydishshop@gmail.com" style="color:var(--ink)">thedailydishshop@gmail.com</a></p>
+      </div>
+    </div>
+  `;
+}
+
+// ─────────────────────────────────────────────
+// RENDER SECTION
+// ─────────────────────────────────────────────
+function renderSection(){
+  const pageProducts = getPageProducts(activePage);
+  return `
+    <div style="margin-bottom:24px">
+      <h3 style="font-family:var(--display);font-size:28px;font-weight:900;text-transform:uppercase">${activePage}</h3>
+      <p style="font-style:italic;margin-top:6px;font-size:14px;opacity:.75">${pageProducts.length} item${pageProducts.length!==1?"s":""} in this section</p>
+    </div>
+    <div class="product-grid">
+      ${pageProducts.map(p=>`
+        <div class="product-card">
+          <img src="${p.image}" alt="${p.title}" onerror="this.src='${FALLBACK}'"/>
+          <div class="product-card-body">
+            <div class="product-card-top">
+              <h3 class="product-title">${p.title}</h3>
+              <span class="pill">${p.collection}</span>
+            </div>
+            ${p.hotDeal?`<span class="hot-badge" style="margin-bottom:8px;display:inline-flex">🔥 Hot Deal</span>`:""}
+            <p class="product-subtitle">${p.subtitle}</p>
+            <p class="product-desc">${p.description}</p>
+            <p class="product-price">${p.priceLine}</p>
+            <div class="product-actions">
+              ${p.options.map(o=>`
+                <button class="product-add-btn ${o.variant==="outline"?"outline":"solid"}" onclick="addToCart('${p.id}','${o.id}')">
+                  ${o.label} (${money(o.price)})
+                </button>
+              `).join("")}
+            </div>
+          </div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+renderNav();
+renderPage();
+updateCartUI();
+</script>
+</body>
+</html>

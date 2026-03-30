@@ -1,0 +1,8 @@
+{
+  "name": "the-daily-dish",
+  "version": "1.0.0",
+  "description": "The Daily Dish — curated thrifted tableware shop",
+  "dependencies": {
+    "stripe": "^14.0.0"
+  }
+}
