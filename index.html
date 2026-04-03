@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -80,7 +81,7 @@ button{cursor:pointer;font-family:var(--serif)}
 .product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px}
 .product-card{background:var(--parchment);border:var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;transition:transform .15s}
 .product-card:hover{transform:translateY(-2px)}
-.product-card img{width:100%;height:200px;object-fit:cover;border-bottom:var(--border)}
+.product-card img{width:100%;height:200px;object-fit:cover;object-position:center;border-bottom:var(--border)}
 .product-card-body{padding:18px;flex:1;display:flex;flex-direction:column}
 .product-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
 .product-title{font-family:var(--display);font-size:17px;font-weight:700;text-transform:uppercase;line-height:1.2}
@@ -101,7 +102,7 @@ button{cursor:pointer;font-family:var(--serif)}
 .fp-body{padding:20px}
 .hero-grid{display:grid;grid-template-columns:1fr 1fr}
 @media(max-width:680px){.hero-grid{grid-template-columns:1fr}}
-.hero-img{width:100%;height:270px;object-fit:cover;border-right:2px solid var(--ink)}
+.hero-img{width:100%;height:270px;object-fit:cover;object-position:center;border-right:2px solid var(--ink)}
 @media(max-width:680px){.hero-img{border-right:none;border-bottom:2px solid var(--ink)}}
 .hero-content{padding:22px}
 .hero-product-title{font-family:var(--display);font-size:22px;font-weight:900;text-transform:uppercase;margin-bottom:8px;line-height:1.2}
@@ -204,7 +205,10 @@ button{cursor:pointer;font-family:var(--serif)}
     <!-- NAV -->
     <div class="navbar">
       <div class="nav-links" id="nav-links"></div>
-      <button class="cart-btn" onclick="openCart()">Cart (<span id="cart-count">0</span>)</button>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:nowrap;justify-content:center">
+        <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1.5px solid rgba(0,0,0,.35);border-radius:999px;padding:4px 10px;white-space:nowrap;opacity:.8;text-align:center" id="edition-date"></div>
+        <button class="cart-btn" onclick="openCart()">Cart (<span id="cart-count">0</span>)</button>
+      </div>
     </div>
 
     <!-- TICKER -->
@@ -285,48 +289,49 @@ button{cursor:pointer;font-family:var(--serif)}
 const FALLBACK = "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=800&q=70";
 
 const IMGS = {
-  bowl:"https://images.unsplash.com/photo-1603189343302-e603f7add05a?auto=format&fit=crop&w=800&q=70",
-  plate:"https://images.unsplash.com/photo-1589571894960-20bbe2828d0a?auto=format&fit=crop&w=800&q=70",
-  mug:"https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?auto=format&fit=crop&w=800&q=70",
-  glass:"https://images.unsplash.com/photo-1571104508999-893933ded431?auto=format&fit=crop&w=800&q=70",
-  vintage:"https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=800&q=70",
-  fork:"https://images.unsplash.com/photo-1582735689369-4fe89db7114c?auto=format&fit=crop&w=800&q=70",
-  spoon:"https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=800&q=70",
-  knife:"https://images.unsplash.com/photo-1604908811371-4e6a2dff7e94?auto=format&fit=crop&w=800&q=70",
-  charger:"https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=800&q=70",
-  redplate:"https://images.unsplash.com/photo-1514190051997-0f6f39ca5cde?auto=format&fit=crop&w=800&q=70",
-  lighthouse:"https://images.unsplash.com/photo-1516912481808-3406841bd33c?auto=format&fit=crop&w=800&q=70",
+  bowl:"https://i.imgur.com/ZPXaQFI.jpeg",
+  plate:"https://i.imgur.com/SLXy3Fd.jpeg",
+  mug:"https://i.imgur.com/CoTjjh6.jpeg",
+  glass:"https://i.imgur.com/ju7LV0y.jpeg",
+  vintage:"https://i.imgur.com/iLj6ICw.jpeg",
+  fork:"https://i.imgur.com/ZHjtpjV.jpeg",
+  spoon:"https://i.imgur.com/IZpaghE.jpeg",
+  knife:"https://i.imgur.com/01K4jkn.jpeg",
+  charger:"https://i.imgur.com/RzdE6Na.jpeg",
+  redplate:"https://i.imgur.com/EdI3INH.jpeg",
+  lighthouse:"https://i.imgur.com/OMoutL2.jpeg",
 };
 
 // ── IMPORTANT: Replace placeholder image URLs below with your real product photo URLs ──
 const products = [
-  {id:"centerpiece-bowl",collection:"Bowls",section:"Kitchen",title:"Decorative Centerpiece Bowl",subtitle:"Perfect for a table centerpiece or a giant bowl of popcorn.",description:"Ceramic bowl with a colorful decorative band — an easy statement piece for your kitchen or dining table.",image:IMGS.bowl,priceLine:"Single Bowl — $10",options:[{id:"single",label:"Add One",price:10}],hotDeal:true,story:"Witnesses report a sudden spike in popcorn consumption across the city. Investigators confirm the cause: one bold ceramic bowl with a decorative band, spotted making every table look expensive."},
+  {id:"centerpiece-bowl",collection:"Bowls",section:"Kitchen",title:"Decorative Centerpiece Bowl",subtitle:"Perfect for a table centerpiece or a giant bowl of popcorn.",description:"Ceramic bowl with a colorful decorative band — an easy statement piece for your kitchen or dining table.",image:"https://i.imgur.com/ZPXaQFI.jpeg",priceLine:"Single Bowl — $10",options:[{id:"single",label:"Add One",price:10}],hotDeal:true,story:"Witnesses report a sudden spike in popcorn consumption across the city. Investigators confirm the cause: one bold ceramic bowl with a decorative band, spotted making every table look expensive."},
   {id:"lighthouse-plates",collection:"Lighthouse Collection",section:"Dining",title:"Lighthouse Plates",subtitle:"Coastal glass plates with a lighthouse scene and rim artwork.",description:"Good condition glass plates with a lighthouse centerpiece and a playful nautical border.",image:IMGS.lighthouse,priceLine:"Set of 4 — $24 | Single Plate — $6",options:[{id:"set-4",label:"Add Set of 4",price:24},{id:"single",label:"Add One",price:6,variant:"outline"}],hotDeal:true,story:"Coastal charm lands on the front page. Sources say these glass plates bring lighthouse energy to any dinner — no beach required. Best enjoyed with seafood, pasta, or a confident frozen pizza."},
-  {id:"lighthouse-bowls",collection:"Lighthouse Collection",section:"Kitchen",title:"Lighthouse Bowls",subtitle:"Matching bowls for the lighthouse set.",description:"Glass bowls with the same coastal vibe — great for cereal, soup, snacks, or sides.",image:IMGS.lighthouse,priceLine:"Set of 8 — $30 | Single Bowl — $5",options:[{id:"set-8",label:"Add Set of 8",price:30},{id:"single",label:"Add One",price:5,variant:"outline"}],story:"A calm sea, a steady bowl. These match the lighthouse plates and keep your table looking like a curated coastal editorial."},
+  {id:"lighthouse-bowls",collection:"Lighthouse Collection",section:"Kitchen",title:"Lighthouse Bowls",subtitle:"Matching bowls for the lighthouse set.",description:"Glass bowls with the same coastal vibe — great for cereal, soup, snacks, or sides.",image:"https://i.imgur.com/YIDDz9V.jpeg",priceLine:"Set of 8 — $30 | Single Bowl — $5",options:[{id:"set-8",label:"Add Set of 8",price:30},{id:"single",label:"Add One",price:5,variant:"outline"}],story:"A calm sea, a steady bowl. These match the lighthouse plates and keep your table looking like a curated coastal editorial."},
   {id:"red-dinner-plates",collection:"Red Glass Set",section:"Dining",title:"Red Glass Dinner Plates",subtitle:"Bold, clean, and made for everyday dinners.",description:"Large red glass plates with a smooth finish — they fit any dinner and instantly upgrade the table.",image:IMGS.redplate,priceLine:"Set of 3 — $15 | Single Plate — $6",options:[{id:"set-3",label:"Add Set of 3",price:15},{id:"single",label:"Add One",price:6,variant:"outline"}],hotDeal:true,story:"BREAKING: red plates spotted making weeknight dinners look like a magazine shoot. Analysts confirm the color boosts confidence, compliments, and second servings."},
-  {id:"red-appetizer-plates",collection:"Red Glass Set",section:"Dining",title:"Red Glass Appetizer Plates",subtitle:"Smaller companion plates to the red dinner set.",description:"Same glass quality in a smaller size — ideal for desserts, appetizers, and side dishes.",image:IMGS.redplate,priceLine:"Set of 4 — $15 | Single Plate — $4",options:[{id:"set-4",label:"Add Set of 4",price:15},{id:"single",label:"Add One",price:4,variant:"outline"}],story:"Small plate, big impact. Perfect for appetizers, desserts, and that 'just one more snack' moment."},
-  {id:"red-bowls",collection:"Red Glass Set",section:"Kitchen",title:"Red Glass Bowls",subtitle:"The final piece of the red glass dinner set.",description:"Matching red bowls — perfect for soup, cereal, sides, and keeping the set consistent.",image:IMGS.redplate,priceLine:"Set of 3 — $12 | Single Bowl — $5",options:[{id:"set-3",label:"Add Set of 3",price:12},{id:"single",label:"Add One",price:5,variant:"outline"}],story:"A matching bowl is the secret to a table that looks intentional. These finish the red set like a headline finishes a story."},
-  {id:"sleek-soup-bowls",collection:"Bowls",section:"Kitchen",title:"Sleek Glass Soup Bowls",subtitle:"Smooth, modern, and super clean-looking.",description:"Minimalist glass bowls with subtle color rings near the rim — great for soups, pasta, or salads.",image:IMGS.bowl,priceLine:"Set of 2 — $16 | Single Bowl — $9",options:[{id:"pair",label:"Add Both",price:16},{id:"single",label:"Add One",price:9,variant:"outline"}],story:"Tonight's forecast: soup. These bowls keep it sleek, simple, and modern — like a clean front-page layout."},
-  {id:"green-tea-plates",collection:"Small Plates",section:"Dining",title:"Green Tea Plates",subtitle:"Little plates for tea time, snacks, and desserts.",description:"Lightweight small plates with layered green/blue rings and a fun retro look.",image:IMGS.plate,priceLine:"Set of 6 — $6 | Single Plate — $1",options:[{id:"set-6",label:"Add Set of 6",price:6},{id:"single",label:"Add One",price:1,variant:"outline"}],story:"Tea plates filed under: small but mighty. Perfect for desserts, snacks, and whatever you call 'just a little treat.'"},
-  {id:"blue-cream-bowl",collection:"Bowls",section:"Kitchen",title:"Blue & Cream Ceramic Bowl",subtitle:"Great for cereal, noodles, or soup — and it looks super cool.",description:"Rich blue exterior, smooth cream interior, and a rustic rim detail. One-of-one.",image:IMGS.bowl,priceLine:"Single Bowl — $6",options:[{id:"single",label:"Add One",price:6}],story:"A one-of-one bowl with a bold blue exterior — the kind of piece that makes plain noodles feel like a ritual."},
-  {id:"brown-mugs",collection:"Drinkware",section:"Morning Edition",title:"Three-Tone Coffee Mugs",subtitle:"Earthy shades of brown that look amazing together.",description:"A set of 3 ceramic mugs with a clean modern shape and layered tones — perfect for coffee, tea, or cocoa.",image:IMGS.mug,priceLine:"Set of 3 — $15 | Single Mug — $6",options:[{id:"set-3",label:"Add Set of 3",price:15},{id:"single",label:"Add One",price:6,variant:"outline"}],story:"Morning edition: these mugs are warm, earthy, and photogenic. Coffee tastes better when the cup looks like a brand."},
-  {id:"blue-glass-cups",collection:"Drinkware",section:"Morning Edition",title:"Blue Glass Cups",subtitle:"Perfect for wine or water — your call.",description:"Small deep-blue glasses that add a bold pop to the table. Great for daily use or hosting.",image:IMGS.glass,priceLine:"Set of 5 — $15 | Single Cup — $4",options:[{id:"set-5",label:"Add Set of 5",price:15},{id:"single",label:"Add One",price:4,variant:"outline"}],story:"A quiet blue that looks expensive. Perfect for water, wine, or the 'I'm hosting' confidence boost."},
-  {id:"charger-plates",collection:"Hosting Essentials",section:"Dining",title:"Metal Charger Plates",subtitle:"Extra-large base plates that sit under your main dinner plate.",description:"Textured metal chargers that instantly elevate a table setting — great for hosting, holidays, and decor.",image:IMGS.charger,priceLine:"Pair — $12 | Single Charger — $7",options:[{id:"pair",label:"Add Pair",price:12},{id:"single",label:"Add One",price:7,variant:"outline"}],story:"Sources confirm: chargers are the fastest way to make a table look 'event-ready.' These bring texture and shine like a headline brings drama."},
-  {id:"forks",collection:"Silverware",section:"Tableware",title:"Forks",subtitle:"Simple stainless forks for everyday meals.",description:"Standard dinner forks that work with any kitchen setup. Great for apartments, dorms, or starter kitchens.",image:IMGS.fork,priceLine:"Single Fork — $0.75 | 20 Piece Bundle — $10",options:[{id:"bundle-20",label:"Add 20 Fork Bundle",price:10},{id:"single",label:"Add One",price:0.75,variant:"outline"}],story:"Reliable forks ready for action. Perfect for pasta nights, quick lunches, and the occasional late-night snack."},
-  {id:"spoons",collection:"Silverware",section:"Tableware",title:"Spoons",subtitle:"Classic spoons for cereal, soup, or desserts.",description:"Versatile spoons that handle everything from breakfast cereal to evening ice cream.",image:IMGS.spoon,priceLine:"Single Spoon — $0.75 | 20 Piece Bundle — $10",options:[{id:"bundle-20",label:"Add 20 Spoon Bundle",price:10},{id:"single",label:"Add One",price:0.75,variant:"outline"}],story:"Breakfast approved. These spoons are the unsung heroes of cereal, soup, and dessert."},
-  {id:"butter-knives",collection:"Silverware",section:"Tableware",title:"Butter Knives",subtitle:"Perfect for spreading butter, jams, or soft cheeses.",description:"Simple butter knives that complete any table setting and make breakfast toast easier.",image:IMGS.knife,priceLine:"Single Knife — $0.75 | 20 Piece Bundle — $10",options:[{id:"bundle-20",label:"Add 20 Knife Bundle",price:10},{id:"single",label:"Add One",price:0.75,variant:"outline"}],story:"A small tool that makes breakfast better. Ideal for toast, bagels, and weekend brunch."},
-  {id:"vintage-romance-plate",collection:"Vintage Plates",section:"Dining",title:"Vintage Romance Glass Plate",subtitle:"A decorative dinner plate with classic romantic artwork.",description:"A beautiful vintage-style glass dinner plate featuring detailed romantic scenes around the rim and a central illustration.",image:IMGS.vintage,priceLine:"Single Plate — $15",options:[{id:"single",label:"Add One",price:15}],hotDeal:true,story:"Editors confirm: this may be the most charming plate in circulation. With detailed vintage romance scenes around the border, this glass plate turns any dinner into a story worth telling."},
-  {id:"american-eagle-plate",collection:"Vintage Plates",section:"Dining",title:"American Eagle Gold Trim Plate",subtitle:"A bold patriotic glass plate with gold trim.",description:"Vintage-style decorative plate featuring a bald eagle, American flag, drum, and historic imagery.",image:IMGS.vintage,priceLine:"Single Plate — $12",options:[{id:"single",label:"Add One",price:12}],hotDeal:true,story:"Breaking from the patriotic desk: a bold American eagle lands on today's tableware lineup. With a gold trim and historic imagery, this plate feels like something straight out of a collector's cabinet."},
-  {id:"purple-flower-square-plate",collection:"Vintage Plates",section:"Dining",title:"Purple Flower Square Glass Plate",subtitle:"A simple square plate with soft purple flowers.",description:"A square glass plate with a soft yellow background and hand-painted style purple flowers in the center.",image:IMGS.vintage,priceLine:"Single Plate — $10",options:[{id:"single",label:"Add One",price:10}],story:"From the garden desk: a quiet floral plate enters the lineup. With soft purple flowers and a unique square shape, this dish proves simple pieces can still steal the show."},
-  {id:"vintage-fruit-appetizer-plate",collection:"Vintage Plates",section:"Dining",title:"Vintage Fruit Appetizer Plate",subtitle:"A detailed small plate that sits slightly deep like a bowl.",description:"A beautiful vintage square appetizer plate with colorful fruit illustrations and a blue border.",image:IMGS.vintage,priceLine:"Single Plate — $10 | Pair — $15",options:[{id:"pair",label:"Add Both",price:15},{id:"single",label:"Add One",price:10,variant:"outline"}],story:"From the vintage kitchen desk: editors uncovered a beautifully detailed fruit plate hiding in the archives. With raised edges and colorful artwork, it works perfectly for appetizers, salads, or a small dessert worth showing off."},
-  {id:"earth-tone-dinner-plates",collection:"Vintage Plates",section:"Dining",title:"Earth-Tone Heavy Dinner Plates",subtitle:"Large, sleek plates with layered brown tones.",description:"Heavy ceramic dinner plates with layered earth-tone stripes in tan, rust, gray, and chocolate brown.",image:IMGS.plate,priceLine:"Pair — $15 | Single Plate — $9",options:[{id:"pair",label:"Add Both",price:15},{id:"single",label:"Add One",price:9,variant:"outline"}],story:"Design desk report: a pair of bold earth-tone plates have entered circulation. With layered browns and a sleek finish, these heavy dinner plates bring modern design energy to any table."},
-  {id:"minimal-earth-dinner-plates",collection:"Vintage Plates",section:"Dining",title:"Minimal Earth-Tone Dinner Plates",subtitle:"Simple, smooth plates built for big meals.",description:"Smooth ceramic dinner plates with a soft earth-tone gradient and warm brown rim.",image:IMGS.plate,priceLine:"Set of 3 — $16 | Single Plate — $7",options:[{id:"set-3",label:"Add All 3",price:16},{id:"single",label:"Add One",price:7,variant:"outline"}],story:"Kitchen desk update: sometimes the simplest plate is the most useful. These smooth earth-tone dishes are perfect for large meals and everyday dinners."},
-  {id:"coconut-style-glass-bowl",collection:"Bowls",section:"Kitchen",title:"Coconut Style Glass Bowl",subtitle:"A small decorative bowl with tropical style artwork.",description:"A solid glass bowl featuring a colorful plant design and warm orange rim.",image:IMGS.bowl,priceLine:"Single Bowl — $8",options:[{id:"single",label:"Add One",price:8}],story:"From the tropical desk: editors spotted a colorful coconut-style bowl entering the kitchen lineup. Perfect for fruit, snacks, or dessert — a small bowl with island energy."},
-  {id:"fruit-ceramic-creamer",collection:"Drinkware",section:"Morning Edition",title:"Vintage Fruit Ceramic Creamer",subtitle:"A small pouring pitcher for cream, milk, or syrup.",description:"A small ceramic creamer pitcher with colorful fruit designs and a curved handle for easy pouring.",image:IMGS.mug,priceLine:"Pair — $10 | Single Pitcher — $7",options:[{id:"pair",label:"Add Both",price:10},{id:"single",label:"Add One",price:7,variant:"outline"}],story:"Morning desk discovery: a pair of tiny vintage cream pitchers arrived with colorful fruit artwork and a classic pouring spout."},
-  {id:"clear-stem-glasses",collection:"Drinkware",section:"Morning Edition",title:"Clear Stem Drinking Glasses",subtitle:"Simple heavy glass cups that feel great in your hand.",description:"A set of sturdy clear stemmed glasses made from thick, heavy glass.",image:IMGS.glass,priceLine:"Set of 4 — $15 | Single Glass — $5",options:[{id:"set-4",label:"Add Set of 4",price:15},{id:"single",label:"Add One",price:5,variant:"outline"}],story:"Glassware desk report: four clear stem glasses have entered the lineup. Thick, sturdy, and easy to hold — perfect for water, wine, or whatever drink makes dinner feel complete."},
+  {id:"red-appetizer-plates",collection:"Red Glass Set",section:"Dining",title:"Red Glass Appetizer Plates",subtitle:"Smaller companion plates to the red dinner set.",description:"Same glass quality in a smaller size — ideal for desserts, appetizers, and side dishes.",image:"https://i.imgur.com/2nIIUwa.jpeg",priceLine:"Set of 4 — $15 | Single Plate — $4",options:[{id:"set-4",label:"Add Set of 4",price:15},{id:"single",label:"Add One",price:4,variant:"outline"}],story:"Small plate, big impact. Perfect for appetizers, desserts, and that 'just one more snack' moment."},
+  {id:"red-bowls",collection:"Red Glass Set",section:"Kitchen",title:"Red Glass Bowls",subtitle:"The final piece of the red glass dinner set.",description:"Matching red bowls — perfect for soup, cereal, sides, and keeping the set consistent.",image:"https://i.imgur.com/MEFyLMQ.jpeg",priceLine:"Set of 3 — $12 | Single Bowl — $5",options:[{id:"set-3",label:"Add Set of 3",price:12},{id:"single",label:"Add One",price:5,variant:"outline"}],story:"A matching bowl is the secret to a table that looks intentional. These finish the red set like a headline finishes a story."},
+  {id:"sleek-soup-bowls",collection:"Bowls",section:"Kitchen",title:"Sleek Glass Soup Bowls",subtitle:"Smooth, modern, and super clean-looking.",description:"Minimalist glass bowls with subtle color rings near the rim — great for soups, pasta, or salads.",image:"https://i.imgur.com/uQbpbBb.jpeg",priceLine:"Set of 2 — $16 | Single Bowl — $9",options:[{id:"pair",label:"Add Both",price:16},{id:"single",label:"Add One",price:9,variant:"outline"}],story:"Tonight's forecast: soup. These bowls keep it sleek, simple, and modern — like a clean front-page layout."},
+  {id:"green-tea-plates",collection:"Small Plates",section:"Dining",title:"Green Tea Plates",subtitle:"Little plates for tea time, snacks, and desserts.",description:"Lightweight small plates with layered green/blue rings and a fun retro look.",image:"https://i.imgur.com/EiotFbg.jpeg",priceLine:"Set of 6 — $6 | Single Plate — $1",options:[{id:"set-6",label:"Add Set of 6",price:6},{id:"single",label:"Add One",price:1,variant:"outline"}],story:"Tea plates filed under: small but mighty. Perfect for desserts, snacks, and whatever you call 'just a little treat.'"},
+  {id:"blue-cream-bowl",collection:"Bowls",section:"Kitchen",title:"Blue & Cream Ceramic Bowl",subtitle:"Great for cereal, noodles, or soup — and it looks super cool.",description:"Rich blue exterior, smooth cream interior, and a rustic rim detail. One-of-one.",image:"https://i.imgur.com/RQbW9iN.jpeg",priceLine:"Single Bowl — $6",options:[{id:"single",label:"Add One",price:6}],story:"A one-of-one bowl with a bold blue exterior — the kind of piece that makes plain noodles feel like a ritual."},
+  {id:"brown-mugs",collection:"Drinkware",section:"Morning Edition",title:"Three-Tone Coffee Mugs",subtitle:"Earthy shades of brown that look amazing together.",description:"A set of 3 ceramic mugs with a clean modern shape and layered tones — perfect for coffee, tea, or cocoa.",image:"https://i.imgur.com/CoTjjh6.jpeg",priceLine:"Set of 3 — $15 | Single Mug — $6",options:[{id:"set-3",label:"Add Set of 3",price:15},{id:"single",label:"Add One",price:6,variant:"outline"}],story:"Morning edition: these mugs are warm, earthy, and photogenic. Coffee tastes better when the cup looks like a brand."},
+  {id:"blue-glass-cups",collection:"Drinkware",section:"Morning Edition",title:"Blue Glass Cups",subtitle:"Perfect for wine or water — your call.",description:"Small deep-blue glasses that add a bold pop to the table. Great for daily use or hosting.",image:"https://i.imgur.com/ju7LV0y.jpeg",priceLine:"Set of 5 — $15 | Single Cup — $4",options:[{id:"set-5",label:"Add Set of 5",price:15},{id:"single",label:"Add One",price:4,variant:"outline"}],story:"A quiet blue that looks expensive. Perfect for water, wine, or the 'I'm hosting' confidence boost."},
+  {id:"charger-plates",collection:"Hosting Essentials",section:"Dining",title:"Metal Charger Plates",subtitle:"Extra-large base plates that sit under your main dinner plate.",description:"Textured metal chargers that instantly elevate a table setting — great for hosting, holidays, and decor.",image:"https://i.imgur.com/RzdE6Na.jpeg",priceLine:"Pair — $12 | Single Charger — $7",options:[{id:"pair",label:"Add Pair",price:12},{id:"single",label:"Add One",price:7,variant:"outline"}],story:"Sources confirm: chargers are the fastest way to make a table look 'event-ready.' These bring texture and shine like a headline brings drama."},
+  {id:"blue-plastic-plates",collection:"Everyday Plates",section:"Dining",title:"Blue Plastic Dinner Plates",subtitle:"Bold blue plates perfect for everyday use.",description:"Set of 3 sturdy blue plastic dinner plates with a clean modern rim. Lightweight, easy to clean, and great for everyday meals or outdoor dining.",image:"https://i.imgur.com/f3BAVyl.jpeg",priceLine:"Set of 3 — $12 | Single Plate — $5",options:[{id:"set-3",label:"Add Set of 3",price:12},{id:"single",label:"Add One",price:5,variant:"outline"}],story:"From the everyday desk: three bold blue plates arrive ready for action. Lightweight and easy to clean — perfect for weeknight dinners, outdoor meals, or anyone who just needs a reliable plate."},
+  {id:"forks",collection:"Silverware",section:"Tableware",title:"Forks",subtitle:"Simple stainless forks for everyday meals.",description:"Standard dinner forks that work with any kitchen setup. Great for apartments, dorms, or starter kitchens.",image:"https://i.imgur.com/ZHjtpjV.jpeg",priceLine:"Single Fork — $0.75 | 20 Piece Bundle — $10",options:[{id:"bundle-20",label:"Add 20 Fork Bundle",price:10},{id:"single",label:"Add One",price:0.75,variant:"outline"}],story:"Reliable forks ready for action. Perfect for pasta nights, quick lunches, and the occasional late-night snack."},
+  {id:"spoons",collection:"Silverware",section:"Tableware",title:"Spoons",subtitle:"Classic spoons for cereal, soup, or desserts.",description:"Versatile spoons that handle everything from breakfast cereal to evening ice cream.",image:"https://i.imgur.com/IZpaghE.jpeg",priceLine:"Single Spoon — $0.75 | 20 Piece Bundle — $10",options:[{id:"bundle-20",label:"Add 20 Spoon Bundle",price:10},{id:"single",label:"Add One",price:0.75,variant:"outline"}],story:"Breakfast approved. These spoons are the unsung heroes of cereal, soup, and dessert."},
+  {id:"butter-knives",collection:"Silverware",section:"Tableware",title:"Butter Knives",subtitle:"Perfect for spreading butter, jams, or soft cheeses.",description:"Simple butter knives that complete any table setting and make breakfast toast easier.",image:"https://i.imgur.com/01K4jkn.jpeg",priceLine:"Single Knife — $0.75 | 20 Piece Bundle — $10",options:[{id:"bundle-20",label:"Add 20 Knife Bundle",price:10},{id:"single",label:"Add One",price:0.75,variant:"outline"}],story:"A small tool that makes breakfast better. Ideal for toast, bagels, and weekend brunch."},
+  {id:"vintage-romance-plate",collection:"Vintage Plates",section:"Dining",title:"Vintage Romance Glass Plate",subtitle:"A decorative dinner plate with classic romantic artwork.",description:"A beautiful vintage-style glass dinner plate featuring detailed romantic scenes around the rim and a central illustration.",image:"https://i.imgur.com/iLj6ICw.jpeg",priceLine:"Single Plate — $15",options:[{id:"single",label:"Add One",price:15}],hotDeal:true,story:"Editors confirm: this may be the most charming plate in circulation. With detailed vintage romance scenes around the border, this glass plate turns any dinner into a story worth telling."},
+  {id:"american-eagle-plate",collection:"Vintage Plates",section:"Dining",title:"American Eagle Gold Trim Plate",subtitle:"A bold patriotic glass plate with gold trim.",description:"Vintage-style decorative plate featuring a bald eagle, American flag, drum, and historic imagery.",image:"https://i.imgur.com/0ie0rvR.jpeg",priceLine:"Single Plate — $12",options:[{id:"single",label:"Add One",price:12}],hotDeal:true,story:"Breaking from the patriotic desk: a bold American eagle lands on today's tableware lineup. With a gold trim and historic imagery, this plate feels like something straight out of a collector's cabinet."},
+  {id:"purple-flower-square-plate",collection:"Vintage Plates",section:"Dining",title:"Purple Flower Square Glass Plate",subtitle:"A simple square plate with soft purple flowers.",description:"A square glass plate with a soft yellow background and hand-painted style purple flowers in the center.",image:"https://i.imgur.com/wbAXpwr.jpeg",priceLine:"Single Plate — $10",options:[{id:"single",label:"Add One",price:10}],story:"From the garden desk: a quiet floral plate enters the lineup. With soft purple flowers and a unique square shape, this dish proves simple pieces can still steal the show."},
+  {id:"vintage-fruit-appetizer-plate",collection:"Vintage Plates",section:"Dining",title:"Vintage Fruit Appetizer Plate",subtitle:"A detailed small plate that sits slightly deep like a bowl.",description:"A beautiful vintage square appetizer plate with colorful fruit illustrations and a blue border.",image:"https://i.imgur.com/RFbQzK9.jpeg",priceLine:"Single Plate — $10 | Pair — $15",options:[{id:"pair",label:"Add Both",price:15},{id:"single",label:"Add One",price:10,variant:"outline"}],story:"From the vintage kitchen desk: editors uncovered a beautifully detailed fruit plate hiding in the archives. With raised edges and colorful artwork, it works perfectly for appetizers, salads, or a small dessert worth showing off."},
+  {id:"earth-tone-dinner-plates",collection:"Vintage Plates",section:"Dining",title:"Earth-Tone Heavy Dinner Plates",subtitle:"Large, sleek plates with layered brown tones.",description:"Heavy ceramic dinner plates with layered earth-tone stripes in tan, rust, gray, and chocolate brown.",image:"https://i.imgur.com/WwVyCxT.jpeg",priceLine:"Pair — $15 | Single Plate — $9",options:[{id:"pair",label:"Add Both",price:15},{id:"single",label:"Add One",price:9,variant:"outline"}],story:"Design desk report: a pair of bold earth-tone plates have entered circulation. With layered browns and a sleek finish, these heavy dinner plates bring modern design energy to any table."},
+  {id:"minimal-earth-dinner-plates",collection:"Vintage Plates",section:"Dining",title:"Minimal Earth-Tone Dinner Plates",subtitle:"Simple, smooth plates built for big meals.",description:"Smooth ceramic dinner plates with a soft earth-tone gradient and warm brown rim.",image:"https://i.imgur.com/SLXy3Fd.jpeg",priceLine:"Set of 3 — $16 | Single Plate — $7",options:[{id:"set-3",label:"Add All 3",price:16},{id:"single",label:"Add One",price:7,variant:"outline"}],story:"Kitchen desk update: sometimes the simplest plate is the most useful. These smooth earth-tone dishes are perfect for large meals and everyday dinners."},
+  {id:"coconut-style-glass-bowl",collection:"Bowls",section:"Kitchen",title:"Coconut Style Glass Bowl",subtitle:"A small decorative bowl with tropical style artwork.",description:"A solid glass bowl featuring a colorful plant design and warm orange rim.",image:"https://i.imgur.com/pU4fkqU.jpeg",priceLine:"Single Bowl — $8",options:[{id:"single",label:"Add One",price:8}],story:"From the tropical desk: editors spotted a colorful coconut-style bowl entering the kitchen lineup. Perfect for fruit, snacks, or dessert — a small bowl with island energy."},
+  {id:"fruit-ceramic-creamer",collection:"Drinkware",section:"Morning Edition",title:"Vintage Fruit Ceramic Creamer",subtitle:"A small pouring pitcher for cream, milk, or syrup.",description:"A small ceramic creamer pitcher with colorful fruit designs and a curved handle for easy pouring.",image:"https://i.imgur.com/ST6b5UY.jpeg",priceLine:"Pair — $10 | Single Pitcher — $7",options:[{id:"pair",label:"Add Both",price:10},{id:"single",label:"Add One",price:7,variant:"outline"}],story:"Morning desk discovery: a pair of tiny vintage cream pitchers arrived with colorful fruit artwork and a classic pouring spout."},
+  {id:"clear-stem-glasses",collection:"Drinkware",section:"Morning Edition",title:"Clear Stem Drinking Glasses",subtitle:"Simple heavy glass cups that feel great in your hand.",description:"A set of sturdy clear stemmed glasses made from thick, heavy glass.",image:"https://i.imgur.com/buOSp3B.jpeg",priceLine:"Set of 4 — $15 | Single Glass — $5",options:[{id:"set-4",label:"Add Set of 4",price:15},{id:"single",label:"Add One",price:5,variant:"outline"}],story:"Glassware desk report: four clear stem glasses have entered the lineup. Thick, sturdy, and easy to hold — perfect for water, wine, or whatever drink makes dinner feel complete."},
 ];
 
-const PAGE_ORDER = ["Front Page","Plates","Bowls","Cups","Tableware","Full Inventory"];
+const PAGE_ORDER = ["Front Page","Plates","Bowls","Cups","Tableware","Full Inventory","Notes to the Editor"];
 const PAGE_META = {
   "Front Page":{kicker:"Breaking News",headline:"The Latest From The Daily Dish",subhead:"Featured stories, fresh finds, and curated tableware from today's edition."},
   "Plates":{kicker:"Plates",headline:"Plates Worth Setting the Table For",subhead:"Dinner plates, appetizer plates, charger plates, and standout vintage finds."},
@@ -334,6 +339,7 @@ const PAGE_META = {
   "Cups":{kicker:"Cups",headline:"Drinking Glasses & Cups",subhead:"Everyday drinking glasses — perfect for water, juice, wine, or anything you're pouring."},
   "Tableware":{kicker:"Tableware",headline:"Kitchen Items Seeking New Homes",subhead:"Bundles, basics, and practical pieces that still have personality."},
   "Full Inventory":{kicker:"Full Inventory",headline:"Everything In Today's Paper",subhead:"Browse every available item in one place, regardless of section."},
+  "Notes to the Editor":{kicker:"Notes to the Editor",headline:"Leave Your Mark on The Daily Dish",subhead:"Every letter is read by the editor — your voice shapes the next edition."},
 };
 
 // ─────────────────────────────────────────────
@@ -523,6 +529,7 @@ function renderPage(){
 
   const body=document.getElementById("page-body");
   if(activePage==="Front Page"){ body.innerHTML=renderFrontPage(); }
+  else if(activePage==="Notes to the Editor"){ body.innerHTML=renderLettersPage(); }
   else { body.innerHTML=renderSection(); }
 }
 
@@ -531,9 +538,10 @@ function renderPage(){
 // ─────────────────────────────────────────────
 function renderFrontPage(){
   const dealOfDay = products.find(p=>p.id==="vintage-romance-plate")||products.find(p=>p.hotDeal)||products[0];
-  const latestArrivals = products.slice(-5).reverse();
-  const vintageSpotlight = products.filter(p=>p.collection==="Vintage Plates").slice(0,3);
-  const editorPicks = products.filter(p=>p.id==="lighthouse-plates"||p.id==="red-dinner-plates");
+  const blueCreamer = products.find(p=>p.id==="blue-cream-bowl");
+  const latestArrivals = [...products.slice(-5).reverse(), blueCreamer].filter(Boolean);
+  const vintageSpotlight = products.filter(p=>p.id==="american-eagle-plate"||p.id==="purple-flower-square-plate"||p.id==="vintage-fruit-appetizer-plate").sort((a,b)=>{const order=["american-eagle-plate","purple-flower-square-plate","vintage-fruit-appetizer-plate"];return order.indexOf(a.id)-order.indexOf(b.id);});
+  const editorPicks = products.filter(p=>p.id==="lighthouse-plates"||p.id==="lighthouse-bowls"||p.id==="red-dinner-plates"||p.id==="red-appetizer-plates"||p.id==="red-bowls");
 
   return `
     <!-- HERO -->
@@ -613,6 +621,7 @@ function renderFrontPage(){
         <div class="three-col">
           ${vintageSpotlight.map(item=>`
             <div style="border-top:2px solid var(--ink);padding-top:14px">
+              <img src="${item.image}" alt="${item.title}" style="width:100%;height:120px;object-fit:cover;object-position:center;border-radius:8px;border:2px solid var(--ink);margin-bottom:10px" onerror="this.src='${FALLBACK}'"/>
               <p class="sidebar-item-title">${item.title}</p>
               <p class="sidebar-item-price">${item.priceLine}</p>
               <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
@@ -633,14 +642,43 @@ function renderFrontPage(){
       </div></div>
       <div class="fp-body">
         <p class="about-body">The Daily Dish started as a simple idea: what if a small online shop could feel like reading a newspaper? Instead of headlines about politics or sports, the stories here are about plates, bowls, mugs, and the everyday objects that make a kitchen feel like home.</p>
-        <p class="about-body">I began collecting dishes from thrift stores and secondhand shops because each piece felt unique. Some are colorful, some are simple, but every item has character. Rather than building a typical online store, I wanted to create something fun — a place where browsing dishes feels like flipping through the pages of a newspaper.</p>
-        <p class="about-body">The Daily Dish is a curated kitchen shop built around secondhand finds, character pieces, and a cleaner, more memorable way to browse tableware online.</p>
+        <p class="about-body">I began collecting dishes from thrift stores and secondhand shops because each piece felt unique. Some are colorful, some are simple, but every item has character. Rather than building a typical online store, I wanted to create something fun — a place where browsing dishes feels like flipping through the pages of a newspaper. Every piece I find, I ask myself one question — would I want this in my own kitchen?</p>
+        <p class="about-body">The Daily Dish is a small kitchen shop built around great dishes, unique pieces, and a fun way to find tableware you'll actually love.</p>
         <hr class="about-divider"/>
-        <p style="font-style:italic;font-size:13px;margin-bottom:14px">Written by <strong>Elijah Spivey</strong><br/>Founder, The Daily Dish</p>
-        <p style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:8px">Contact The Daily Dish</p>
-        <p class="contact-item">📷 Instagram: <a href="https://instagram.com/thedailydish.official" target="_blank" style="color:var(--ink)">@thedailydish.official</a></p>
-        <p class="contact-item">📘 Facebook: <a href="https://facebook.com/thedailydish.official" target="_blank" style="color:var(--ink)">@thedailydish.official</a></p>
-        <p class="contact-item">✉️ Email: <a href="mailto:thedailydishshop@gmail.com" style="color:var(--ink)">thedailydishshop@gmail.com</a></p>
+        <p style="font-family:var(--display);font-size:22px;font-weight:900;text-transform:uppercase;text-align:center;margin-bottom:16px">Why Should You Buy From The Daily Dish?</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:22px">
+          <div style="border:2px solid var(--ink);border-radius:12px;padding:18px;background:var(--cream);text-align:center">
+            <div style="font-size:28px;margin-bottom:10px">🔍</div>
+            <p style="font-weight:700;text-transform:uppercase;font-size:13px;margin-bottom:6px">Handpicked Finds</p>
+            <p style="font-size:12px;line-height:1.6;opacity:.8">Every item is personally selected by our team — no bulk buying, no filler. Just pieces worth owning.</p>
+          </div>
+          <div style="border:2px solid var(--ink);border-radius:12px;padding:18px;background:var(--cream);text-align:center">
+            <div style="font-size:28px;margin-bottom:10px">💰</div>
+            <p style="font-weight:700;text-transform:uppercase;font-size:13px;margin-bottom:6px">Affordable Prices</p>
+            <p style="font-size:12px;line-height:1.6;opacity:.8">Premium quality dishes at prices that make sense. Most items under $15 — sets included.</p>
+          </div>
+          <div style="border:2px solid var(--ink);border-radius:12px;padding:18px;background:var(--cream);text-align:center">
+            <div style="font-size:28px;margin-bottom:10px">✨</div>
+            <p style="font-weight:700;text-transform:uppercase;font-size:13px;margin-bottom:6px">One of a Kind</p>
+            <p style="font-size:12px;line-height:1.6;opacity:.8">These aren't mass produced. Each piece has character — the kind you can't find at a big box store.</p>
+          </div>
+          <div style="border:2px solid var(--ink);border-radius:12px;padding:18px;background:var(--cream);text-align:center">
+            <div style="font-size:28px;margin-bottom:10px">📦</div>
+            <p style="font-weight:700;text-transform:uppercase;font-size:13px;margin-bottom:6px">Ship or Pick Up</p>
+            <p style="font-size:12px;line-height:1.6;opacity:.8">Choose local pickup for free or ship straight to your door. Packed with care every time.</p>
+          </div>
+          <div style="border:2px solid var(--ink);border-radius:12px;padding:18px;background:var(--cream);text-align:center">
+            <div style="font-size:28px;margin-bottom:10px">💌</div>
+            <p style="font-weight:700;text-transform:uppercase;font-size:13px;margin-bottom:6px">Request Anything</p>
+            <p style="font-size:12px;line-height:1.6;opacity:.8">Don't see what you need? Write a letter and Elijah will hunt it down on his next search for new dishes.</p>
+          </div>
+        </div>
+        <hr class="about-divider"/>
+        <p style="font-style:italic;font-size:13px;margin-bottom:14px;text-align:center">Written by <strong>Elijah Spivey</strong><br/>Founder, The Daily Dish</p>
+        <p style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:8px;text-align:center">Contact The Daily Dish</p>
+        <p class="contact-item" style="text-align:center">📷 Instagram: <a href="https://instagram.com/thedailydish.official" target="_blank" style="color:var(--ink)">@thedailydish.official</a></p>
+        <p class="contact-item" style="text-align:center">📘 Facebook: <a href="https://facebook.com/thedailydish.official" target="_blank" style="color:var(--ink)">@thedailydish.official</a></p>
+        <p class="contact-item" style="text-align:center">✉️ Email: <a href="mailto:thedailydishshop@gmail.com" style="color:var(--ink)">thedailydishshop@gmail.com</a></p>
       </div>
     </div>
   `;
@@ -684,11 +722,95 @@ function renderSection(){
 }
 
 // ─────────────────────────────────────────────
+// RENDER LETTERS PAGE
+// ─────────────────────────────────────────────
+function renderLettersPage(){
+  return `
+    <div class="fp-section" style="margin-bottom:22px">
+      <div class="fp-section-header">
+        <div>
+          <p class="fp-kicker">Write In</p>
+          <h3 class="fp-title">Notes to the Editor</h3>
+        </div>
+        <span style="font-size:20px">✉️</span>
+      </div>
+      <div class="fp-body">
+        <p style="font-size:14px;line-height:1.75;margin-bottom:20px">
+          Got a request? Want a specific color, style, or set? Looking for something you can't find anywhere else?
+          Write it in and our team will get back to you same day, and we will do our best to track down what you are looking for.
+        </p>
+        <div style="display:grid;gap:14px">
+          <div>
+            <label style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:6px">Your Name</label>
+            <input id="letter-name" type="text" placeholder="First name is fine!" style="width:100%;padding:10px 14px;font-size:14px;font-family:var(--serif);border:2px solid var(--ink);border-radius:10px;background:var(--cream);color:var(--ink);outline:none"/>
+          </div>
+          <div>
+            <label style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:6px">Your Email (so Elijah can reply!)</label>
+            <input id="letter-email" type="email" placeholder="your@email.com" style="width:100%;padding:10px 14px;font-size:14px;font-family:var(--serif);border:2px solid var(--ink);border-radius:10px;background:var(--cream);color:var(--ink);outline:none"/>
+          </div>
+          <div>
+            <label style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:6px">Your Letter</label>
+            <textarea id="letter-message" rows="6" placeholder="Tell us what you're looking for — a specific dish, color, style, set, or just say hello..." style="width:100%;padding:10px 14px;font-size:14px;font-family:var(--serif);border:2px solid var(--ink);border-radius:10px;background:var(--cream);color:var(--ink);outline:none;resize:vertical"></textarea>
+          </div>
+          <div id="letter-status" style="display:none;padding:10px 14px;border-radius:10px;font-size:13px;font-weight:700"></div>
+          <button onclick="submitLetter()" style="padding:13px;font-size:14px;font-weight:700;border:2px solid var(--ink);border-radius:12px;background:var(--ink);color:var(--cream);font-family:var(--serif);cursor:pointer">
+            Send Note to The Daily Dish ✉️
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="fp-section">
+      <div class="fp-section-header"><div>
+        <p class="fp-kicker">From the Editor's Desk</p>
+        <h3 class="fp-title">A Note from Elijah</h3>
+      </div></div>
+      <div class="fp-body">
+        <p style="font-size:14px;line-height:1.8;margin-bottom:16px">Every letter I receive is read personally. If you're looking for something specific — a color, a pattern, a full set — I'll do my best to find it on my next search for new dishes. The Daily Dish is built around what you actually want in your kitchen. Your requests shape what ends up in the next edition.</p>
+        <hr style="border:none;border-top:2px solid var(--ink);margin:16px 0"/>
+        <p style="font-style:italic;font-size:13px">— Elijah Spivey, Founder & Editor of The Daily Dish</p>
+        <p style="font-size:13px;margin-top:8px">📷 @thedailydish.official</p>
+        <p style="font-size:13px">✉️ thedailydishshop@gmail.com</p>
+      </div>
+    </div>
+  `;
+}
+
+async function submitLetter(){
+  const name=document.getElementById("letter-name").value.trim();
+  const email=document.getElementById("letter-email").value.trim();
+  const message=document.getElementById("letter-message").value.trim();
+  const status=document.getElementById("letter-status");
+  if(!name||!message){
+    status.style.display="block";
+    status.style.background="#fef2f2";
+    status.style.border="1px solid #fca5a5";
+    status.style.color="#b91c1c";
+    status.textContent="Please fill in your name and message before sending!";
+    return;
+  }
+  const mailto=`mailto:thedailydishshop@gmail.com?subject=Letter to The Daily Dish from ${encodeURIComponent(name)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`)}`;
+  window.location.href=mailto;
+  status.style.display="block";
+  status.style.background="#f0fdf4";
+  status.style.border="1px solid #86efac";
+  status.style.color="#15803d";
+  status.textContent="✅ Your letter is ready to send — check your email app!";
+}
+
+// ─────────────────────────────────────────────
 // INIT
 // ─────────────────────────────────────────────
 renderNav();
 renderPage();
 updateCartUI();
+
+// Auto edition date
+(function(){
+  const now = new Date();
+  const dateStr = now.toLocaleDateString("en-US", {month:"2-digit",day:"2-digit",year:"numeric"});
+  const vol = Math.floor((now - new Date("2026-04-01")) / (1000*60*60*24)) + 1;
+  document.getElementById("edition-date").textContent = `Vol. 1 · No. ${vol} · ${dateStr}`;
+})();
 </script>
 </body>
 </html>
