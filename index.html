@@ -102,8 +102,8 @@ button{cursor:pointer;font-family:var(--serif)}
 .fp-body{padding:20px}
 .hero-grid{display:grid;grid-template-columns:1fr 1fr}
 @media(max-width:680px){.hero-grid{grid-template-columns:1fr}}
-.hero-img{width:100%;height:270px;object-fit:cover;object-position:center;border-right:2px solid var(--ink)}
-@media(max-width:680px){.hero-img{border-right:none;border-bottom:2px solid var(--ink)}}
+.hero-img{width:100%;height:340px;object-fit:contain;object-position:center;border-right:2px solid var(--ink);background:linear-gradient(135deg,#f9f3e8,#f0e6d0);padding:20px}
+@media(max-width:680px){.hero-img{border-right:none;border-bottom:2px solid var(--ink);object-fit:contain;background:linear-gradient(135deg,#f9f3e8,#f0e6d0);padding:20px}}
 .hero-content{padding:22px}
 .hero-product-title{font-family:var(--display);font-size:22px;font-weight:900;text-transform:uppercase;margin-bottom:8px;line-height:1.2}
 .story-text{font-size:13px;line-height:1.75;margin-bottom:14px}
@@ -187,20 +187,19 @@ button{cursor:pointer;font-family:var(--serif)}
   .navbar{padding:10px 14px}
 }
 
-/* ── MOBILE LAYOUT (max 768px) ── */
 @media(max-width:768px){
-
   /* Masthead */
   .masthead-rule h1{font-size:clamp(26px,8vw,42px)}
   .masthead-tagline{font-size:11px}
 
-  /* Nav — horizontal scroll */
-  .navbar{flex-direction:column;gap:8px;padding:10px 12px}
-  .nav-links{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  /* Nav — clean horizontal scroll, bigger tap targets */
+  .navbar{flex-direction:column;gap:6px;padding:8px 12px}
+  .nav-links{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:8px;padding:4px 0 8px;-webkit-overflow-scrolling:touch;scrollbar-width:none;width:100%}
   .nav-links::-webkit-scrollbar{display:none}
-  .nav-btn{font-size:10px;padding:5px 12px;white-space:nowrap;flex-shrink:0}
+  .nav-btn{font-size:12px;padding:8px 16px;white-space:nowrap;flex-shrink:0;border-radius:8px;border:2px solid rgba(0,0,0,0.25)}
+  .nav-btn.active{background:var(--ink);color:var(--cream);border-color:var(--ink)}
 
-  /* Edition date + cart on same row */
+  /* Cart row */
   .navbar > div:last-child{display:flex;align-items:center;justify-content:space-between;width:100%}
 
   /* Page header */
@@ -210,7 +209,7 @@ button{cursor:pointer;font-family:var(--serif)}
 
   /* Hero section — stack vertically */
   .hero-grid{display:flex;flex-direction:column}
-  .hero-img{width:100%;height:220px;border-right:none;border-bottom:2px solid var(--ink)}
+  .hero-img{width:100%;height:280px;object-fit:contain;object-position:center;border-right:none;border-bottom:2px solid var(--ink);background:linear-gradient(135deg,#f9f3e8,#f0e6d0);padding:20px}
 
   /* Two col — single column on mobile */
   .two-col{grid-template-columns:1fr}
@@ -232,7 +231,7 @@ button{cursor:pointer;font-family:var(--serif)}
 
   /* Page footer nav */
   .page-footer{padding:12px 14px}
-  .page-nav-btn{padding:8px 12px;font-size:12px}
+  .page-nav-btn{padding:10px 16px;font-size:13px}
 
   /* Cart drawer — full screen on mobile */
   .cart-drawer{max-width:100%}
@@ -376,7 +375,6 @@ const products = [
   {id:"forks",collection:"Silverware",section:"Tableware",title:"Forks",subtitle:"Simple stainless forks for everyday meals.",description:"Standard dinner forks that work with any kitchen setup. Great for apartments, dorms, or starter kitchens.",image:"https://i.imgur.com/ZHjtpjV.jpeg",priceLine:"Single Fork — $0.75 | 20 Piece Bundle — $10",options:[{id:"bundle-20",label:"Add 20 Fork Bundle",price:10},{id:"single",label:"Add One",price:0.75,variant:"outline"}],story:"Reliable forks ready for action. Perfect for pasta nights, quick lunches, and the occasional late-night snack."},
   {id:"spoons",collection:"Silverware",section:"Tableware",title:"Spoons",subtitle:"Classic spoons for cereal, soup, or desserts.",description:"Versatile spoons that handle everything from breakfast cereal to evening ice cream.",image:"https://i.imgur.com/IZpaghE.jpeg",priceLine:"Single Spoon — $0.75 | 20 Piece Bundle — $10",options:[{id:"bundle-20",label:"Add 20 Spoon Bundle",price:10},{id:"single",label:"Add One",price:0.75,variant:"outline"}],story:"Breakfast approved. These spoons are the unsung heroes of cereal, soup, and dessert."},
   {id:"butter-knives",collection:"Silverware",section:"Tableware",title:"Butter Knives",subtitle:"Perfect for spreading butter, jams, or soft cheeses.",description:"Simple butter knives that complete any table setting and make breakfast toast easier.",image:"https://i.imgur.com/01K4jkn.jpeg",priceLine:"Single Knife — $0.75 | 20 Piece Bundle — $10",options:[{id:"bundle-20",label:"Add 20 Knife Bundle",price:10},{id:"single",label:"Add One",price:0.75,variant:"outline"}],story:"A small tool that makes breakfast better. Ideal for toast, bagels, and weekend brunch."},
-  {id:"vintage-romance-plate",oneOfOne:true,collection:"Vintage Plates",section:"Dining",title:"Vintage Romance Glass Plate",subtitle:"A decorative dinner plate with classic romantic artwork.",description:"A beautiful vintage-style glass dinner plate featuring detailed romantic scenes around the rim and a central illustration.",image:"https://i.imgur.com/iLj6ICw.jpeg",priceLine:"Single Plate — $15",options:[{id:"single",label:"Add One",price:15}],hotDeal:true,story:"Editors confirm: this may be the most charming plate in circulation. With detailed vintage romance scenes around the border, this glass plate turns any dinner into a story worth telling."},
   {id:"american-eagle-plate",oneOfOne:true,collection:"Vintage Plates",section:"Dining",title:"American Eagle Gold Trim Plate",subtitle:"A bold patriotic glass plate with gold trim.",description:"Vintage-style decorative plate featuring a bald eagle, American flag, drum, and historic imagery.",image:"https://i.imgur.com/0ie0rvR.jpeg",priceLine:"Single Plate — $12",options:[{id:"single",label:"Add One",price:12}],hotDeal:true,story:"Breaking from the patriotic desk: a bold American eagle lands on today's tableware lineup. With a gold trim and historic imagery, this plate feels like something straight out of a collector's cabinet."},
   {id:"purple-flower-square-plate",oneOfOne:true,collection:"Vintage Plates",section:"Dining",title:"Purple Flower Square Glass Plate",subtitle:"A simple square plate with soft purple flowers.",description:"A square glass plate with a soft yellow background and hand-painted style purple flowers in the center.",image:"https://i.imgur.com/wbAXpwr.jpeg",priceLine:"Single Plate — $10",options:[{id:"single",label:"Add One",price:10}],story:"From the garden desk: a quiet floral plate enters the lineup. With soft purple flowers and a unique square shape, this dish proves simple pieces can still steal the show."},
   {id:"vintage-fruit-appetizer-plate",collection:"Vintage Plates",section:"Dining",title:"Vintage Fruit Appetizer Plate",subtitle:"A detailed small plate that sits slightly deep like a bowl.",description:"A beautiful vintage square appetizer plate with colorful fruit illustrations and a blue border.",image:"https://i.imgur.com/RFbQzK9.jpeg",priceLine:"Single Plate — $10 | Pair — $15",options:[{id:"pair",label:"Add Both",price:15},{id:"single",label:"Add One",price:10,variant:"outline"}],story:"From the vintage kitchen desk: editors uncovered a beautifully detailed fruit plate hiding in the archives. With raised edges and colorful artwork, it works perfectly for appetizers, salads, or a small dessert worth showing off."},
@@ -402,8 +400,7 @@ const products = [
   {id:"southwest-ranch-plate",oneOfOne:true,collection:"Plates",section:"Dining",title:"Southwest Ranch Plate",subtitle:"A large dinner plate with a rich southwestern geometric rim design.",description:"A large dinner plate with a rich southwestern geometric rim design — detailed patterns that bring a global spirit to your table. Clean white center lets the bold border do all the talking.",image:"https://i.imgur.com/us8luRh.jpeg",priceLine:"Single Plate — $8",options:[{id:"single",label:"Add One",price:8}],addedAt:"2026-04-06",story:"From the plates desk — a unique southwestern ranch plate just landed in the shop. One available and the rim design is unlike anything we've had before."},
   {id:"blue-rimmed-deep-plate",oneOfOne:true,collection:"Plates",section:"Dining",title:"Blue Rimmed Deep Dinner Plate",subtitle:"A large heavy plate that works just as well for soup as it does for dinner.",description:"A large heavy plate with a bold blue and white wave pattern around the rim and a deep center that works just as well for soup as it does for dinner. Seriously heavy and seriously cool.",image:"https://i.imgur.com/FCsqILC.jpeg",priceLine:"Single Plate — $8",options:[{id:"single",label:"Add One",price:8}],addedAt:"2026-04-06",story:"From the plates desk — a bold blue rimmed deep plate just arrived. Heavy glass, cool design, and a shape that works for anything you put in it."},
   // ── NEW DROPS ──
-  {id:"tallboy-beer-glasses",collection:"Drinkware",section:"Morning Edition",title:"Clear Tallboy Beer Glasses",subtitle:"Heavy clear glass tallboy beer glasses — perfect for any cold drink.",description:"Heavy clear glass tallboy beer glasses with a classic pilsner shape — wide at the top, narrow at the base. Sturdy, clean and perfect for beer, juice, or whatever you're pouring.",image:"https://i.imgur.com/k6cnpxc.jpeg",priceLine:"Single — $4 | All 4 — $15",options:[{id:"set-4",label:"Add All 4",price:15},{id:"single",label:"Add One",price:4,variant:"outline"}],addedAt:"2026-04-07",story:"From the glassware desk — four heavy tallboy beer glasses just landed in the shop. Classic shape, solid glass, and ready for game night."},
-  {id:"mosaic-mandala-plate",oneOfOne:true,collection:"Plates",section:"Dining",title:"Mosaic Mandala Plate",subtitle:"A stunning decorative plate covered in an intricate mosaic mandala design.",description:"A stunning decorative plate covered in an intricate mosaic mandala design — cream and white pebble shapes scattered across a deep burgundy background with a gold floral center and gold rim. The kind of plate that looks like art on your table.",image:"https://i.imgur.com/4cWnAVt.jpeg",priceLine:"Single Plate — $9",options:[{id:"single",label:"Add One",price:9}],addedAt:"2026-04-07",story:"From the plates desk — a one of a kind mosaic mandala plate just made it into the shop. Intricate, beautiful, and unlike anything else we've carried."},
+  {id:"mosaic-mandala-plate",oneOfOne:true,collection:"Plates",section:"Dining",title:"Mosaic Mandala Plate",subtitle:"A stunning decorative plate covered in an intricate mosaic mandala design.",description:"Honestly this might be the coolest plate we've ever had in the shop. Deep burgundy background covered in cream pebble shapes, a gold floral center, and a gold rim that ties the whole thing together. It's the kind of plate you put on the table and everyone asks about it.",image:"https://i.imgur.com/4cWnAVt.jpeg",priceLine:"Single Plate — $9",options:[{id:"single",label:"Add One",price:9}],addedAt:"2026-04-07",story:"We don't say this often but this one stopped us in our tracks. A mosaic mandala design in burgundy, cream and gold — detailed, beautiful, and there's only one. Don't think too long on this one."},
   {id:"black-white-split-bowl",oneOfOne:true,collection:"Bowls",section:"Kitchen",title:"Black & White Split Bowl",subtitle:"A large heavy glass bowl split right down the middle in black and white.",description:"A large heavy glass bowl split right down the middle — one half clean white, the other deep matte black. Bold, modern and completely one of a kind. The kind of bowl that makes people ask where you got it.",image:"https://i.imgur.com/POgGZEG.jpeg",priceLine:"Single Bowl — $10",options:[{id:"single",label:"Add One",price:10}],addedAt:"2026-04-07",story:"From the bowls desk — a bold black and white split bowl just arrived. Heavy glass, modern design, and seriously striking on any table."},
   {id:"white-embossed-floral-plate",collection:"Plates",section:"Dining",title:"White Embossed Floral Plate",subtitle:"A large heavy white glass plate with a raised floral design around the rim.",description:"A large heavy glass dinner plate in clean white with a beautifully detailed raised floral and fruit design embossed around the rim. Elegant without trying too hard — the kind of plate that makes a simple meal feel special.",image:"https://i.imgur.com/6ZJb0Jk.jpeg",priceLine:"Single — $5 | All 5 — $20",options:[{id:"set-5",label:"Add All 5",price:20},{id:"single",label:"Add One",price:5,variant:"outline"}],addedAt:"2026-04-07",story:"From the plates desk — five elegant white embossed floral plates just landed in the shop. Raised rim detail, heavy glass, and a clean look that works with anything."},
   {id:"solid-black-bowl",collection:"Bowls",section:"Kitchen",title:"Solid Black Ceramic Bowl",subtitle:"A sleek solid black ceramic bowl with a glossy finish.",description:"A sleek solid black ceramic bowl with a glossy finish inside and out. Clean, modern and the kind of bowl that goes with everything. Perfect for soup, cereal, or anything you want to look a little more intentional.",image:"https://i.imgur.com/5ct0WgG.jpeg",priceLine:"Single Bowl — $5 | All 3 — $12",options:[{id:"set-3",label:"Add All 3",price:12},{id:"single",label:"Add One",price:5,variant:"outline"}],addedAt:"2026-04-07",story:"From the bowls desk — a clean solid black ceramic bowl just made it into the shop. Simple, bold, and works with any kitchen style."},
@@ -432,7 +429,7 @@ const INVENTORY = {
   "red-dinner-plates__set-3":1,"red-dinner-plates__single":3,
   "red-appetizer-plates__set-4":1,"red-appetizer-plates__single":4,
   "american-eagle-plate__single":1,
-  "vintage-romance-plate__single":1,
+  "vintage-romance-plate__single":0,
   "purple-flower-square-plate__single":1,
   "vintage-fruit-appetizer-plate__pair":1,"vintage-fruit-appetizer-plate__single":2,
   "earth-tone-dinner-plates__pair":1,"earth-tone-dinner-plates__single":2,
@@ -446,7 +443,7 @@ const INVENTORY = {
   "deep-red-square-plate__set-3":1,"deep-red-square-plate__single":3,
   "southwest-ranch-plate__single":1,
   "blue-rimmed-deep-plate__single":1,
-  "tallboy-beer-glasses__set-4":1,"tallboy-beer-glasses__single":4,
+  "tallboy-beer-glasses__set-4":0,"tallboy-beer-glasses__single":0,
   "mosaic-mandala-plate__single":1,
   "black-white-split-bowl__single":1,
   "white-embossed-floral-plate__set-5":1,"white-embossed-floral-plate__single":5,
@@ -694,39 +691,44 @@ function renderPage(){
 // RENDER FRONT PAGE
 // ─────────────────────────────────────────────
 function renderFrontPage(){
-  const dealOfDay = products.find(p=>p.id==="american-eagle-plate")||deals[0]||products[0];
+  const dealOfDay = products.find(p=>p.id==="mosaic-mandala-plate")||deals[0]||products[0];
   const blueCreamer = products.find(p=>p.id==="blue-cream-bowl");
   const boldStripe = products.find(p=>p.id==="bold-stripe-plate");
   const latestArrivals = [...products.slice(-6).reverse(), blueCreamer, boldStripe].filter((p,i,a)=>p&&a.findIndex(x=>x&&x.id===p.id)===i).slice(0,6);
-  const vintageSpotlight = products.filter(p=>p.id==="vintage-romance-plate"||p.id==="purple-flower-square-plate"||p.id==="vintage-fruit-appetizer-plate").sort((a,b)=>{const order=["vintage-romance-plate","purple-flower-square-plate","vintage-fruit-appetizer-plate"];return order.indexOf(a.id)-order.indexOf(b.id);});
+  const vintageSpotlight = products.filter(p=>p.id==="american-eagle-plate"||p.id==="southwest-ranch-plate"||p.id==="vintage-fruit-appetizer-plate").sort((a,b)=>{const order=["american-eagle-plate","southwest-ranch-plate","vintage-fruit-appetizer-plate"];return order.indexOf(a.id)-order.indexOf(b.id);});
   const editorPicks = products.filter(p=>p.id==="lighthouse-plates"||p.id==="lighthouse-bowls"||p.id==="red-dinner-plates"||p.id==="red-appetizer-plates"||p.id==="red-bowls");
 
   return `
     <!-- HERO -->
-    <div class="fp-section">
-      <div class="fp-section-header">
+    <div style="margin-bottom:22px;background:#1f1b16;border:3px solid #1f1b16;border-radius:14px;overflow:hidden;box-shadow:4px 4px 0 #1f1b16">
+      <div style="padding:14px 20px;border-bottom:2px solid rgba(244,236,216,.2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
         <div>
-          <p class="fp-kicker">Featured Story</p>
-          <h3 class="fp-title">Today's Front Page Pick</h3>
+          <p style="font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#f4ecd8;opacity:.6;margin-bottom:4px">⭐ Featured Story</p>
+          <h3 style="font-family:var(--display);font-size:clamp(18px,3.5vw,26px);font-weight:900;text-transform:uppercase;color:#f4ecd8;line-height:1.1">Today's Front Page Pick</h3>
         </div>
-        <span class="hot-badge">🔥 Hot Deal</span>
+        <span class="hot-badge">🔥 Editor's Pick</span>
       </div>
-      <div class="hero-grid">
-        <img class="hero-img" src="${dealOfDay.image}" alt="${dealOfDay.title}" onerror="this.src='${FALLBACK}'"/>
-        <div class="hero-content">
-          <h3 class="hero-product-title">${dealOfDay.title}</h3>
-          <p style="font-style:italic;font-size:14px;margin-bottom:10px">${dealOfDay.subtitle}</p>
-          <p class="story-text">${dealOfDay.story}</p>
-          <p style="font-weight:700;margin-bottom:14px">${dealOfDay.priceLine}</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr" class="hero-grid">
+        <div style="background:linear-gradient(135deg,#2d2820,#1f1b16);display:flex;align-items:center;justify-content:center;border-right:2px solid rgba(244,236,216,.15);min-height:300px;position:relative;overflow:hidden">
+          <img src="${dealOfDay.image}" alt="${dealOfDay.title}" style="width:90%;height:90%;object-fit:cover;object-position:50% 50%;filter:drop-shadow(0 8px 24px rgba(0,0,0,.6));mask-image:radial-gradient(ellipse 75% 75% at 50% 50%,black 45%,transparent 100%);-webkit-mask-image:radial-gradient(ellipse 75% 75% at 50% 50%,black 45%,transparent 100%);display:block;margin:auto" onerror="this.src='${FALLBACK}'"/>
+        </div>
+        <div style="padding:24px;display:flex;flex-direction:column;justify-content:center">
+          <h3 style="font-family:var(--display);font-size:20px;font-weight:900;text-transform:uppercase;color:#f4ecd8;margin-bottom:8px;line-height:1.2">${dealOfDay.title}</h3>
+          <p style="font-style:italic;font-size:13px;margin-bottom:12px;color:#f4ecd8;opacity:.75">${dealOfDay.subtitle}</p>
+          <p style="font-size:13px;line-height:1.7;color:#f4ecd8;opacity:.85;margin-bottom:14px">${dealOfDay.story}</p>
+          <p style="font-weight:700;margin-bottom:16px;color:#f4ecd8;font-size:15px">${dealOfDay.priceLine}</p>
           <div style="display:flex;flex-wrap:wrap;gap:8px">
             ${dealOfDay.options.slice(0,2).map(o=>`
-              <button class="product-add-btn ${o.variant==="outline"?"outline":"solid"}" onclick="addToCart('${dealOfDay.id}','${o.id}')">
+              <button style="font-family:var(--serif);padding:10px 18px;font-size:13px;font-weight:700;border:2px solid #f4ecd8;border-radius:8px;background:#f4ecd8;color:#1f1b16;cursor:pointer" onclick="addToCart('${dealOfDay.id}','${o.id}')">
                 ${o.label} (${money(o.price)})
               </button>
             `).join("")}
-            <button class="product-add-btn outline" onclick="goToPage('${getPageForProduct(dealOfDay)}')">Browse Section →</button>
+            <button style="font-family:var(--serif);padding:10px 18px;font-size:13px;font-weight:700;border:2px solid rgba(244,236,216,.4);border-radius:8px;background:transparent;color:#f4ecd8;cursor:pointer" onclick="goToPage('${getPageForProduct(dealOfDay)}')">Browse Section →</button>
           </div>
         </div>
+      </div>
+      <div style="padding:8px 20px;background:rgba(255,255,255,.05);border-top:2px solid rgba(244,236,216,.1)">
+        <p style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#f4ecd8;opacity:.5">🗞️ Handpicked by The Daily Dish · Limited stock · One of a kind</p>
       </div>
     </div>
 
