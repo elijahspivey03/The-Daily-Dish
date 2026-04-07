@@ -44,7 +44,7 @@ button{cursor:pointer;font-family:var(--serif)}
 /* ── Nav bar ── */
 .navbar{padding:10px 20px;border-bottom:var(--border-heavy);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
 .nav-links{display:flex;flex-wrap:wrap;gap:7px}
-.nav-btn{padding:5px 14px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;border:2px solid rgba(0,0,0,0.35);border-radius:999px;background:transparent;color:var(--ink);transition:all .15s;font-family:var(--serif);font-weight:400}
+.nav-btn{padding:4px 10px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;border:2px solid rgba(0,0,0,0.35);border-radius:999px;background:transparent;color:var(--ink);transition:all .15s;font-family:var(--serif);font-weight:400}
 .nav-btn:hover{border-color:var(--ink)}
 .nav-btn.active{border-color:var(--ink);background:var(--cream);font-weight:700}
 .cart-btn{padding:8px 18px;font-size:13px;font-weight:700;border:2px solid var(--ink);border-radius:var(--radius-sm);background:var(--ink);color:var(--cream);transition:opacity .15s}
@@ -214,6 +214,8 @@ button{cursor:pointer;font-family:var(--serif)}
   /* Two col — single column on mobile */
   .two-col{grid-template-columns:1fr}
   .three-col{grid-template-columns:1fr 1fr}
+  .archive-mobile-only{display:none}
+  @media(max-width:768px){.archive-mobile-only{display:block !important}}
 
   /* Product grid — single column */
   .product-grid{grid-template-columns:1fr}
@@ -369,13 +371,13 @@ const products = [
   {id:"grapevine-plate",oneOfOne:true,collection:"Plates",section:"Dining",title:"Grapevine Dinner Plate",subtitle:"A medium glass plate with a detailed grapevine and flower illustration around the rim.",description:"A medium sized glass plate with a detailed grapevine and flower illustration wrapped around the rim in deep blue, green and burgundy. The kind of plate that looks like it came from your grandmother's good china collection — in the best possible way.",image:"https://i.imgur.com/hdDJXtD.jpeg",priceLine:"Single Plate — $6",options:[{id:"single",label:"Add One",price:6}],addedAt:"2026-04-07",story:"From the plates desk — a beautiful grapevine dinner plate just landed in the shop. Detailed, pretty, and only one available."},
   {id:"magnolia-floral-bowl",oneOfOne:true,collection:"Bowls",section:"Kitchen",title:"Magnolia Soup Bowl",subtitle:"A wide soup bowl with magnolia flowers, cherries and leaves painted around the rim.",description:"A wide glass soup bowl with a deep green and red rim and a soft magnolia flower illustration painted in the center. Cherries, pinecones and leaves fill out the border and give it a really warm natural vibe.",image:"https://i.imgur.com/pU437LJ.jpeg",priceLine:"Single Bowl — $8",options:[{id:"single",label:"Add One",price:8}],addedAt:"2026-04-07",story:"From the bowls desk — a gorgeous magnolia floral soup bowl just made it into the shop. Warm, natural, and the kind of piece that makes breakfast feel intentional."},
   {id:"red-dinner-plates",collection:"Red Glass Collection",section:"Dining",title:"Red Glass Dinner Plates",subtitle:"Bold red glass plates that make every meal feel like an occasion.",description:"These are heavy, deep red glass dinner plates that look way more expensive than they are. If you want your table to actually look good, these are the ones.",image:"https://i.imgur.com/EdI3INH.jpeg",priceLine:"Set of 3 — $15 | Single Plate — $6",options:[{id:"set-3",label:"Add Set of 3",price:15},{id:"single",label:"Add One",price:6,variant:"outline"}],story:"Bold color, solid glass, and a price that makes sense. These red dinner plates are the kind of thing you put on the table and people notice."},
-  {id:"white-embossed-floral-plate",collection:"Plates",section:"Dining",title:"White Embossed Floral Plates",subtitle:"Clean white plates with a raised flower and fruit design around the rim.",description:"Five heavy white glass dinner plates with a beautiful raised floral and fruit pattern embossed all the way around the rim. They're elegant without being fussy and look great on basically any table.",image:"https://i.imgur.com/6ZJb0Jk.jpeg",priceLine:"Single — $5 | All 5 — $20",options:[{id:"set-5",label:"Add All 5",price:20},{id:"single",label:"Add One",price:5,variant:"outline"}],addedAt:"2026-04-07",story:"From the plates desk — five elegant white embossed floral plates just landed in the shop. Raised rim detail, heavy glass, and a clean look that works with anything."},
-  {id:"centerpiece-bowl",collection:"Bowls",section:"Kitchen",title:"The Statement Bowl",subtitle:"Big, bold, and made to sit in the middle of your table.",description:"A ceramic bowl with a colorful painted band around the outside that looks great whether you're using it or just leaving it out. It's the kind of piece that makes your kitchen feel a little more put together without trying too hard.",image:"https://i.imgur.com/ZPXaQFI.jpeg",priceLine:"Single Bowl — $10 | Both — $15",options:[{id:"both",label:"Add Both",price:15},{id:"single",label:"Add One",price:10,variant:"outline"}],hotDeal:true,story:"Witnesses report a sudden spike in popcorn consumption across the city. Investigators confirm the cause: one bold ceramic bowl with a decorative band, spotted making every table look expensive."},
+  {id:"white-embossed-floral-plate",collection:"Plates",section:"Dining",title:"White Floral Rim Plates",subtitle:"Clean white plates with a raised flower and fruit design around the rim.",description:"Five heavy white glass dinner plates with a beautiful raised floral and fruit pattern embossed all the way around the rim. They're elegant without being fussy and look great on basically any table.",image:"https://i.imgur.com/6ZJb0Jk.jpeg",priceLine:"Single — $4 | All 5 — $18",options:[{id:"set-5",label:"Add All 5",price:18},{id:"single",label:"Add One",price:4,variant:"outline"}],addedAt:"2026-04-07",story:"From the plates desk — five elegant white floral rim plates just landed in the shop. Raised rim detail, heavy glass, and a clean look that works with anything."},
+  {id:"centerpiece-bowl",collection:"Bowls",section:"Kitchen",title:"Big Centerpiece Popcorn Bowl",subtitle:"A big bold bowl made for the middle of the table — or a massive bowl of popcorn.",description:"A ceramic bowl with a colorful painted band around the outside that looks great whether you're using it or just leaving it out. It's the kind of piece that makes your kitchen feel a little more put together without trying too hard.",image:"https://i.imgur.com/ZPXaQFI.jpeg",priceLine:"Single Bowl — $10 | Both — $12",options:[{id:"both",label:"Add Both",price:12},{id:"single",label:"Add One",price:10,variant:"outline"}],hotDeal:true,story:"Witnesses report a sudden spike in popcorn consumption across the city. Investigators confirm the cause: one bold ceramic bowl with a decorative band, spotted making every table look expensive."},
   {id:"orange-swirl-plates",collection:"Plates",section:"Dining",title:"Sunset Orange Swirl Plates",subtitle:"Heavy glass plates in a warm sunny orange with a hand-swirled finish.",description:"Same heavy glass quality as the ocean blue swirl plates but in a bold sunny orange that looks incredible on any table. A warm swirled finish that looks totally handmade and completely one of a kind.",image:"https://i.imgur.com/j8d3d1H.jpeg",priceLine:"Single — $6 | Both — $10",options:[{id:"both",label:"Add Both",price:10},{id:"single",label:"Add One",price:6,variant:"outline"}],addedAt:"2026-04-07",story:"From the plates desk — two sunset orange swirl plates just landed in the shop. Warm, bold, and beautiful on any table."},
   {id:"earth-tone-dinner-plates",collection:"Vintage Plates",section:"Dining",title:"Earth Tone Dinner Plates",subtitle:"Heavy layered plates in tan, rust, gray and chocolate brown.",description:"These are big heavy dinner plates with layered earth tone stripes that look really sharp on any table. They have a sleek modern finish and feel seriously solid when you pick them up.",image:"https://i.imgur.com/WwVyCxT.jpeg",priceLine:"Pair — $15 | Single Plate — $9",options:[{id:"pair",label:"Add Both",price:15},{id:"single",label:"Add One",price:9,variant:"outline"}],story:"Design desk report: a pair of bold earth-tone plates have entered circulation. Layered browns and a sleek finish that bring modern energy to any table."},
   {id:"tribal-diamond-bowl",oneOfOne:true,collection:"Bowls",section:"Kitchen",title:"Diamond Pattern Ceramic Bowl",subtitle:"A compact bowl covered in a colorful diamond pattern in teal, orange and burgundy.",description:"A compact ceramic bowl with a repeating diamond pattern in teal, burnt orange and burgundy wrapped all the way around the outside with a clean white interior. It's small but it really pops.",image:"https://i.imgur.com/LMlPbiJ.jpeg",priceLine:"Single Bowl — $6",options:[{id:"single",label:"Add One",price:6}],addedAt:"2026-04-07",story:"From the bowls desk — a bold tribal diamond pattern bowl just landed in the shop. Compact, colorful, and completely one of a kind."},
   {id:"blue-swirl-plates",collection:"Plates",section:"Dining",title:"Ocean Blue Swirl Plates",subtitle:"Heavy glass plates in a rich ocean blue with a hand-swirled finish.",description:"Big heavy glass plates in a deep ocean blue with a swirled finish that makes every single one look a little different. The kind of plates that make your table look like you actually tried.",image:"https://i.imgur.com/SRb1eG2.jpeg",priceLine:"Single — $6 | Both — $10",options:[{id:"both",label:"Add Both",price:10},{id:"single",label:"Add One",price:6,variant:"outline"}],addedAt:"2026-04-07",story:"From the plates desk — two ocean blue swirl plates just arrived. Bold color, beautiful finish, and seriously high quality glass."},
-  {id:"lighthouse-bowls",collection:"Lighthouse Collection",section:"Kitchen",title:"Lighthouse Soup Bowls",subtitle:"Matching bowls from the lighthouse collection — great for soup or cereal.",description:"These glass bowls match the lighthouse dinner plates and are great for soup, cereal, or anything you want to eat out of a bowl. A nice set to have if you like things to match.",image:"https://i.imgur.com/YIDDz9V.jpeg",priceLine:"Set of 8 — $30 | Single Bowl — $5",options:[{id:"set-8",label:"Add Set of 8",price:30},{id:"single",label:"Add One",price:5,variant:"outline"}],story:"The lighthouse collection keeps growing. Eight matching bowls that bring the same coastal energy as the plates — perfect for a full matching set."},
+  {id:"lighthouse-bowls",collection:"Lighthouse Collection",section:"Kitchen",title:"Lighthouse Soup Bowls",subtitle:"Matching bowls from the lighthouse collection — great for soup or cereal.",description:"These glass bowls match the lighthouse dinner plates and are great for soup, cereal, or anything you want to eat out of a bowl. A nice set to have if you like things to match.",image:"https://i.imgur.com/YIDDz9V.jpeg",priceLine:"Set of 8 — $25 | Single Bowl — $5",options:[{id:"set-8",label:"Add Set of 8",price:25},{id:"single",label:"Add One",price:5,variant:"outline"}],story:"The lighthouse collection keeps growing. Eight matching bowls that bring the same coastal energy as the plates — perfect for a full matching set."},
   {id:"solid-black-bowl",collection:"Bowls",section:"Kitchen",title:"Solid Black Ceramic Bowls",subtitle:"Clean glossy black ceramic bowls that go with literally everything.",description:"Solid black ceramic bowls with a glossy finish inside and out that look sharp with any kitchen setup. Simple, sturdy and the kind of bowl you reach for without thinking.",image:"https://i.imgur.com/5ct0WgG.jpeg",priceLine:"Single Bowl — $5 | All 3 — $12",options:[{id:"set-3",label:"Add All 3",price:12},{id:"single",label:"Add One",price:5,variant:"outline"}],addedAt:"2026-04-07",story:"From the bowls desk — a clean solid black ceramic bowl just made it into the shop. Simple, bold, and works with any kitchen style."},
   {id:"red-appetizer-plates",collection:"Red Glass Collection",section:"Dining",title:"Red Glass Appetizer Plates",subtitle:"Smaller red glass plates — great for apps, dessert, or side dishes.",description:"Same deep red glass as the dinner plates but in a smaller size that's perfect for appetizers, bread, or dessert. They stack clean and look great next to the full set.",image:"https://i.imgur.com/2nIIUwa.jpeg",priceLine:"Set of 4 — $15 | Single Plate — $4",options:[{id:"set-4",label:"Add Set of 4",price:15},{id:"single",label:"Add One",price:4,variant:"outline"}],story:"The supporting cast every table needs. These red appetizer plates are the perfect sidekick to the dinner plates — or honestly great on their own."},
   {id:"colorful-glass-plate-set",collection:"Plates",section:"Dining",title:"Colorful Glass Dinner Plates",subtitle:"A full set of 8 matching glass plates in yellow, green and blue.",description:"Eight matching glass dinner plates in a fun mix of yellow, green and blue tones that all go together really well. Good quality glass, great price, and perfect if you just want a full matching set without spending a lot.",image:"https://i.imgur.com/xhxXdzm.jpeg",priceLine:"Single — $5 | Full Set of 8 — $25",options:[{id:"set-8",label:"Add Full Set of 8",price:25},{id:"single",label:"Add One",price:5,variant:"outline"}],addedAt:"2026-04-07",story:"From the plates desk — a full set of eight colorful glass dinner plates just landed in the shop. Yellow, green and blue tones that all work together. Great deal for anyone stocking up."},
@@ -384,13 +386,13 @@ const products = [
   {id:"vintage-fruit-appetizer-plate",collection:"Vintage Plates",section:"Dining",title:"Vintage Fruit Appetizer Plate",subtitle:"A small raised plate with colorful fruit painted all over it.",description:"A small appetizer plate with colorful fruit illustrations and slightly raised edges that make it feel more like a dish than a flat plate. Great for snacks, cheese, or dessert.",image:"https://i.imgur.com/RFbQzK9.jpeg",priceLine:"Single Plate — $10 | Pair — $15",options:[{id:"pair",label:"Add Both",price:15},{id:"single",label:"Add One",price:10,variant:"outline"}],story:"From the vintage kitchen desk: a beautifully detailed fruit plate with raised edges and colorful artwork — perfect for appetizers or a small dessert worth showing off."},
   {id:"sleek-soup-bowls",collection:"Bowls",section:"Kitchen",title:"Clear Glass Soup Bowls",subtitle:"Simple clear glass bowls — clean, heavy and really versatile.",description:"Heavy clear glass soup bowls that look clean on any table and work for pretty much anything — soup, salad, pasta, ice cream. Simple and really well made.",image:"https://i.imgur.com/uQbpbBb.jpeg",priceLine:"Pair — $16 | Single Bowl — $9",options:[{id:"pair",label:"Add Both",price:16},{id:"single",label:"Add One",price:9,variant:"outline"}],story:"Clear, clean, and seriously heavy. These glass soup bowls work for everything from ramen to ice cream without skipping a beat."},
   {id:"blue-rimmed-deep-plate",oneOfOne:true,collection:"Plates",section:"Dining",title:"Deep Blue Rimmed Plate",subtitle:"A large heavy plate with a bold blue rim that dips down like a bowl.",description:"A large heavy plate with a bold blue and white patterned rim and a deep center that works just as well for soup as it does for a regular meal. Really heavy and really cool.",image:"https://i.imgur.com/FCsqILC.jpeg",priceLine:"Single Plate — $8",options:[{id:"single",label:"Add One",price:8}],addedAt:"2026-04-06",story:"From the plates desk — a bold blue rimmed deep plate just arrived. Heavy glass, cool design, and a shape that works for anything you put in it."},
-  {id:"blue-cream-bowl",oneOfOne:true,collection:"Bowls",section:"Kitchen",title:"Blue & Cream Ceramic Bowl",subtitle:"A pretty two-tone ceramic bowl in blue and cream.",description:"A small ceramic bowl with a blue exterior and a cream interior that looks like something you'd find at a boutique for way more money. Simple, clean, and really nice quality.",image:"https://i.imgur.com/RQbW9iN.jpeg",priceLine:"Single Bowl — $6",options:[{id:"single",label:"Add One",price:6}],story:"From the bowls desk — a simple two-tone blue and cream ceramic bowl that looks like it costs three times what we're charging for it."},
+  {id:"blue-cream-bowl",collection:"Bowls",section:"Kitchen",title:"Blue & Cream Ceramic Bowl",subtitle:"A pretty two-tone ceramic bowl in blue and cream.",description:"A small ceramic bowl with a blue exterior and a cream interior that looks like something you'd find at a boutique for way more money. Simple, clean, and really nice quality.",image:"https://i.imgur.com/RQbW9iN.jpeg",priceLine:"Single Bowl — $8 | Both — $14",options:[{id:"both",label:"Add Both",price:14},{id:"single",label:"Add One",price:8,variant:"outline"}],story:"From the bowls desk — a simple two-tone blue and cream ceramic bowl that looks like it costs three times what we're charging for it."},
   {id:"deep-red-square-plate",collection:"Plates",section:"Dining",title:"Deep Red Square Plates",subtitle:"Heavy square glass plates in a deep rich red — bold and modern.",description:"Three heavy glass dinner plates in a deep rich red glaze on a modern square shape. They look really intentional on a table and the color is seriously striking.",image:"https://i.imgur.com/Dsw1Z6c.jpeg",priceLine:"Single — $5 | All 3 — $12",options:[{id:"set-3",label:"Add All 3",price:12},{id:"single",label:"Add One",price:5,variant:"outline"}],addedAt:"2026-04-06",story:"From the plates desk — three deep red square glass dinner plates just arrived. Heavy, bold, and seriously striking on any table."},
-  {id:"brown-mugs",collection:"Drinkware",section:"Morning Edition",title:"Three-Tone Coffee Mugs",subtitle:"A matching set of three ceramic mugs in warm brown tones.",description:"A set of three ceramic coffee mugs in three different warm brown shades that look great together on a shelf or in a cabinet. Solid, comfortable to hold, and perfect for a morning routine.",image:"https://i.imgur.com/CoTjjh6.jpeg",priceLine:"Set of 3 — $15 | Single Mug — $6",options:[{id:"set-3",label:"Add All 3",price:15},{id:"single",label:"Add One",price:6,variant:"outline"}],story:"Three mugs, three shades, one great morning. These warm brown ceramic mugs are the kind of thing you reach for every single day without thinking about it."},
+  {id:"brown-mugs",collection:"Drinkware",section:"Morning Edition",title:"Three-Tone Coffee Mugs",subtitle:"A matching set of three ceramic mugs in warm brown tones.",description:"A set of three ceramic coffee mugs in three different warm brown shades that look great together on a shelf or in a cabinet. Solid, comfortable to hold, and perfect for a morning routine.",image:"https://i.imgur.com/CoTjjh6.jpeg",priceLine:"Set of 3 — $12 | Single Mug — $5",options:[{id:"set-3",label:"Add All 3",price:12},{id:"single",label:"Add One",price:5,variant:"outline"}],story:"Three mugs, three shades, one great morning. These warm brown ceramic mugs are the kind of thing you reach for every single day without thinking about it."},
   {id:"pumpkin-patch-bowl",oneOfOne:true,collection:"Bowls",section:"Kitchen",title:"Pumpkin Patch Bowl",subtitle:"A glass bowl with a warm pumpkin and gourd design painted on the outside.",description:"A solid glass bowl with colorful pumpkins and gourds painted all the way around the outside in warm fall tones with a red floral rim. It's cozy and charming and honestly just really pretty.",image:"https://i.imgur.com/uZcXT2e.jpeg",priceLine:"Single Bowl — $6",options:[{id:"single",label:"Add One",price:6}],addedAt:"2026-04-06",story:"From the bowls desk — a stunning pumpkin patch bowl just made it into the shop. Warm colors, cool design, and only one available."},
   {id:"minimal-earth-dinner-plates",collection:"Vintage Plates",section:"Dining",title:"Smooth Earth Tone Dinner Plates",subtitle:"Simple smooth plates in warm earth tones with a brown rim.",description:"Clean smooth dinner plates with a soft earth tone gradient and a warm brown rim — the kind of plates that go with everything and never look out of place. Great for everyday use.",image:"https://i.imgur.com/SLXy3Fd.jpeg",priceLine:"Set of 3 — $16 | Single Plate — $7",options:[{id:"set-3",label:"Add All 3",price:16},{id:"single",label:"Add One",price:7,variant:"outline"}],story:"Kitchen desk update: sometimes the simplest plate is the most useful. Smooth earth-tone dishes perfect for large meals and everyday dinners."},
   {id:"color-pattern-bowl",oneOfOne:true,collection:"Bowls",section:"Kitchen",title:"Colorful Geometric Bowl",subtitle:"A bright glass bowl covered in a bold geometric pattern.",description:"A glass bowl covered in a striking geometric pattern in blue, red, green and yellow that wraps all the way around the outside. It's loud in the best way — the kind of bowl that gets noticed.",image:"https://i.imgur.com/y5KsKKz.jpeg",priceLine:"Single Bowl — $6",options:[{id:"single",label:"Add One",price:6}],addedAt:"2026-04-06",story:"From the bowls desk — a bold geometric patterned glass bowl just landed in the shop. Distinctive colors and a design that stands out on any table."},
-  {id:"blue-glass-cups",collection:"Drinkware",section:"Morning Edition",title:"Blue Glass Drinking Cups",subtitle:"A set of five blue glass cups — great for water, juice or iced tea.",description:"Five blue glass cups that look great on any table and are perfect for everyday drinking — water, juice, iced tea, whatever. They have a nice weight to them and the color is really pretty in the light.",image:"https://i.imgur.com/ju7LV0y.jpeg",priceLine:"Set of 5 — $15 | Single Cup — $4",options:[{id:"set-5",label:"Add Set of 5",price:15},{id:"single",label:"Add One",price:4,variant:"outline"}],story:"Five blue glass cups that look like they belong at a nice dinner. Great for any drink and priced like they belong in your cabinet already."},
+  {id:"blue-glass-cups",collection:"Drinkware",section:"Morning Edition",title:"Blue Glass Drinking Cups",subtitle:"A set of five blue glass cups — great for water, juice or iced tea.",description:"Five blue glass cups that look great on any table and are perfect for everyday drinking — water, juice, iced tea, whatever. They have a nice weight to them and the color is really pretty in the light.",image:"https://i.imgur.com/ju7LV0y.jpeg",priceLine:"Set of 5 — $12 | Single Cup — $3",options:[{id:"set-5",label:"Add Set of 5",price:12},{id:"single",label:"Add One",price:3,variant:"outline"}],story:"Five blue glass cups that look like they belong at a nice dinner. Great for any drink and priced like they belong in your cabinet already."},
   {id:"southwest-ranch-plate",oneOfOne:true,collection:"Plates",section:"Dining",title:"Southwest Pattern Dinner Plate",subtitle:"A large plate with a detailed southwestern geometric border all the way around.",description:"A big dinner plate with a clean white center and a detailed southwestern pattern around the rim in warm earthy tones. The border design is really intricate and the plate itself feels really high quality.",image:"https://i.imgur.com/us8luRh.jpeg",priceLine:"Single Plate — $8",options:[{id:"single",label:"Add One",price:8}],addedAt:"2026-04-06",story:"From the plates desk — a unique southwestern ranch plate just landed in the shop. One available and the rim design is unlike anything we've had before."},
   {id:"coconut-style-glass-bowl",oneOfOne:true,collection:"Bowls",section:"Kitchen",title:"Tropical Glass Bowl",subtitle:"A small colorful glass bowl with a fun tropical plant design.",description:"A solid glass bowl with a colorful tropical plant design and a warm orange rim that makes it stand out on any shelf or table. Small but really eye-catching.",image:"https://i.imgur.com/pU4fkqU.jpeg",priceLine:"Single Bowl — $8",options:[{id:"single",label:"Add One",price:8}],story:"From the tropical desk: a colorful coconut-style bowl enters the kitchen lineup. Perfect for fruit, snacks, or just looking good on the counter."},
   {id:"purple-flower-square-plate",oneOfOne:true,collection:"Vintage Plates",section:"Dining",title:"Purple Flower Square Plate",subtitle:"A square glass plate with hand-painted purple flowers.",description:"A square glass plate with a soft yellow background and purple flowers painted right in the middle — simple, pretty, and unlike any round plate you've ever owned. Only one available.",image:"https://i.imgur.com/wbAXpwr.jpeg",priceLine:"Single Plate — $10",options:[{id:"single",label:"Add One",price:10}],story:"From the garden desk: a quiet floral plate enters the lineup. Simple purple flowers on a square glass base — the kind of piece that just works."},
@@ -409,16 +411,29 @@ const products = [
   {id:"swirl-plate-bundle",collection:"Full Inventory",section:"Dining",title:"Blue & Orange Swirl Plate Set",subtitle:"All four swirl plates — two ocean blue and two sunset orange.",description:"Two ocean blue and two sunset orange swirl plates together in one bundle. Heavy glass, hand-swirled finish, and a color combo that looks seriously intentional on any table.",image:"DUAL:https://i.imgur.com/SRb1eG2.jpeg|https://i.imgur.com/j8d3d1H.jpeg",priceLine:"Full Set of 4 — $16",options:[{id:"set-4",label:"Add All 4",price:16}],story:"From the plates desk — the complete swirl set. Two blue, two orange, one great price. Buy all four and save."},
   {id:"blue-white-glass-plates",collection:"Plates",section:"Dining",title:"Light Blue & White Glass Plates",subtitle:"A set of three glass plates with a cool blue and white design.",description:"Three light blue and white glass plates with a clean flowing design that looks really elegant on any table. Great quality glass and the kind of plates that work for everyday meals or something a little more special.",image:"https://i.imgur.com/NAYrNYp.jpeg",priceLine:"Single — $5 | All 3 — $12",options:[{id:"set-3",label:"Add All 3",price:12},{id:"single",label:"Add One",price:5,variant:"outline"}],addedAt:"2026-04-07",story:"From the plates desk — three light blue and white glass plates just landed in the shop. Clean design, great quality, and a color that works with pretty much everything."},
   {id:"cat-dog-bowl",oneOfOne:true,collection:"Bowls",section:"Kitchen",title:"Cat & Dog Novelty Bowl",subtitle:"A small shallow bowl with a cat and dog figurine on the rim — one of a kind.",description:"A small shallow bowl in red, purple and white with a cat and dog figurine sticking up from the rim. Honestly we're not totally sure what it is either, but it's fun, it's one of a kind, and someone out there is going to love it.",image:"https://i.imgur.com/dhJP8Gz.jpeg",priceLine:"Single — $5",options:[{id:"single",label:"Add One",price:5}],addedAt:"2026-04-07",story:"From the bowls desk — a cat and dog novelty bowl just made it into the shop. We can't fully explain it but we're glad it's here. One available."},
-  {id:"budweiser-racing-glasses",collection:"Drinkware",section:"Morning Edition",title:"Budweiser Talladega Nights Beer Glasses",subtitle:"Four collector glass beer glasses from the Budweiser Talladega Nights collection.",description:"Four heavy glass beer glasses with Budweiser Racing and Talladega Nights printed on them — the kind of thing you find once and never see again. Great for game nights, man caves, or anyone who appreciates a good collector piece.",image:"https://i.imgur.com/Ebq6OLR.jpeg",priceLine:"Single — $4 | Full Set of 4 — $12",options:[{id:"set-4",label:"Add Full Set of 4",price:12},{id:"single",label:"Add One",price:4,variant:"outline"}],addedAt:"2026-04-07",story:"From the glassware desk — four Budweiser Talladega Nights collector glasses just landed in the shop. You don't see these every day. Grab the set before someone else does."},
+  // ── SETS & BUNDLES ──
+  {id:"colorful-plates-set",collection:"Sets",section:"Dining",title:"Colorful Glass Dinner Plate Set",subtitle:"All 8 colorful glass dinner plates in yellow, green and blue.",description:"All eight matching colorful glass dinner plates bundled together — yellow, green and blue tones that all go together really well. Great quality glass and a perfect full set for the price.",image:"https://i.imgur.com/xhxXdzm.jpeg",priceLine:"Full Set of 8 — $25",options:[{id:"full-set",label:"Add All 8",price:25}],story:"From the sets desk — the complete colorful glass plate set. Eight plates, three colors, one great price."},
+  {id:"brown-mugs-set",collection:"Sets",section:"Dining",title:"Three-Tone Coffee Mug Set",subtitle:"All 3 matching brown tone ceramic mugs together.",description:"All three warm brown ceramic mugs bundled together — three slightly different shades that look really sharp together on any shelf or counter. A great set for a morning coffee lover.",image:"https://i.imgur.com/CoTjjh6.jpeg",priceLine:"Full Set of 3 — $12",options:[{id:"full-set",label:"Add All 3",price:12}],story:"From the sets desk — all three brown tone coffee mugs in one bundle. Three shades, one great morning."},
+  {id:"blue-cups-set",collection:"Sets",section:"Dining",title:"Blue Glass Drinking Cup Set",subtitle:"All 5 blue glass drinking cups together.",description:"All five blue glass drinking cups bundled together at a discount. Great for everyday use, hosting, or just having a full matching set of glasses on the table.",image:"https://i.imgur.com/ju7LV0y.jpeg",priceLine:"Full Set of 5 — $12",options:[{id:"full-set",label:"Add All 5",price:12}],story:"From the sets desk — all five blue glass cups in one bundle. Great color, great price."},
+  {id:"popcorn-bowl-set",collection:"Sets",section:"Dining",title:"Big Centerpiece Popcorn Bowl Set",subtitle:"Both big centerpiece popcorn bowls together for one great price.",description:"Both big colorful centerpiece bowls bundled together — perfect for popcorn movie nights, fruit on the counter, or just making your kitchen look really good. Two bowls, one great price.",image:"https://i.imgur.com/ZPXaQFI.jpeg",priceLine:"Both Bowls — $12",options:[{id:"full-set",label:"Add Both",price:12}],story:"From the sets desk — both big centerpiece popcorn bowls in one bundle. Bold, fun and perfect for the middle of any table."},
+  {id:"blue-white-plates-set",collection:"Sets",section:"Dining",title:"Light Blue & White Plate Set",subtitle:"All 3 light blue and white glass plates together.",description:"All three light blue and white glass plates bundled together at a discount. Clean flowing design, great quality glass, and a color that works with pretty much everything.",image:"https://i.imgur.com/NAYrNYp.jpeg",priceLine:"Full Set of 3 — $12",options:[{id:"full-set",label:"Add All 3",price:12}],story:"From the sets desk — all three light blue and white glass plates in one bundle. Clean, elegant and a great deal."},
+  {id:"smooth-earth-plates-set",collection:"Sets",section:"Dining",title:"Smooth Earth Tone Plate Set",subtitle:"All 3 smooth earth tone dinner plates together.",description:"All three smooth earth tone dinner plates bundled together — soft gradient finish, warm brown rim, and the kind of plates that go with everything. A clean simple set at a great price.",image:"https://i.imgur.com/SLXy3Fd.jpeg",priceLine:"Full Set of 3 — $16",options:[{id:"full-set",label:"Add All 3",price:16}],story:"From the sets desk — all three smooth earth tone dinner plates in one bundle. Simple, clean and versatile."},
+  {id:"deep-red-square-set",collection:"Sets",section:"Dining",title:"Deep Red Square Plate Set",subtitle:"All 3 deep red square glass plates together.",description:"All three deep red square glass plates bundled together — bold color, modern square shape, and seriously heavy glass. A striking set that makes any table look intentional.",image:"https://i.imgur.com/Dsw1Z6c.jpeg",priceLine:"Full Set of 3 — $12",options:[{id:"full-set",label:"Add All 3",price:12}],story:"From the sets desk — all three deep red square plates in one bundle. Bold, heavy and a great deal for the full set."},
+  {id:"lighthouse-full-set",collection:"Sets",section:"Dining",title:"Lighthouse Complete Collection",subtitle:"The full lighthouse set — 4 dinner plates and 8 matching soup bowls.",description:"All 12 pieces from the lighthouse collection in one bundle — four dinner plates and eight matching soup bowls. Everything you need for a full coastal themed table setting at a great price.",image:"DUAL:https://i.imgur.com/OMoutL2.jpeg|https://i.imgur.com/YIDDz9V.jpeg",priceLine:"Full Set — $40",options:[{id:"full-set",label:"Add Full Set",price:40}],story:"From the sets desk — the complete lighthouse collection. Four plates, eight bowls, one coastal table. Everything matches and everything is ready to go."},
+  {id:"red-glass-full-set",collection:"Sets",section:"Dining",title:"Red Glass Complete Set",subtitle:"3 dinner plates, 4 appetizer plates and 3 bowls — all in deep red glass.",description:"The complete red glass collection — three dinner plates, four appetizer plates and three bowls all in the same bold deep red glass. Bold, matching and a serious upgrade for any table.",image:"DUAL:https://i.imgur.com/EdI3INH.jpeg|https://i.imgur.com/MEFyLMQ.jpeg",priceLine:"Full Set — $25",options:[{id:"full-set",label:"Add Full Set",price:25}],story:"From the sets desk — the complete red glass collection. Three dinner plates, four appetizer plates and three bowls all in one bundle. Bold color, great price."},
+  {id:"white-floral-set",collection:"Sets",section:"Dining",title:"White Floral Rim Plate Set",subtitle:"All 5 white floral rim plates together at a discount.",description:"All five white floral rim plates bundled together — heavy glass, beautiful raised flower and fruit design around the rim, and a clean elegant look that works with any table.",image:"https://i.imgur.com/6ZJb0Jk.jpeg",priceLine:"Full Set of 5 — $18",options:[{id:"full-set",label:"Add All 5",price:18}],story:"From the sets desk — all five white floral rim plates in one bundle. Elegant, heavy glass and a price that makes sense for the whole set."},
+  {id:"earth-tone-full-set",collection:"Sets",section:"Dining",title:"Earth Tone Complete Plate Set",subtitle:"2 dinner plates and 3 appetizer plates in matching earth tones.",description:"Two heavy earth tone dinner plates and three matching appetizer plates all bundled together — same bold geometric border and same great quality. Everything you need for a complete matching earth tone table.",image:"DUAL:https://i.imgur.com/WwVyCxT.jpeg|https://i.imgur.com/1jZWQOw.jpeg",priceLine:"Full Set — $24",options:[{id:"full-set",label:"Add Full Set",price:24}],story:"From the sets desk — the complete earth tone plate collection. Two big plates, three small plates, one great price."},
+  {id:"swirl-full-set",collection:"Sets",section:"Dining",title:"Blue & Orange Swirl Plate Set",subtitle:"All 4 swirl plates — 2 ocean blue and 2 sunset orange.",description:"Two ocean blue and two sunset orange swirl plates together in one bundle. Heavy glass, hand-swirled finish, and a color combo that looks seriously intentional on any table.",image:"DUAL:https://i.imgur.com/SRb1eG2.jpeg|https://i.imgur.com/j8d3d1H.jpeg",priceLine:"Full Set of 4 — $16",options:[{id:"full-set",label:"Add All 4",price:16}],story:"From the sets desk — the complete swirl set. Two blue, two orange, one great price."},
   {id:"forks",collection:"Silverware",section:"Tableware",title:"Stainless Steel Forks",subtitle:"Simple everyday forks — good quality and priced right.",description:"Standard stainless steel dinner forks that work for any meal — simple, clean and easy to mix into any silverware setup. Great if you're stocking up or filling in gaps.",image:"https://i.imgur.com/ZHjtpjV.jpeg",priceLine:"Single Fork — $0.75 | Bundle of 20 — $10",options:[{id:"bundle-20",label:"Add 20 Fork Bundle",price:10},{id:"single",label:"Add One",price:0.75,variant:"outline"}],story:"Reliable forks ready for action. Perfect for pasta nights, quick lunches, and the occasional late-night snack."},
   {id:"spoons",collection:"Silverware",section:"Tableware",title:"Stainless Steel Spoons",subtitle:"Versatile everyday spoons — good for everything from cereal to soup.",description:"Simple stainless steel spoons that handle everything from breakfast cereal to soup to ice cream without any complaints. The kind of silverware you just always want to have around.",image:"https://i.imgur.com/IZpaghE.jpeg",priceLine:"Single Spoon — $0.75 | Bundle of 20 — $10",options:[{id:"bundle-20",label:"Add 20 Spoon Bundle",price:10},{id:"single",label:"Add One",price:0.75,variant:"outline"}],story:"Breakfast approved. These spoons are the unsung heroes of cereal, soup, and dessert."},
   {id:"butter-knives",collection:"Silverware",section:"Tableware",title:"Butter Knives",subtitle:"Simple spreading knives — great for butter, jam or soft cheese.",description:"Stainless steel butter knives that are perfect for spreading butter, jam, cream cheese or anything else on toast or bread. Simple and practical and honestly something every kitchen needs.",image:"https://i.imgur.com/01K4jkn.jpeg",priceLine:"Single Knife — $0.75 | Bundle of 20 — $10",options:[{id:"bundle-20",label:"Add 20 Knife Bundle",price:10},{id:"single",label:"Add One",price:0.75,variant:"outline"}],story:"A small tool that makes breakfast better. Ideal for toast, bagels, and weekend brunch."},
 ];
 
 
-const PAGE_ORDER = ["Front Page","Plates","Bowls","Cups","Silverware","Full Inventory","Notes to the Editor"];
+const PAGE_ORDER = ["Front Page","Sets","Plates","Bowls","Cups","Silverware","Full Inventory","Notes to the Editor"];
 const PAGE_META = {
   "Front Page":{kicker:"Breaking News",headline:"The Latest From The Daily Dish",subhead:"Featured stories, fresh finds, and curated tableware from today's edition."},
+  "Sets":{kicker:"Sets & Bundles",headline:"Better Together — Shop The Sets",subhead:"Plates, bowls and cups bundled together so your table always matches."},
   "Plates":{kicker:"Plates",headline:"Plates Worth Setting the Table For",subhead:"Dinner plates, appetizer plates, charger plates, and standout vintage finds."},
   "Bowls":{kicker:"Bowls",headline:"Bowls That Mean Business",subhead:"Soup, cereal, noodles, snacks, and statement pieces for the center of the table."},
   "Cups":{kicker:"Cups",headline:"Drinking Glasses & Cups",subhead:"Everyday drinking glasses — perfect for water, juice, wine, or anything you're pouring."},
@@ -472,7 +487,8 @@ const INVENTORY = {
   "lighthouse-bowls__set-8":1,"lighthouse-bowls__single":8,
   "red-bowls__set-3":1,"red-bowls__single":3,
   "sleek-soup-bowls__pair":1,"sleek-soup-bowls__single":2,
-  "blue-cream-bowl__single":1,"coconut-style-glass-bowl__single":1,
+  "blue-cream-bowl__both":1,"blue-cream-bowl__single":2,
+  "coconut-style-glass-bowl__single":1,
   "brown-mugs__set-3":1,"brown-mugs__single":3,
   "blue-glass-cups__set-5":1,"blue-glass-cups__single":5,
   "fruit-ceramic-creamer__pair":1,"fruit-ceramic-creamer__single":2,
@@ -483,6 +499,18 @@ const INVENTORY = {
   "blue-white-glass-plates__set-3":1,"blue-white-glass-plates__single":3,
   "cat-dog-bowl__single":1,
   "budweiser-racing-glasses__set-4":1,"budweiser-racing-glasses__single":4,
+  "colorful-plates-set__full-set":1,
+  "brown-mugs-set__full-set":1,
+  "blue-cups-set__full-set":1,
+  "popcorn-bowl-set__full-set":1,
+  "blue-white-plates-set__full-set":1,
+  "smooth-earth-plates-set__full-set":1,
+  "deep-red-square-set__full-set":1,
+  "lighthouse-full-set__full-set":1,
+  "red-glass-full-set__full-set":1,
+  "white-floral-set__full-set":1,
+  "earth-tone-full-set__full-set":1,
+  "swirl-full-set__full-set":1,
   "forks__bundle-20":1,"forks__single":20,
   "spoons__bundle-20":1,"spoons__single":20,
   "butter-knives__bundle-20":1,"butter-knives__single":20,
@@ -528,6 +556,7 @@ function isNewAddition(p){
 function getPageProducts(page){
   if(page==="Front Page") return [];
   if(page==="Full Inventory") return products;
+  if(page==="Sets") return ["lighthouse-full-set","red-glass-full-set","earth-tone-full-set","white-floral-set","deep-red-square-set","colorful-plates-set","brown-mugs-set","blue-cups-set","popcorn-bowl-set","blue-white-plates-set","smooth-earth-plates-set","swirl-full-set"].map(id=>products.find(p=>p.id===id)).filter(Boolean);
   if(page==="Plates") return products.filter(p=>{const t=p.title.toLowerCase();return t.includes("plate")||t.includes("charger");});
   if(page==="Bowls") return products.filter(p=>p.title.toLowerCase().includes("bowl"));
   if(page==="Cups") return products.filter(p=>p.collection==="Drinkware"||["tall-botanical-mug","autumn-leaf-cup","green-amber-mug","terracotta-mug","champagne-flutes"].includes(p.id));
@@ -708,7 +737,7 @@ function renderPage(){
 // RENDER FRONT PAGE
 // ─────────────────────────────────────────────
 function renderFrontPage(){
-  const dealOfDay = products.find(p=>p.id==="cobalt-blue-pitcher")||deals[0]||products[0];
+  const dealOfDay = products.find(p=>p.id==="swirl-full-set")||deals[0]||products[0];
   const latestArrivals = [
     products.find(p=>p.id==="black-white-split-bowl"),
     products.find(p=>p.id==="cobalt-blue-pitcher"),
@@ -718,77 +747,91 @@ function renderFrontPage(){
     products.find(p=>p.id==="pumpkin-patch-bowl"),
     products.find(p=>p.id==="blue-rimmed-deep-plate"),
   ].filter(Boolean);
-  const vintageSpotlight = products.filter(p=>p.id==="american-eagle-plate"||p.id==="vintage-fruit-appetizer-plate"||p.id==="earth-tone-dinner-plates").sort((a,b)=>{const order=["american-eagle-plate","vintage-fruit-appetizer-plate","earth-tone-dinner-plates"];return order.indexOf(a.id)-order.indexOf(b.id);});
+  const vintageSpotlight = products.filter(p=>p.id==="american-eagle-plate"||p.id==="vintage-fruit-appetizer-plate"||p.id==="earth-tone-dinner-plates"||p.id==="purple-flower-square-plate").sort((a,b)=>{const order=["american-eagle-plate","vintage-fruit-appetizer-plate","earth-tone-dinner-plates","purple-flower-square-plate"];return order.indexOf(a.id)-order.indexOf(b.id);});
   const editorPicks = products.filter(p=>p.id==="lighthouse-plates"||p.id==="lighthouse-bowls"||p.id==="red-dinner-plates"||p.id==="red-appetizer-plates"||p.id==="red-bowls");
 
   return `
     <!-- HERO -->
-    <div style="margin-bottom:22px;background:#0a0f1e;border:3px solid #1f1b16;border-radius:16px;overflow:hidden;box-shadow:6px 6px 0 #1f1b16">
-      <div style="padding:14px 24px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;background:linear-gradient(90deg,rgba(255,255,255,.04),transparent)">
+    <div style="margin-bottom:22px;background:#1a1a1a;border:3px solid #1f1b16;border-radius:14px;overflow:hidden;box-shadow:4px 4px 0 #1f1b16">
+      <div style="padding:14px 20px;border-bottom:2px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;background:rgba(255,255,255,.03)">
         <div>
-          <p style="font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#8fafd4;margin-bottom:4px">⭐ Featured Story</p>
-          <h3 style="font-family:var(--display);font-size:clamp(18px,3.5vw,26px);font-weight:900;text-transform:uppercase;color:#f4ecd8;line-height:1.1;letter-spacing:.05em">Today's Front Page Pick</h3>
+          <p style="font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:rgba(244,236,216,.5);margin-bottom:4px">🗞️ Featured Set</p>
+          <h3 style="font-family:var(--display);font-size:clamp(18px,3.5vw,26px);font-weight:900;text-transform:uppercase;color:#f4ecd8;line-height:1.1">Today's Front Page Pick</h3>
         </div>
-        <span style="background:linear-gradient(135deg,#d4a843,#f0c96a);color:#1a1000;font-family:var(--serif);font-weight:700;font-size:11px;padding:6px 14px;border-radius:999px;letter-spacing:.08em;text-transform:uppercase">✨ Editor's Choice</span>
+        <span style="background:linear-gradient(135deg,#e87c2a,#3b82f6);color:white;font-family:var(--serif);font-weight:700;font-size:11px;padding:6px 14px;border-radius:999px;letter-spacing:.05em">📦 Bundle Deal</span>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr" class="hero-grid">
-        <div style="position:relative;display:flex;align-items:center;justify-content:center;min-height:340px;overflow:hidden;border-right:1px solid rgba(255,255,255,.06)">
-          <!-- Background layers -->
-          <div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 80% at 50% 50%,#0d1f4a 0%,#050a14 100%)"></div>
-          <div style="position:absolute;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(80,120,220,.12) 0%,transparent 65%);top:50%;left:50%;transform:translate(-50%,-50%)"></div>
-          <div style="position:absolute;width:200px;height:200px;border-radius:50%;border:1px solid rgba(100,150,255,.08);top:50%;left:50%;transform:translate(-50%,-50%)"></div>
-          <div style="position:absolute;width:280px;height:280px;border-radius:50%;border:1px solid rgba(100,150,255,.05);top:50%;left:50%;transform:translate(-50%,-50%)"></div>
-          <!-- Image -->
-          <img src="${dealOfDay.image}" alt="${dealOfDay.title}" style="max-width:90%;max-height:310px;object-fit:contain;object-position:center;filter:drop-shadow(0 16px 40px rgba(0,0,40,.9)) drop-shadow(0 4px 12px rgba(80,120,255,.2));position:relative;z-index:2;mask-image:radial-gradient(ellipse 72% 72% at 50% 50%,black 30%,rgba(0,0,0,.8) 50%,transparent 75%);-webkit-mask-image:radial-gradient(ellipse 72% 72% at 50% 50%,black 30%,rgba(0,0,0,.8) 50%,transparent 75%)" onerror="this.src='${FALLBACK}'"/>
+        <div style="position:relative;display:flex;align-items:center;justify-content:center;min-height:300px;overflow:hidden;border-right:1px solid rgba(255,255,255,.08)">
+          <div style="position:absolute;inset:0;background:linear-gradient(135deg,#7c2d0a 0%,#1a1a1a 50%,#1e3a6e 100%)"></div>
+          <div style="position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr">
+            <img src="https://i.imgur.com/j8d3d1H.jpeg" style="width:100%;height:100%;object-fit:cover;opacity:.6;mix-blend-mode:luminosity"/>
+            <img src="https://i.imgur.com/SRb1eG2.jpeg" style="width:100%;height:100%;object-fit:cover;opacity:.6;mix-blend-mode:luminosity"/>
+          </div>
+          <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(232,124,42,.15),rgba(59,130,246,.15))"></div>
+          <div style="position:relative;z-index:2;text-align:center;padding:20px">
+            <div style="display:flex;gap:12px;justify-content:center;align-items:center">
+              <div style="width:120px;height:120px;border:3px solid rgba(232,124,42,.8);border-radius:10px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.2)">
+                <img src="https://i.imgur.com/j8d3d1H.jpeg" style="width:100%;height:100%;object-fit:contain;object-position:center;padding:6px" onerror="this.src='${FALLBACK}'"/>
+              </div>
+              <span style="font-size:24px;color:white;opacity:.6">+</span>
+              <div style="width:120px;height:120px;border:3px solid rgba(59,130,246,.8);border-radius:10px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.2)">
+                <img src="https://i.imgur.com/SRb1eG2.jpeg" style="width:100%;height:100%;object-fit:contain;object-position:center;padding:6px" onerror="this.src='${FALLBACK}'"/>
+              </div>
+            </div>
+            <p style="color:rgba(244,236,216,.7);font-size:12px;margin-top:14px;letter-spacing:.1em;text-transform:uppercase">2 Orange + 2 Blue</p>
+          </div>
         </div>
-        <div style="padding:32px 28px;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(160deg,rgba(255,255,255,.03),transparent)">
-          <div style="width:40px;height:2px;background:linear-gradient(90deg,#d4a843,transparent);margin-bottom:16px"></div>
-          <h3 style="font-family:var(--display);font-size:22px;font-weight:900;text-transform:uppercase;color:#f4ecd8;margin-bottom:8px;line-height:1.2;letter-spacing:.03em">${dealOfDay.title}</h3>
-          <p style="font-style:italic;font-size:13px;margin-bottom:14px;color:#8fafd4">${dealOfDay.subtitle}</p>
-          <p style="font-size:13px;line-height:1.8;color:rgba(244,236,216,.75);margin-bottom:20px">${dealOfDay.story}</p>
-          <p style="font-weight:700;margin-bottom:20px;color:#d4a843;font-size:16px;letter-spacing:.02em">${dealOfDay.priceLine}</p>
+        <div style="padding:28px;display:flex;flex-direction:column;justify-content:center;background:rgba(255,255,255,.02)">
+          <h3 style="font-family:var(--display);font-size:20px;font-weight:900;text-transform:uppercase;color:#f4ecd8;margin-bottom:8px;line-height:1.2">${dealOfDay.title}</h3>
+          <p style="font-style:italic;font-size:13px;margin-bottom:12px;color:rgba(244,236,216,.6)">${dealOfDay.subtitle}</p>
+          <p style="font-size:13px;line-height:1.75;color:rgba(244,236,216,.8);margin-bottom:16px">${dealOfDay.story}</p>
+          <p style="font-weight:700;margin-bottom:16px;font-size:18px;background:linear-gradient(135deg,#e87c2a,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${dealOfDay.priceLine}</p>
           <div style="display:flex;flex-wrap:wrap;gap:8px">
-            ${dealOfDay.options.slice(0,2).map(o=>`
-              <button style="font-family:var(--serif);padding:11px 20px;font-size:13px;font-weight:700;border:none;border-radius:8px;background:linear-gradient(135deg,#d4a843,#f0c96a);color:#1a1000;cursor:pointer;letter-spacing:.03em" onclick="addToCart('${dealOfDay.id}','${o.id}')">
-                ${o.label} (${money(o.price)})
-              </button>
-            `).join("")}
-            <button style="font-family:var(--serif);padding:11px 20px;font-size:13px;font-weight:700;border:1px solid rgba(244,236,216,.2);border-radius:8px;background:transparent;color:rgba(244,236,216,.7);cursor:pointer" onclick="goToPage('${getPageForProduct(dealOfDay)}')">Browse Section →</button>
+            <button style="font-family:var(--serif);padding:11px 20px;font-size:13px;font-weight:700;border:none;border-radius:8px;background:linear-gradient(135deg,#e87c2a,#3b82f6);color:white;cursor:pointer" onclick="addToCart('${dealOfDay.id}','${dealOfDay.options[0].id}')">
+              ${dealOfDay.options[0].label} (${money(dealOfDay.options[0].price)})
+            </button>
+            <button style="font-family:var(--serif);padding:11px 20px;font-size:13px;font-weight:700;border:1px solid rgba(244,236,216,.2);border-radius:8px;background:transparent;color:rgba(244,236,216,.7);cursor:pointer" onclick="goToPage('Sets')">View All Sets →</button>
           </div>
         </div>
       </div>
-      <div style="padding:10px 24px;background:rgba(0,0,0,.3);border-top:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:8px">
-        <div style="width:6px;height:6px;border-radius:50%;background:#d4a843;flex-shrink:0"></div>
-        <p style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(200,216,240,.4)">Handpicked by The Daily Dish · Limited stock · One of a kind</p>
+      <div style="padding:8px 20px;background:rgba(0,0,0,.3);border-top:1px solid rgba(255,255,255,.06)">
+        <p style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(244,236,216,.3)">🗞️ Handpicked by The Daily Dish · 4 plates total · Buy together and save</p>
       </div>
     </div>
 
     <!-- NEW ADDITIONS TEASER -->
-    <div style="margin-bottom:22px;background:#e8f4f0;border:3px solid #1f1b16;border-radius:14px;overflow:hidden;box-shadow:4px 4px 0 #1f1b16">
-      <div style="padding:14px 20px;border-bottom:2px solid #1f1b16;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;background:#c8e6de">
+    <div style="margin-bottom:22px;background:linear-gradient(135deg,#f0faf6,#e8f4f0);border:3px solid #1f1b16;border-radius:14px;overflow:hidden;box-shadow:4px 4px 0 #1f1b16">
+      <div style="padding:14px 20px;border-bottom:2px solid #1f1b16;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;background:linear-gradient(90deg,#c8e6de,#d4eee6)">
         <div>
           <p style="font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#065f46;opacity:.8;margin-bottom:4px">🆕 Just Landed</p>
-          <h3 style="font-family:var(--display);font-size:clamp(18px,3.5vw,26px);font-weight:900;text-transform:uppercase;color:#1f1b16;line-height:1.1">Fresh Additions To The Shop ✨</h3>
+          <h3 style="font-family:var(--display);font-size:clamp(18px,3.5vw,26px);font-weight:900;text-transform:uppercase;color:#1f1b16;line-height:1.1">New Additions To The Shop</h3>
         </div>
-        <span style="font-size:28px">✨</span>
+        <span style="background:linear-gradient(135deg,#065f46,#0d9488);color:white;font-family:var(--serif);font-weight:700;font-size:11px;padding:6px 14px;border-radius:999px;letter-spacing:.05em">✨ Shop Now</span>
       </div>
-      <div style="padding:16px 20px">
-        <p style="font-size:13px;line-height:1.75;color:#1f1b16;margin-bottom:14px">Brand new pieces just added — be the first to grab them before they're gone. We're always finding something new and these just made the cut.</p>
-        <button onclick="goToPage('New Additions')" style="font-family:var(--serif);padding:10px 20px;font-size:13px;font-weight:700;border:2px solid #1f1b16;border-radius:8px;background:#065f46;color:#e8f4f0;cursor:pointer;white-space:nowrap">✨ View New Additions →</button>
+      <div style="padding:16px 20px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center">
+        <div>
+          <p style="font-size:13px;line-height:1.75;color:#1f1b16;margin-bottom:14px">Brand new pieces just added — be the first to grab them before they're gone. We're always finding something new and these just made the cut.</p>
+          <button onclick="goToPage('New Additions')" style="font-family:var(--serif);padding:10px 20px;font-size:13px;font-weight:700;border:none;border-radius:8px;background:linear-gradient(135deg,#065f46,#0d9488);color:white;cursor:pointer;white-space:nowrap;box-shadow:0 4px 12px rgba(6,95,70,.2)">✨ View New Additions →</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;opacity:.5">
+          <div style="width:40px;height:4px;border-radius:4px;background:#065f46"></div>
+          <div style="width:28px;height:4px;border-radius:4px;background:#065f46"></div>
+          <div style="width:34px;height:4px;border-radius:4px;background:#065f46"></div>
+        </div>
       </div>
-      <div style="padding:8px 20px;background:#c8e6de;border-top:2px solid #1f1b16">
-        <p style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#065f46">🌿 New items added regularly · Be the first to grab them</p>
+      <div style="padding:8px 20px;background:linear-gradient(90deg,#c8e6de,#d4eee6);border-top:2px solid #1f1b16">
+        <p style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#065f46">🌿 New items dropping regularly · First come first served</p>
       </div>
     </div>
 
     <!-- EDITOR'S PICKS + LATEST ARRIVALS -->
     <div class="two-col" style="margin-bottom:22px">
-      <div class="fp-section" style="margin-bottom:0">
-        <div class="fp-section-header"><div>
-          <p class="fp-kicker">Editor's Picks</p>
-          <h3 class="fp-title">Today's Top Stories</h3>
-        </div></div>
-        <div class="fp-body">
+      <div style="background:#fce8ee;border:3px solid #1f1b16;border-radius:14px;overflow:hidden;box-shadow:3px 3px 0 #1f1b16;margin-bottom:0">
+        <div style="padding:14px 18px;border-bottom:2px solid #1f1b16;background:#f9d5df">
+          <p style="font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#9d174d;margin-bottom:4px">Editor's Picks</p>
+          <h3 style="font-family:var(--display);font-size:clamp(16px,2.5vw,22px);font-weight:900;text-transform:uppercase;color:#1f1b16;line-height:1.1">Today's Top Stories</h3>
+        </div>
+        <div class="fp-body" style="background:#fce8ee">
           ${editorPicks.map(p=>`
             <div class="sidebar-item">
               <p class="sidebar-item-title">${p.title}</p>
@@ -802,12 +845,12 @@ function renderFrontPage(){
           `).join("")}
         </div>
       </div>
-      <div class="fp-section" style="margin-bottom:0">
-        <div class="fp-section-header"><div>
-          <p class="fp-kicker">Latest Arrivals</p>
-          <h3 class="fp-title">Fresh Finds From The Field</h3>
-        </div></div>
-        <div class="fp-body">
+      <div style="background:#e8f0fc;border:3px solid #1f1b16;border-radius:14px;overflow:hidden;box-shadow:3px 3px 0 #1f1b16;margin-bottom:0">
+        <div style="padding:14px 18px;border-bottom:2px solid #1f1b16;background:#c8d8f5">
+          <p style="font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#1e40af;margin-bottom:4px">Latest Arrivals</p>
+          <h3 style="font-family:var(--display);font-size:clamp(16px,2.5vw,22px);font-weight:900;text-transform:uppercase;color:#1f1b16;line-height:1.1">New Finds From The Field</h3>
+        </div>
+        <div class="fp-body" style="background:#e8f0fc">
           ${latestArrivals.map(it=>`
             <div class="sidebar-item">
               <p class="sidebar-item-title">${it.title}</p>
@@ -828,8 +871,8 @@ function renderFrontPage(){
       <div class="fp-body">
         <p style="font-size:13px;line-height:1.7;margin-bottom:16px">A rotating feature of the shop's most eye-catching vintage pieces — the kinds of finds that make the paper worth reading.</p>
         <div class="three-col">
-          ${vintageSpotlight.map(item=>`
-            <div style="border-top:2px solid var(--ink);padding-top:14px">
+          ${vintageSpotlight.map((item, i)=>`
+            <div style="border-top:2px solid var(--ink);padding-top:14px${i===3?';display:none' :''}" class="${i===3?'archive-mobile-only':''}">
               <img src="${item.image}" alt="${item.title}" style="width:100%;height:120px;object-fit:cover;object-position:center;border-radius:8px;border:2px solid var(--ink);margin-bottom:10px" onerror="this.src='${FALLBACK}'"/>
               <p class="sidebar-item-title">${item.title}</p>
               <p class="sidebar-item-price">${item.priceLine}</p>
@@ -898,6 +941,7 @@ function renderFrontPage(){
 // ─────────────────────────────────────────────
 function renderSection(){
   const pageProducts = getPageProducts(activePage);
+  const isSetsPage = activePage === "Sets";
   return `
     <div style="margin-bottom:24px">
       <h3 style="font-family:var(--display);font-size:28px;font-weight:900;text-transform:uppercase">${activePage}</h3>
@@ -915,18 +959,18 @@ function renderSection(){
           <div class="product-card-body">
             <div class="product-card-top">
               <h3 class="product-title">${p.title}</h3>
-              <span class="pill">${p.collection}</span>
+              <span class="pill">${isSetsPage ? "📦 Bundle" : p.collection}</span>
             </div>
             ${p.hotDeal?`<span class="hot-badge" style="margin-bottom:8px;display:inline-flex">🔥 Hot Deal</span>`:""}
             <p class="product-subtitle">${p.subtitle}</p>
             <p class="product-desc">${p.description}</p>
             <p class="product-price">${p.priceLine}</p>
             <div class="product-actions">
-              ${p.options.map(o=>{
+              ${(isSetsPage ? p.options.filter(o=>o.id==="full-set"||o.id.includes("set")||o.id==="both"||o.id==="pair").slice(0,1) : p.options).map(o=>{
                 const soldOut = isSoldOut(p.id, o.id);
                 const stock = INVENTORY[`${p.id}__${o.id}`];
                 const stockLabel = p.oneOfOne ? `<span style="font-size:11px;color:#b45309;font-weight:700;display:block;margin-bottom:6px">⚠️ Only 1 left!</span>` : stock === 0 ? `<span style="font-size:11px;color:#b91c1c;font-weight:700;display:block;margin-bottom:6px">❌ Sold Out</span>` : "";
-                return `${stockLabel}<button class="product-add-btn ${o.variant==="outline"?"outline":"solid"}" onclick="addToCart('${p.id}','${o.id}')" ${soldOut?"disabled":""} style="${soldOut?"opacity:.45;cursor:not-allowed;text-decoration:line-through;":""}">${soldOut?"Sold Out":o.label+" ("+money(o.price)+")"}</button>`;
+                return `${stockLabel}<button class="product-add-btn solid" onclick="addToCart('${p.id}','${o.id}')" ${soldOut?"disabled":""} style="${soldOut?"opacity:.45;cursor:not-allowed;text-decoration:line-through;":""}">${soldOut?"Sold Out":o.label+" ("+money(o.price)+")"}</button>`;
               }).join("")}
             </div>
           </div>
@@ -949,7 +993,7 @@ function renderNewAdditionsPage(){
       <div class="fp-section-header">
         <div>
           <p class="fp-kicker">🆕 Just Landed</p>
-          <h3 class="fp-title">Fresh Additions To The Shop</h3>
+          <h3 class="fp-title">New Additions To The Shop</h3>
         </div>
         <span style="font-size:28px">✨</span>
       </div>
