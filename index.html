@@ -25,7 +25,7 @@
   --display:'Playfair Display',Georgia,serif;
 }
 html{scroll-behavior:smooth}
-body{background:var(--cream);background-image:radial-gradient(rgba(0,0,0,0.045) 1px,transparent 1px);background-size:18px 18px;font-family:var(--serif);color:var(--ink);min-height:100vh}
+body{background:var(--cream);background-image:radial-gradient(rgba(0,0,0,0.045) 1px,transparent 1px);background-size:18px 18px;font-family:var(--serif);color:var(--ink);min-height:100vh;padding-top:44px}
 img{display:block;max-width:100%}
 button{cursor:pointer;font-family:var(--serif)}
 
@@ -51,12 +51,26 @@ button{cursor:pointer;font-family:var(--serif)}
 .cart-btn:hover{opacity:.85}
 
 /* ── Ticker ── */
-.ticker{overflow:hidden;border-bottom:var(--border-heavy);background:var(--cream);padding:9px 0}
-.ticker-inner{white-space:nowrap;display:inline-block;animation:ticker 32s linear infinite;font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+.ticker{overflow:hidden;background:#1a0a0a;padding:0;border-bottom:3px solid #e53e3e;position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:stretch;height:44px}
+.ticker-label{background:#e53e3e;color:white;font-family:var(--display);font-size:13px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;padding:0 18px;display:flex;align-items:center;white-space:nowrap;flex-shrink:0;gap:6px}
+.ticker-inner{white-space:nowrap;display:inline-block;animation:ticker 70s linear infinite;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.92);font-family:var(--serif);padding:0;line-height:44px;will-change:transform}
+.ticker-inner:hover{animation-play-state:paused}
 @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
+.page-flip{
+  animation:pageFlipIn .38s cubic-bezier(.16,.84,.44,1) both;
+  will-change:opacity,transform;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+}
+.product-card{overflow:hidden}
+.product-card img{transition:transform .45s cubic-bezier(.25,.46,.45,.94),object-fit 0s;will-change:transform;display:block;object-fit:cover;object-position:center;background:var(--cream)}
+.product-card:hover img{transform:scale(1.04);object-fit:contain}
+.product-card .sold-stamp-wrap img{transition:transform .45s cubic-bezier(.25,.46,.45,.94);will-change:transform;object-fit:cover;background:var(--cream)}
+.product-card:hover .sold-stamp-wrap img{transform:scale(1.04);object-fit:contain}
+
 /* ── Page card ── */
-.page-card{border:var(--border-heavy);border-radius:var(--radius);background:var(--parchment);overflow:hidden;box-shadow:var(--shadow)}
+.page-card{border:var(--border-heavy);border-radius:var(--radius);background:var(--parchment);box-shadow:var(--shadow)}
 .page-header{padding:20px 24px;border-bottom:var(--border-heavy);display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
 .page-kicker{font-size:11px;letter-spacing:.25em;text-transform:uppercase;opacity:.7}
 .page-title{font-family:var(--display);font-size:clamp(22px,4vw,38px);font-weight:900;text-transform:uppercase;line-height:1.1;margin-top:6px}
@@ -245,14 +259,86 @@ button{cursor:pointer;font-family:var(--serif)}
   .cart-drawer{width:100%!important;max-width:100%!important}
 
   /* Ticker */
-  .ticker-inner{font-size:10px}
+  .ticker-inner{font-size:10px;letter-spacing:.1em}
+  .ticker-label{font-size:10px;padding:0 10px}
 
   /* Shipping options */
   .shipping-options{grid-template-columns:1fr}
 }
+/* ── STOP THE PRESSES POPUP ── */
+#stp-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;animation:fadeInOverlay .3s ease}
+@keyframes fadeInOverlay{from{opacity:0}to{opacity:1}}
+#stp-modal{background:var(--cream);border:4px solid var(--ink);border-radius:4px;max-width:680px;width:100%;box-shadow:8px 8px 0 var(--ink);animation:stampIn .4s cubic-bezier(.175,.885,.32,1.275);overflow:hidden;max-height:90vh;overflow-y:auto}
+@keyframes stampIn{from{transform:scale(.6) rotate(-3deg);opacity:0}to{transform:scale(1) rotate(0deg);opacity:1}}
+.stp-header{background:var(--ink);color:var(--cream);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--ink)}
+.stp-stamp{display:inline-block;border:3px solid #e53e3e;color:#e53e3e;font-family:var(--display);font-size:clamp(20px,4vw,32px);font-weight:900;letter-spacing:.05em;padding:4px 14px;transform:rotate(-4deg);text-transform:uppercase;animation:stampPulse 1.5s ease-in-out infinite}
+@keyframes stampPulse{0%,100%{box-shadow:0 0 0 0 rgba(229,62,62,.6)}50%{box-shadow:0 0 0 8px rgba(229,62,62,0)}}
+.stp-items{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px}
+@media(max-width:500px){.stp-items{grid-template-columns:repeat(2,1fr)}}
+.stp-item{border:2px solid var(--ink);border-radius:6px;overflow:hidden;position:relative;cursor:pointer;transition:transform .15s}
+.stp-item:hover{transform:translateY(-3px)}
+.stp-item img{width:100%;height:110px;object-fit:cover;object-position:center;display:block}
+.stp-item-info{padding:8px 10px}
+.stp-item-title{font-family:var(--display);font-size:12px;font-weight:900;text-transform:uppercase;line-height:1.2;margin-bottom:4px}
+.stp-item-price{font-family:var(--serif);font-size:12px;font-weight:700;color:#b45309}
+.stp-pulse{position:absolute;top:6px;right:6px;width:10px;height:10px;border-radius:50%;background:#e53e3e;animation:dotPulse 1.2s ease-in-out infinite}
+@keyframes dotPulse{0%,100%{box-shadow:0 0 0 0 rgba(229,62,62,.6);transform:scale(1)}50%{box-shadow:0 0 0 6px rgba(229,62,62,0);transform:scale(1.1)}}
+.stp-hot-ring{position:absolute;inset:0;border-radius:6px;box-shadow:0 0 0 2px rgba(229,62,62,.4);animation:ringPulse 1.5s ease-in-out infinite}
+@keyframes ringPulse{0%,100%{box-shadow:0 0 0 2px rgba(229,62,62,.5)}50%{box-shadow:0 0 0 6px rgba(229,62,62,0)}}
+
+/* ── TYPEWRITER ── */
+.typewriter-wrap{text-align:center;padding:8px 0 4px}
+.typewriter-title{font-family:var(--display);font-size:clamp(36px,8vw,72px);font-weight:900;text-transform:uppercase;letter-spacing:.04em;line-height:1;overflow:hidden;white-space:nowrap;border-right:3px solid var(--ink);width:0;animation:typeTitle 1.2s steps(11,end) .2s forwards,blinkTitle .7s step-end 1.4s 1,hideCursor 0s 2.1s forwards}
+@keyframes typeTitle{to{width:100%}}
+@keyframes blinkTitle{50%{border-color:transparent}}
+@keyframes hideCursor{to{border-color:transparent}}
+.typewriter-sub{font-family:var(--serif);font-size:clamp(13px,2.5vw,18px);font-style:italic;overflow:hidden;white-space:nowrap;border-right:2px solid var(--ink);width:0;opacity:0;animation:typeSub 1.4s steps(22,end) 1.6s forwards,blinkSub .7s step-end 3.1s 1,hideSubCursor 0s 3.8s forwards,fadeInSub 0s 1.6s forwards}
+@keyframes typeSub{to{width:100%}}
+@keyframes blinkSub{50%{border-color:transparent}}
+@keyframes hideSubCursor{to{border-color:transparent}}
+@keyframes fadeInSub{to{opacity:1}}
+/* ── CONFETTI & FIREWORKS ── */
+.confetti-piece{position:fixed;width:10px;height:10px;border-radius:2px;pointer-events:none;z-index:9998;animation:confettiFall linear forwards}
+@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+@keyframes burst{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0}}
+@keyframes flash{0%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(4)}}
+
+/* ── SOLD OUT STAMP ── */
+.sold-stamp-wrap{position:relative}
+.sold-stamp{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-20deg);background:rgba(0,0,0,.65);color:#fff;font-family:var(--display);font-size:clamp(13px,2.5vw,18px);font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border:2px solid #e53e3e;border-radius:4px;white-space:nowrap;pointer-events:none;z-index:3;animation:stampSlam .35s cubic-bezier(.175,.885,.32,1.275) forwards}
+@keyframes stampSlam{from{transform:translate(-50%,-50%) rotate(-20deg) scale(2.5);opacity:0}to{transform:translate(-50%,-50%) rotate(-20deg) scale(1);opacity:1}}
 </style>
 </head>
 <body>
+<div id="stp-overlay" onclick="handleOverlayClick(event)">
+  <div id="stp-modal">
+    <div class="stp-header">
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="stp-stamp">Stop The Presses!</span>
+      </div>
+      <button onclick="closePopup()" style="background:none;border:none;color:var(--cream);font-size:24px;cursor:pointer;line-height:1;padding:0 4px">✕</button>
+    </div>
+    <div style="padding:14px 20px 4px;border-bottom:2px solid var(--ink);background:var(--cream)">
+      <p style="font-family:var(--display);font-size:11px;letter-spacing:.2em;text-transform:uppercase;opacity:.6;margin-bottom:2px">🗞️ Breaking From The Daily Dish</p>
+      <p style="font-family:var(--serif);font-size:14px;line-height:1.6">Hot items are moving fast — don't miss out on today's most wanted pieces. Grab them before they're gone!</p>
+    </div>
+    <div class="stp-items" id="stp-items"></div>
+    <div style="padding:12px 20px;border-top:2px solid var(--ink);display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;background:#faf7f2">
+      <p style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;opacity:.5;font-family:var(--serif)">🔴 Live inventory — first come first served</p>
+      <button onclick="closePopup()" style="font-family:var(--serif);padding:10px 24px;font-size:13px;font-weight:700;border:2px solid var(--ink);border-radius:6px;background:var(--ink);color:var(--cream);cursor:pointer">Enter The Shop →</button>
+    </div>
+  </div>
+</div>
+
+<!-- BREAKING NEWS TICKER — fixed to top, always visible -->
+<div class="ticker" id="breaking-ticker">
+  <div class="ticker-label">🔴 Breaking</div>
+  <div style="overflow:hidden;flex:1">
+    <div class="ticker-inner">
+      Budweiser Beerstein 1999 — only one in stock, don't sleep on it &nbsp;·&nbsp; Wine glasses just $1 each — grab the full set of 9 for $9 &nbsp;·&nbsp; Ballast Point skeleton glass — the coolest glass in the shop &nbsp;·&nbsp; Twisted dinner glasses — heavy solid glass, full set of 10 for $16 &nbsp;·&nbsp; Red ceramic dinner plates — five heavy pieces, set of 5 for $15 &nbsp;·&nbsp; Longhorn whiskey glasses — small and large now available &nbsp;·&nbsp; New drops landing regularly — hit the New Additions button &nbsp;·&nbsp; Lighthouse collection: coastal charm for your dinner table &nbsp;·&nbsp; Smirnoff golf ball glass — the heaviest glass in the shop &nbsp;·&nbsp; Sweetwater IPA glass — nearly new condition, just $4 &nbsp;·&nbsp; Sets for every budget — from $9 wine glasses to full 24pc dinnerware &nbsp;·&nbsp; SweetWater 420 glass — worn in and full of character &nbsp;·&nbsp; Cobalt blue pitcher — museum worthy, priced like it belongs in your home &nbsp;·&nbsp; The Daily Dish: curated thrifted tableware, one headline at a time &nbsp;·&nbsp; Budweiser Beerstein 1999 — only one in stock, don't sleep on it &nbsp;·&nbsp; Wine glasses just $1 each — grab the full set of 9 for $9 &nbsp;·&nbsp; Ballast Point skeleton glass — the coolest glass in the shop &nbsp;·&nbsp; Twisted dinner glasses — heavy solid glass, full set of 10 for $16 &nbsp;·&nbsp; Red ceramic dinner plates — five heavy pieces, set of 5 for $15 &nbsp;·&nbsp; Longhorn whiskey glasses — small and large now available &nbsp;·&nbsp; New drops landing regularly — hit the New Additions button &nbsp;·&nbsp; Lighthouse collection: coastal charm for your dinner table &nbsp;·&nbsp; Smirnoff golf ball glass — the heaviest glass in the shop &nbsp;·&nbsp; Sweetwater IPA glass — nearly new condition, just $4 &nbsp;·&nbsp; Sets for every budget — from $9 wine glasses to full 24pc dinnerware &nbsp;·&nbsp; SweetWater 420 glass — worn in and full of character &nbsp;·&nbsp; Cobalt blue pitcher — museum worthy, priced like it belongs in your home &nbsp;·&nbsp; The Daily Dish: curated thrifted tableware, one headline at a time &nbsp;·&nbsp;
+    </div>
+  </div>
+</div>
 
 <div class="wrap">
 
@@ -260,10 +346,14 @@ button{cursor:pointer;font-family:var(--serif)}
   <div class="masthead">
     <div class="masthead-title">
       <div class="masthead-rule">
-        <hr/><h1>The Daily Dish</h1><hr/>
+        <hr/>
+        <div class="typewriter-wrap" id="typewriter-wrap" style="overflow:hidden">
+          <h1 class="typewriter-title" id="tw-title">The Daily Dish</h1>
+          <p class="typewriter-sub" id="tw-sub">Where Every Meal Makes Headlines</p>
+        </div>
+        <hr/>
       </div>
       <div class="masthead-sub-rule"></div>
-      <p class="masthead-tagline">Where Every Meal Makes Headlines</p>
     </div>
 
     <!-- NAV -->
@@ -275,12 +365,6 @@ button{cursor:pointer;font-family:var(--serif)}
       </div>
     </div>
 
-    <!-- TICKER -->
-    <div class="ticker">
-      <div class="ticker-inner">
-        Breaking: vintage romance plate steals the spotlight &nbsp;•&nbsp; new drinkware lands in cups &nbsp;•&nbsp; curated thrifted tableware, one headline at a time &nbsp;•&nbsp; the daily dish newsroom is open for business &nbsp;•&nbsp; lighthouse collection: coastal charm meets your dinner table &nbsp;•&nbsp; red glass set: bold color for everyday meals &nbsp;•&nbsp; Breaking: vintage romance plate steals the spotlight &nbsp;•&nbsp; new drinkware lands in cups &nbsp;•&nbsp; curated thrifted tableware, one headline at a time &nbsp;•&nbsp; the daily dish newsroom is open for business &nbsp;•&nbsp; lighthouse collection: coastal charm meets your dinner table &nbsp;•&nbsp; red glass set: bold color for everyday meals &nbsp;•&nbsp;
-      </div>
-    </div>
   </div>
 
   <!-- PAGE CARD -->
@@ -370,49 +454,48 @@ const IMGS = {
 const products = [
   // ── MIXED NEW & OLD ──
   {id:"cobalt-blue-pitcher",oneOfOne:true,collection:"Drinkware",section:"Morning Edition",title:"Cobalt Blue Floral Pitcher",subtitle:"A stunning deep blue ceramic pitcher with hand-painted flowers and gold trim.",description:"A beautiful deep cobalt blue ceramic pitcher with a ruffled spout, a curved gold-trimmed handle and a hand-painted floral bouquet on the front. It's the kind of piece that looks like it belongs in a museum and we're selling it for ten bucks.",image:"https://i.imgur.com/7l8yH8M.jpeg",priceLine:"Single Pitcher — $10",options:[{id:"single",label:"Add One",price:10}],addedAt:"2026-04-07",story:"From the morning desk — a stunning cobalt blue floral pitcher just arrived in the shop. Gold trim, painted flowers, and a design that makes any table feel curated."},
-  {id:"black-white-split-bowl",oneOfOne:true,collection:"Bowls",section:"Kitchen",title:"Black & White Split Bowl",subtitle:"A large ceramic bowl split right down the middle in black and white.",description:"A big ceramic bowl that's exactly half white and half matte black — split right down the middle in a really clean diagonal. Modern, bold and the kind of piece people ask about.",image:"https://i.imgur.com/POgGZEG.jpeg",priceLine:"Single Bowl — $10",options:[{id:"single",label:"Add One",price:10}],addedAt:"2026-04-07",story:"From the bowls desk — a bold black and white split bowl just arrived. Heavy glass, modern design, and seriously striking on any table."},
-  {id:"american-eagle-plate",oneOfOne:true,collection:"Vintage Plates",section:"Dining",title:"American Eagle Collector Plate",subtitle:"A bold patriotic glass plate with gold trim and eagle artwork.",description:"This one is a real find — a vintage style glass plate with a bald eagle, American flag and gold trim all the way around the edge. It's the kind of plate that belongs in a collection or on display.",image:"https://i.imgur.com/0ie0rvR.jpeg",priceLine:"Single Plate — $12",options:[{id:"single",label:"Add One",price:12}],hotDeal:true,story:"Breaking from the patriotic desk: a bold American eagle lands on today's tableware lineup. With gold trim and historic imagery, this plate feels like something straight out of a collector's cabinet."},
-  {id:"lighthouse-plates",collection:"Lighthouse Collection",section:"Dining",title:"Lighthouse Dinner Plates",subtitle:"Coastal glass plates with a lighthouse scene all the way around.",description:"These glass plates have a lighthouse painted right in the center with a fun nautical border around the rim. They're in great condition and perfect if you want your table to feel a little bit like a day at the water.",image:IMGS.lighthouse,priceLine:"Set of 4 — $24 | Single Plate — $6",options:[{id:"set-4",label:"Add Set of 4",price:24},{id:"single",label:"Add One",price:6,variant:"outline"}],hotDeal:true,story:"Coastal charm lands on the front page. Sources say these glass plates bring lighthouse energy to any dinner — no beach required."},
+  {id:"black-white-split-bowl",oneOfOne:true,collection:"Bowls",section:"Kitchen",title:"Black & White Split Bowl",subtitle:"A large ceramic bowl split right down the middle in black and white.",description:"A big ceramic bowl that's exactly half white and half matte black — split right down the middle in a really clean diagonal. Modern, bold and the kind of piece people ask about.",image:"https://i.imgur.com/POgGZEG.jpeg",priceLine:"Single Bowl — $9",options:[{id:"single",label:"Add One",price:9}],addedAt:"2026-04-07",story:"From the bowls desk — a bold black and white split bowl just arrived. Heavy glass, modern design, and seriously striking on any table."},
+  {id:"american-eagle-plate",oneOfOne:true,collection:"Vintage Plates",section:"Dining",title:"American Eagle Collector Plate",subtitle:"A bold patriotic glass plate with gold trim and eagle artwork.",description:"This one is a real find — a vintage style glass plate with a bald eagle, American flag and gold trim all the way around the edge. It's the kind of plate that belongs in a collection or on display.",image:"https://i.imgur.com/0ie0rvR.jpeg",priceLine:"Single Plate — $10",options:[{id:"single",label:"Add One",price:10}],hotDeal:true,story:"Breaking from the patriotic desk: a bold American eagle lands on today's tableware lineup. With gold trim and historic imagery, this plate feels like something straight out of a collector's cabinet."},
+  {id:"lighthouse-plates",collection:"Lighthouse Collection",section:"Dining",title:"Lighthouse Dinner Plates",subtitle:"Coastal glass plates with a lighthouse scene all the way around.",description:"These glass plates have a lighthouse painted right in the center with a fun nautical border around the rim. They're in great condition and perfect if you want your table to feel a little bit like a day at the water.",image:IMGS.lighthouse,priceLine:"Set of 4 — $20 | Single Plate — $6",options:[{id:"set-4",label:"Add Set of 4",price:20},{id:"single",label:"Add One",price:6,variant:"outline"}],hotDeal:true,story:"Coastal charm lands on the front page. Sources say these glass plates bring lighthouse energy to any dinner — no beach required."},
   {id:"grapevine-plate",oneOfOne:true,collection:"Plates",section:"Dining",title:"Grapevine Dinner Plate",subtitle:"A medium glass plate with a detailed grapevine and flower illustration around the rim.",description:"A medium sized glass plate with a detailed grapevine and flower illustration wrapped around the rim in deep blue, green and burgundy. The kind of plate that looks like it came from your grandmother's good china collection — in the best possible way.",image:"https://i.imgur.com/hdDJXtD.jpeg",priceLine:"Single Plate — $6",options:[{id:"single",label:"Add One",price:6}],addedAt:"2026-04-07",story:"From the plates desk — a beautiful grapevine dinner plate just landed in the shop. Detailed, pretty, and only one available."},
-  {id:"magnolia-floral-bowl",oneOfOne:true,collection:"Bowls",section:"Kitchen",title:"Magnolia Soup Bowl",subtitle:"A wide soup bowl with magnolia flowers, cherries and leaves painted around the rim.",description:"A wide glass soup bowl with a deep green and red rim and a soft magnolia flower illustration painted in the center. Cherries, pinecones and leaves fill out the border and give it a really warm natural vibe.",image:"https://i.imgur.com/pU437LJ.jpeg",priceLine:"Single Bowl — $8",options:[{id:"single",label:"Add One",price:8}],addedAt:"2026-04-07",story:"From the bowls desk — a gorgeous magnolia floral soup bowl just made it into the shop. Warm, natural, and the kind of piece that makes breakfast feel intentional."},
-  {id:"red-dinner-plates",collection:"Red Glass Collection",section:"Dining",title:"Red Glass Dinner Plates",subtitle:"Bold red glass plates that make every meal feel like an occasion.",description:"These are heavy, deep red glass dinner plates that look way more expensive than they are. If you want your table to actually look good, these are the ones.",image:"https://i.imgur.com/EdI3INH.jpeg",priceLine:"Set of 3 — $15 | Single Plate — $6",options:[{id:"set-3",label:"Add Set of 3",price:15},{id:"single",label:"Add One",price:6,variant:"outline"}],story:"Bold color, solid glass, and a price that makes sense. These red dinner plates are the kind of thing you put on the table and people notice."},
-  {id:"white-embossed-floral-plate",collection:"Plates",section:"Dining",title:"White Floral Rim Plates",subtitle:"Clean white plates with a raised flower and fruit design around the rim.",description:"Five heavy white glass dinner plates with a beautiful raised floral and fruit pattern embossed all the way around the rim. They're elegant without being fussy and look great on basically any table.",image:"https://i.imgur.com/6ZJb0Jk.jpeg",priceLine:"Single — $4 | All 5 — $18",options:[{id:"set-5",label:"Add All 5",price:18},{id:"single",label:"Add One",price:4,variant:"outline"}],addedAt:"2026-04-07",story:"From the plates desk — five elegant white floral rim plates just landed in the shop. Raised rim detail, heavy glass, and a clean look that works with anything."},
-  {id:"centerpiece-bowl",collection:"Bowls",section:"Kitchen",title:"Big Centerpiece Popcorn Bowl",subtitle:"A big bold bowl made for the middle of the table — or a massive bowl of popcorn.",description:"A ceramic bowl with a colorful painted band around the outside that looks great whether you're using it or just leaving it out. It's the kind of piece that makes your kitchen feel a little more put together without trying too hard.",image:"https://i.imgur.com/ZPXaQFI.jpeg",priceLine:"Single Bowl — $10 | Both — $12",options:[{id:"both",label:"Add Both",price:12},{id:"single",label:"Add One",price:10,variant:"outline"}],hotDeal:true,story:"Witnesses report a sudden spike in popcorn consumption across the city. Investigators confirm the cause: one bold ceramic bowl with a decorative band, spotted making every table look expensive."},
+  {id:"magnolia-floral-bowl",oneOfOne:true,collection:"Bowls",section:"Kitchen",title:"Magnolia Soup Bowl",subtitle:"A wide soup bowl with magnolia flowers, cherries and leaves painted around the rim.",description:"A wide glass soup bowl with a deep green and red rim and a soft magnolia flower illustration painted in the center. Cherries, pinecones and leaves fill out the border and give it a really warm natural vibe.",image:"https://i.imgur.com/pU437LJ.jpeg",priceLine:"Single Bowl — $6",options:[{id:"single",label:"Add One",price:6}],addedAt:"2026-04-07",story:"From the bowls desk — a gorgeous magnolia floral soup bowl just made it into the shop. Warm, natural, and the kind of piece that makes breakfast feel intentional."},
+  {id:"red-dinner-plates",collection:"Red Glass Collection",section:"Dining",title:"Red Glass Dinner Plates",subtitle:"Bold red glass plates that make every meal feel like an occasion.",description:"These are heavy, deep red glass dinner plates that look way more expensive than they are. If you want your table to actually look good, these are the ones.",image:"https://i.imgur.com/EdI3INH.jpeg",priceLine:"Set of 3 — $12 | Single Plate — $6",options:[{id:"set-3",label:"Add Set of 3",price:12},{id:"single",label:"Add One",price:6,variant:"outline"}],story:"Bold color, solid glass, and a price that makes sense. These red dinner plates are the kind of thing you put on the table and people notice."},
+  {id:"white-embossed-floral-plate",collection:"Plates",section:"Dining",title:"White Floral Rim Plates",subtitle:"Clean white plates with a raised flower and fruit design around the rim.",description:"Five heavy white glass dinner plates with a beautiful raised floral and fruit pattern embossed all the way around the rim. They're elegant without being fussy and look great on basically any table.",image:"https://i.imgur.com/6ZJb0Jk.jpeg",priceLine:"Single — $4 | All 5 — $15",options:[{id:"set-5",label:"Add All 5",price:15},{id:"single",label:"Add One",price:4,variant:"outline"}],addedAt:"2026-04-07",story:"From the plates desk — five elegant white floral rim plates just landed in the shop. Raised rim detail, heavy glass, and a clean look that works with anything."},
+  {id:"centerpiece-bowl",collection:"Bowls",section:"Kitchen",title:"Big Centerpiece Popcorn Bowl",subtitle:"A big bold bowl made for the middle of the table — or a massive bowl of popcorn.",description:"A ceramic bowl with a colorful painted band around the outside that looks great whether you're using it or just leaving it out. It's the kind of piece that makes your kitchen feel a little more put together without trying too hard.",image:"https://i.imgur.com/ZPXaQFI.jpeg",priceLine:"Single Bowl — $7 | Both — $12",options:[{id:"both",label:"Add Both",price:12},{id:"single",label:"Add One",price:7,variant:"outline"}],hotDeal:true,story:"Witnesses report a sudden spike in popcorn consumption across the city. Investigators confirm the cause: one bold ceramic bowl with a decorative band, spotted making every table look expensive."},
   {id:"orange-swirl-plates",collection:"Plates",section:"Dining",title:"Sunset Orange Swirl Plates",subtitle:"Heavy glass plates in a warm sunny orange with a hand-swirled finish.",description:"Same heavy glass quality as the ocean blue swirl plates but in a bold sunny orange that looks incredible on any table. A warm swirled finish that looks totally handmade and completely one of a kind.",image:"https://i.imgur.com/j8d3d1H.jpeg",priceLine:"Single — $6 | Both — $10",options:[{id:"both",label:"Add Both",price:10},{id:"single",label:"Add One",price:6,variant:"outline"}],addedAt:"2026-04-07",story:"From the plates desk — two sunset orange swirl plates just landed in the shop. Warm, bold, and beautiful on any table."},
-  {id:"earth-tone-dinner-plates",collection:"New Additions",section:"Dining",title:"Earth Tone Dinner Plates",subtitle:"Heavy layered plates in tan, rust, gray and chocolate brown.",description:"These are big heavy dinner plates with layered earth tone stripes that look really sharp on any table. They have a sleek modern finish and feel seriously solid when you pick them up.",image:"https://i.imgur.com/WwVyCxT.jpeg",priceLine:"Pair — $15 | Single Plate — $9",options:[{id:"pair",label:"Add Both",price:15},{id:"single",label:"Add One",price:9,variant:"outline"}],story:"Design desk report: a pair of bold earth-tone plates have entered circulation. Layered browns and a sleek finish that bring modern energy to any table."},
-  {id:"tribal-diamond-bowl",oneOfOne:true,collection:"Bowls",section:"Kitchen",title:"Diamond Pattern Ceramic Bowl",subtitle:"A compact bowl covered in a colorful diamond pattern in teal, orange and burgundy.",description:"A compact ceramic bowl with a repeating diamond pattern in teal, burnt orange and burgundy wrapped all the way around the outside with a clean white interior. It's small but it really pops.",image:"https://i.imgur.com/LMlPbiJ.jpeg",priceLine:"Single Bowl — $6",options:[{id:"single",label:"Add One",price:6}],addedAt:"2026-04-07",story:"From the bowls desk — a bold tribal diamond pattern bowl just landed in the shop. Compact, colorful, and completely one of a kind."},
+  {id:"earth-tone-dinner-plates",collection:"Plates",section:"Dining",title:"Earth Tone Dinner Plates",subtitle:"Heavy layered plates in tan, rust, gray and chocolate brown.",description:"These are big heavy dinner plates with layered earth tone stripes that look really sharp on any table. They have a sleek modern finish and feel seriously solid when you pick them up.",image:"https://i.imgur.com/WwVyCxT.jpeg",priceLine:"Pair — $15 | Single Plate — $7",options:[{id:"pair",label:"Add Both",price:15},{id:"single",label:"Add One",price:7,variant:"outline"}],story:"Design desk report: a pair of bold earth-tone plates have entered circulation. Layered browns and a sleek finish that bring modern energy to any table."},
+  {id:"tribal-diamond-bowl",oneOfOne:true,collection:"Bowls",section:"Kitchen",title:"Diamond Pattern Ceramic Bowl",subtitle:"A compact bowl covered in a colorful diamond pattern in teal, orange and burgundy.",description:"A compact ceramic bowl with a repeating diamond pattern in teal, burnt orange and burgundy wrapped all the way around the outside with a clean white interior. It's small but it really pops.",image:"https://i.imgur.com/LMlPbiJ.jpeg",priceLine:"Single Bowl — $5",options:[{id:"single",label:"Add One",price:5}],addedAt:"2026-04-07",story:"From the bowls desk — a bold tribal diamond pattern bowl just landed in the shop. Compact, colorful, and completely one of a kind."},
   {id:"blue-swirl-plates",collection:"Plates",section:"Dining",title:"Ocean Blue Swirl Plates",subtitle:"Heavy glass plates in a rich ocean blue with a hand-swirled finish.",description:"Big heavy glass plates in a deep ocean blue with a swirled finish that makes every single one look a little different. The kind of plates that make your table look like you actually tried.",image:"https://i.imgur.com/SRb1eG2.jpeg",priceLine:"Single — $6 | Both — $10",options:[{id:"both",label:"Add Both",price:10},{id:"single",label:"Add One",price:6,variant:"outline"}],addedAt:"2026-04-07",story:"From the plates desk — two ocean blue swirl plates just arrived. Bold color, beautiful finish, and seriously high quality glass."},
   {id:"lighthouse-bowls",collection:"Lighthouse Collection",section:"Kitchen",title:"Lighthouse Soup Bowls",subtitle:"Matching bowls from the lighthouse collection — great for soup or cereal.",description:"These glass bowls match the lighthouse dinner plates and are great for soup, cereal, or anything you want to eat out of a bowl. A nice set to have if you like things to match.",image:"https://i.imgur.com/YIDDz9V.jpeg",priceLine:"Set of 8 — $25 | Single Bowl — $5",options:[{id:"set-8",label:"Add Set of 8",price:25},{id:"single",label:"Add One",price:5,variant:"outline"}],story:"The lighthouse collection keeps growing. Eight matching bowls that bring the same coastal energy as the plates — perfect for a full matching set."},
-  {id:"solid-black-bowl",collection:"Bowls",section:"Kitchen",title:"Solid Black Ceramic Bowls",subtitle:"Clean glossy black ceramic bowls that go with literally everything.",description:"Solid black ceramic bowls with a glossy finish inside and out that look sharp with any kitchen setup. Simple, sturdy and the kind of bowl you reach for without thinking.",image:"https://i.imgur.com/5ct0WgG.jpeg",priceLine:"Single Bowl — $5 | All 3 — $12",options:[{id:"set-3",label:"Add All 3",price:12},{id:"single",label:"Add One",price:5,variant:"outline"}],addedAt:"2026-04-07",story:"From the bowls desk — a clean solid black ceramic bowl just made it into the shop. Simple, bold, and works with any kitchen style."},
-  {id:"red-appetizer-plates",collection:"Red Glass Collection",section:"Dining",title:"Red Glass Appetizer Plates",subtitle:"Smaller red glass plates — great for apps, dessert, or side dishes.",description:"Same deep red glass as the dinner plates but in a smaller size that's perfect for appetizers, bread, or dessert. They stack clean and look great next to the full set.",image:"https://i.imgur.com/2nIIUwa.jpeg",priceLine:"Set of 4 — $15 | Single Plate — $4",options:[{id:"set-4",label:"Add Set of 4",price:15},{id:"single",label:"Add One",price:4,variant:"outline"}],story:"The supporting cast every table needs. These red appetizer plates are the perfect sidekick to the dinner plates — or honestly great on their own."},
+  {id:"solid-black-bowl",collection:"Bowls",section:"Kitchen",title:"Solid Black Ceramic Bowls",subtitle:"Clean glossy black ceramic bowls that go with literally everything.",description:"Solid black ceramic bowls with a glossy finish inside and out that look sharp with any kitchen setup. Simple, sturdy and the kind of bowl you reach for without thinking.",image:"https://i.imgur.com/5ct0WgG.jpeg",priceLine:"Single Bowl — $5 | All 3 — $10",options:[{id:"set-3",label:"Add All 3",price:10},{id:"single",label:"Add One",price:5,variant:"outline"}],addedAt:"2026-04-07",story:"From the bowls desk — a clean solid black ceramic bowl just made it into the shop. Simple, bold, and works with any kitchen style."},
+  {id:"red-appetizer-plates",collection:"Red Glass Collection",section:"Dining",title:"Red Glass Appetizer Plates",subtitle:"Smaller red glass plates — great for apps, dessert, or side dishes.",description:"Same deep red glass as the dinner plates but in a smaller size that's perfect for appetizers, bread, or dessert. They stack clean and look great next to the full set.",image:"https://i.imgur.com/2nIIUwa.jpeg",priceLine:"Set of 4 — $12 | Single Plate — $4",options:[{id:"set-4",label:"Add Set of 4",price:12},{id:"single",label:"Add One",price:4,variant:"outline"}],story:"The supporting cast every table needs. These red appetizer plates are the perfect sidekick to the dinner plates — or honestly great on their own."},
   {id:"colorful-glass-plate-set",collection:"Plates",section:"Dining",title:"Colorful Glass Dinner Plates",subtitle:"A full set of 8 matching glass plates in yellow, green and blue.",description:"Eight matching glass dinner plates in a fun mix of yellow, green and blue tones that all go together really well. Good quality glass, great price, and perfect if you just want a full matching set without spending a lot.",image:"https://i.imgur.com/xhxXdzm.jpeg",priceLine:"Single — $5 | Full Set of 8 — $25",options:[{id:"set-8",label:"Add Full Set of 8",price:25},{id:"single",label:"Add One",price:5,variant:"outline"}],addedAt:"2026-04-07",story:"From the plates desk — a full set of eight colorful glass dinner plates just landed in the shop. Yellow, green and blue tones that all work together. Great deal for anyone stocking up."},
-  {id:"red-bowls",collection:"Red Glass Collection",section:"Kitchen",title:"Red Glass Bowls",subtitle:"Deep red glass bowls that match the red dinner plate set.",description:"Same deep red glass as the dinner plates but in bowl form — great for soup, salads, or anything else you want to eat out of a bowl. They look really sharp together as a set.",image:"https://i.imgur.com/MEFyLMQ.jpeg",priceLine:"Set of 3 — $12 | Single Bowl — $5",options:[{id:"set-3",label:"Add Set of 3",price:12},{id:"single",label:"Add One",price:5,variant:"outline"}],story:"The red glass collection gets a bowl. Same bold color as the plates, just ready for soup, salad, or cereal — whatever you're having."},
+  {id:"red-bowls",collection:"Red Glass Collection",section:"Kitchen",title:"Red Glass Bowls",subtitle:"Deep red glass bowls that match the red dinner plate set.",description:"Same deep red glass as the dinner plates but in bowl form — great for soup, salads, or anything else you want to eat out of a bowl. They look really sharp together as a set.",image:"https://i.imgur.com/MEFyLMQ.jpeg",priceLine:"Set of 3 — $10 | Single Bowl — $5",options:[{id:"set-3",label:"Add Set of 3",price:10},{id:"single",label:"Add One",price:5,variant:"outline"}],story:"The red glass collection gets a bowl. Same bold color as the plates, just ready for soup, salad, or cereal — whatever you're having."},
   {id:"fall-harvest-plates",collection:"Plates",section:"Dining",title:"Fall Harvest Plates",subtitle:"A pair of beautiful fall themed plates covered in pumpkins and flowers.",description:"A pair of lightweight plates covered in a beautiful fall design — pumpkins, flowers and warm autumn colors all across the surface. Don't let the material fool you, these are genuinely pretty and perfect for seasonal entertaining.",image:"https://i.imgur.com/VubHZ4R.jpeg",priceLine:"Single — $3.50 | Both — $6",options:[{id:"both",label:"Add Both",price:6},{id:"single",label:"Add One",price:3.50,variant:"outline"}],addedAt:"2026-04-07",story:"From the plates desk — two beautiful fall harvest plates just arrived. Pumpkins, flowers and warm autumn colors — perfect for seasonal tables."},
   {id:"vintage-fruit-appetizer-plate",collection:"Vintage Plates",section:"Dining",title:"Vintage Fruit Appetizer Plate",subtitle:"A small raised plate with colorful fruit painted all over it.",description:"A small appetizer plate with colorful fruit illustrations and slightly raised edges that make it feel more like a dish than a flat plate. Great for snacks, cheese, or dessert.",image:"https://i.imgur.com/RFbQzK9.jpeg",priceLine:"Single Plate — $10 | Pair — $15",options:[{id:"pair",label:"Add Both",price:15},{id:"single",label:"Add One",price:10,variant:"outline"}],story:"From the vintage kitchen desk: a beautifully detailed fruit plate with raised edges and colorful artwork — perfect for appetizers or a small dessert worth showing off."},
-  {id:"sleek-soup-bowls",collection:"Bowls",section:"Kitchen",title:"Clear Glass Soup Bowls",subtitle:"Simple clear glass bowls — clean, heavy and really versatile.",description:"Heavy clear glass soup bowls that look clean on any table and work for pretty much anything — soup, salad, pasta, ice cream. Simple and really well made.",image:"https://i.imgur.com/uQbpbBb.jpeg",priceLine:"Pair — $16 | Single Bowl — $9",options:[{id:"pair",label:"Add Both",price:16},{id:"single",label:"Add One",price:9,variant:"outline"}],story:"Clear, clean, and seriously heavy. These glass soup bowls work for everything from ramen to ice cream without skipping a beat."},
-  {id:"blue-rimmed-deep-plate",oneOfOne:true,collection:"Plates",section:"Dining",title:"Deep Blue Rimmed Plate",subtitle:"A large heavy plate with a bold blue rim that dips down like a bowl.",description:"A large heavy plate with a bold blue and white patterned rim and a deep center that works just as well for soup as it does for a regular meal. Really heavy and really cool.",image:"https://i.imgur.com/FCsqILC.jpeg",priceLine:"Single Plate — $8",options:[{id:"single",label:"Add One",price:8}],addedAt:"2026-04-06",story:"From the plates desk — a bold blue rimmed deep plate just arrived. Heavy glass, cool design, and a shape that works for anything you put in it."},
-  {id:"blue-cream-bowl",collection:"Bowls",section:"Kitchen",title:"Blue & Cream Ceramic Bowl",subtitle:"A pretty two-tone ceramic bowl in blue and cream.",description:"A small ceramic bowl with a blue exterior and a cream interior that looks like something you'd find at a boutique for way more money. Simple, clean, and really nice quality.",image:"https://i.imgur.com/RQbW9iN.jpeg",priceLine:"Single Bowl — $8 | Both — $14",options:[{id:"both",label:"Add Both",price:14},{id:"single",label:"Add One",price:8,variant:"outline"}],story:"From the bowls desk — a simple two-tone blue and cream ceramic bowl that looks like it costs three times what we're charging for it."},
+  {id:"sleek-soup-bowls",collection:"Bowls",section:"Kitchen",title:"Clear Glass Soup Bowls",subtitle:"Simple clear glass bowls — clean, heavy and really versatile.",description:"Heavy clear glass soup bowls that look clean on any table and work for pretty much anything — soup, salad, pasta, ice cream. Simple and really well made.",image:"https://i.imgur.com/uQbpbBb.jpeg",priceLine:"Pair — $10 | Single Bowl — $6",options:[{id:"pair",label:"Add Both",price:10},{id:"single",label:"Add One",price:6,variant:"outline"}],story:"Clear, clean, and seriously heavy. These glass soup bowls work for everything from ramen to ice cream without skipping a beat."},
+  {id:"blue-rimmed-deep-plate",oneOfOne:true,collection:"Plates",section:"Dining",title:"Deep Blue Rimmed Plate",subtitle:"A large heavy plate with a bold blue rim that dips down like a bowl.",description:"A large heavy plate with a bold blue and white patterned rim and a deep center that works just as well for soup as it does for a regular meal. Really heavy and really cool.",image:"https://i.imgur.com/FCsqILC.jpeg",priceLine:"Single Plate — $7",options:[{id:"single",label:"Add One",price:7}],addedAt:"2026-04-06",story:"From the plates desk — a bold blue rimmed deep plate just arrived. Heavy glass, cool design, and a shape that works for anything you put in it."},
+  {id:"blue-cream-bowl",collection:"Bowls",section:"Kitchen",title:"Blue & Cream Ceramic Bowl",subtitle:"A pretty two-tone ceramic bowl in blue and cream.",description:"A small ceramic bowl with a blue exterior and a cream interior that looks like something you'd find at a boutique for way more money. Simple, clean, and really nice quality.",image:"https://i.imgur.com/RQbW9iN.jpeg",priceLine:"Single Bowl — $6 | Both — $10",options:[{id:"both",label:"Add Both",price:10},{id:"single",label:"Add One",price:6,variant:"outline"}],story:"From the bowls desk — a simple two-tone blue and cream ceramic bowl that looks like it costs three times what we're charging for it."},
   {id:"deep-red-square-plate",collection:"Plates",section:"Dining",title:"Deep Red Square Plates",subtitle:"Heavy square glass plates in a deep rich red — bold and modern.",description:"Three heavy glass dinner plates in a deep rich red glaze on a modern square shape. They look really intentional on a table and the color is seriously striking.",image:"https://i.imgur.com/Dsw1Z6c.jpeg",priceLine:"Single — $5 | All 3 — $12",options:[{id:"set-3",label:"Add All 3",price:12},{id:"single",label:"Add One",price:5,variant:"outline"}],addedAt:"2026-04-06",story:"From the plates desk — three deep red square glass dinner plates just arrived. Heavy, bold, and seriously striking on any table."},
   {id:"brown-mugs",collection:"Drinkware",section:"Morning Edition",title:"Three-Tone Coffee Mugs",subtitle:"A matching set of three ceramic mugs in warm brown tones.",description:"A set of three ceramic coffee mugs in three different warm brown shades that look great together on a shelf or in a cabinet. Solid, comfortable to hold, and perfect for a morning routine.",image:"https://i.imgur.com/CoTjjh6.jpeg",priceLine:"Set of 3 — $12 | Single Mug — $5",options:[{id:"set-3",label:"Add All 3",price:12},{id:"single",label:"Add One",price:5,variant:"outline"}],story:"Three mugs, three shades, one great morning. These warm brown ceramic mugs are the kind of thing you reach for every single day without thinking about it."},
   {id:"pumpkin-patch-bowl",oneOfOne:true,collection:"Bowls",section:"Kitchen",title:"Pumpkin Patch Bowl",subtitle:"A glass bowl with a warm pumpkin and gourd design painted on the outside.",description:"A solid glass bowl with colorful pumpkins and gourds painted all the way around the outside in warm fall tones with a red floral rim. It's cozy and charming and honestly just really pretty.",image:"https://i.imgur.com/uZcXT2e.jpeg",priceLine:"Single Bowl — $6",options:[{id:"single",label:"Add One",price:6}],addedAt:"2026-04-06",story:"From the bowls desk — a stunning pumpkin patch bowl just made it into the shop. Warm colors, cool design, and only one available."},
-  {id:"minimal-earth-dinner-plates",collection:"Vintage Plates",section:"Dining",title:"Smooth Earth Tone Dinner Plates",subtitle:"Simple smooth plates in warm earth tones with a brown rim.",description:"Clean smooth dinner plates with a soft earth tone gradient and a warm brown rim — the kind of plates that go with everything and never look out of place. Great for everyday use.",image:"https://i.imgur.com/SLXy3Fd.jpeg",priceLine:"Set of 3 — $16 | Single Plate — $7",options:[{id:"set-3",label:"Add All 3",price:16},{id:"single",label:"Add One",price:7,variant:"outline"}],story:"Kitchen desk update: sometimes the simplest plate is the most useful. Smooth earth-tone dishes perfect for large meals and everyday dinners."},
+  {id:"minimal-earth-dinner-plates",collection:"Vintage Plates",section:"Dining",title:"Smooth Earth Tone Dinner Plates",subtitle:"Simple smooth plates in warm earth tones with a brown rim.",description:"Clean smooth dinner plates with a soft earth tone gradient and a warm brown rim — the kind of plates that go with everything and never look out of place. Great for everyday use.",image:"https://i.imgur.com/SLXy3Fd.jpeg",priceLine:"Set of 3 — $15 | Single Plate — $6",options:[{id:"set-3",label:"Add All 3",price:15},{id:"single",label:"Add One",price:6,variant:"outline"}],story:"Kitchen desk update: sometimes the simplest plate is the most useful. Smooth earth-tone dishes perfect for large meals and everyday dinners."},
   {id:"color-pattern-bowl",oneOfOne:true,collection:"Bowls",section:"Kitchen",title:"Colorful Geometric Bowl",subtitle:"A bright glass bowl covered in a bold geometric pattern.",description:"A glass bowl covered in a striking geometric pattern in blue, red, green and yellow that wraps all the way around the outside. It's loud in the best way — the kind of bowl that gets noticed.",image:"https://i.imgur.com/y5KsKKz.jpeg",priceLine:"Single Bowl — $6",options:[{id:"single",label:"Add One",price:6}],addedAt:"2026-04-06",story:"From the bowls desk — a bold geometric patterned glass bowl just landed in the shop. Distinctive colors and a design that stands out on any table."},
-  {id:"blue-glass-cups",collection:"Drinkware",section:"Morning Edition",title:"Blue Glass Drinking Cups",subtitle:"A set of five blue glass cups — great for water, juice or iced tea.",description:"Five blue glass cups that look great on any table and are perfect for everyday drinking — water, juice, iced tea, whatever. They have a nice weight to them and the color is really pretty in the light.",image:"https://i.imgur.com/ju7LV0y.jpeg",priceLine:"Set of 5 — $12 | Single Cup — $3",options:[{id:"set-5",label:"Add Set of 5",price:12},{id:"single",label:"Add One",price:3,variant:"outline"}],story:"Five blue glass cups that look like they belong at a nice dinner. Great for any drink and priced like they belong in your cabinet already."},
   {id:"southwest-ranch-plate",oneOfOne:true,collection:"Plates",section:"Dining",title:"Southwest Pattern Dinner Plate",subtitle:"A large plate with a detailed southwestern geometric border all the way around.",description:"A big dinner plate with a clean white center and a detailed southwestern pattern around the rim in warm earthy tones. The border design is really intricate and the plate itself feels really high quality.",image:"https://i.imgur.com/us8luRh.jpeg",priceLine:"Single Plate — $8",options:[{id:"single",label:"Add One",price:8}],addedAt:"2026-04-06",story:"From the plates desk — a unique southwestern ranch plate just landed in the shop. One available and the rim design is unlike anything we've had before."},
-  {id:"coconut-style-glass-bowl",oneOfOne:true,collection:"Bowls",section:"Kitchen",title:"Tropical Glass Bowl",subtitle:"A small colorful glass bowl with a fun tropical plant design.",description:"A solid glass bowl with a colorful tropical plant design and a warm orange rim that makes it stand out on any shelf or table. Small but really eye-catching.",image:"https://i.imgur.com/pU4fkqU.jpeg",priceLine:"Single Bowl — $8",options:[{id:"single",label:"Add One",price:8}],story:"From the tropical desk: a colorful coconut-style bowl enters the kitchen lineup. Perfect for fruit, snacks, or just looking good on the counter."},
-  {id:"purple-flower-square-plate",oneOfOne:true,collection:"Vintage Plates",section:"Dining",title:"Purple Flower Square Plate",subtitle:"A square glass plate with hand-painted purple flowers.",description:"A square glass plate with a soft yellow background and purple flowers painted right in the middle — simple, pretty, and unlike any round plate you've ever owned. Only one available.",image:"https://i.imgur.com/wbAXpwr.jpeg",priceLine:"Single Plate — $10",options:[{id:"single",label:"Add One",price:10}],story:"From the garden desk: a quiet floral plate enters the lineup. Simple purple flowers on a square glass base — the kind of piece that just works."},
+  {id:"coconut-style-glass-bowl",oneOfOne:true,collection:"Bowls",section:"Kitchen",title:"Tropical Glass Bowl",subtitle:"A small colorful glass bowl with a fun tropical plant design.",description:"A solid glass bowl with a colorful tropical plant design and a warm orange rim that makes it stand out on any shelf or table. Small but really eye-catching.",image:"https://i.imgur.com/pU4fkqU.jpeg",priceLine:"Single Bowl — $6",options:[{id:"single",label:"Add One",price:6}],story:"From the tropical desk: a colorful coconut-style bowl enters the kitchen lineup. Perfect for fruit, snacks, or just looking good on the counter."},
+  {id:"purple-flower-square-plate",oneOfOne:true,collection:"Vintage Plates",section:"Dining",title:"Purple Flower Square Plate",subtitle:"A square glass plate with hand-painted purple flowers.",description:"A square glass plate with a soft yellow background and purple flowers painted right in the middle — simple, pretty, and unlike any round plate you've ever owned. Only one available.",image:"https://i.imgur.com/wbAXpwr.jpeg",priceLine:"Single Plate — $6",options:[{id:"single",label:"Add One",price:6}],story:"From the garden desk: a quiet floral plate enters the lineup. Simple purple flowers on a square glass base — the kind of piece that just works."},
   {id:"fruit-ceramic-creamer",collection:"Drinkware",section:"Morning Edition",title:"Vintage Fruit Creamer Pitcher",subtitle:"A small ceramic pitcher with colorful fruit designs — great for cream or syrup.",description:"A small ceramic pouring pitcher with colorful fruit painted on the side and a curved handle that makes it easy to pour. Perfect for cream, syrup, salad dressing, or anything else you want to pour at the table.",image:"https://i.imgur.com/ST6b5UY.jpeg",priceLine:"Pair — $10 | Single Pitcher — $7",options:[{id:"pair",label:"Add Both",price:10},{id:"single",label:"Add One",price:7,variant:"outline"}],story:"Morning desk discovery: a pair of tiny vintage cream pitchers with colorful fruit artwork and a classic pouring spout. Makes breakfast feel like a little more of an occasion."},
   {id:"green-tea-plates",collection:"Tableware",section:"Dining",title:"Green Tea Side Plates",subtitle:"Small green glass plates — great for sides, snacks or tea time.",description:"A set of six small green glass plates that are perfect for tea time, snacks, or little side dishes. Lightweight, simple, and really versatile for the price.",image:"https://i.imgur.com/EiotFbg.jpeg",priceLine:"Set of 6 — $6 | Single Plate — $1",options:[{id:"set-6",label:"Add All 6",price:6},{id:"single",label:"Add One",price:1,variant:"outline"}],story:"Six simple green glass plates at a price that just makes sense. Perfect for tea time, snacks, or rounding out a set."},
   {id:"clear-stem-glasses",collection:"Drinkware",section:"Morning Edition",title:"Clear Stemmed Drinking Glasses",subtitle:"Heavy clear glasses with a short stem — great for wine or water.",description:"Four heavy clear stemmed drinking glasses that feel really solid in your hand and work great for wine, water, or juice. Classic look that goes with pretty much any table setting.",image:"https://i.imgur.com/buOSp3B.jpeg",priceLine:"Set of 4 — $15 | Single Glass — $5",options:[{id:"set-4",label:"Add Set of 4",price:15},{id:"single",label:"Add One",price:5,variant:"outline"}],story:"Glassware desk report: four clear stem glasses have entered the lineup. Thick, sturdy, and easy to hold — perfect for water, wine, or whatever drink makes dinner feel complete."},
-  {id:"blue-plastic-plates",collection:"Tableware",section:"Dining",title:"Blue Dinner Plates",subtitle:"Solid blue plates — sturdy and great for everyday meals.",description:"Solid blue dinner plates that are sturdy, easy to clean, and just work great for everyday use. A good simple option if you just need reliable plates on the table.",image:"https://i.imgur.com/f3BAVyl.jpeg",priceLine:"Set of 3 — $12 | Single Plate — $5",options:[{id:"set-3",label:"Add Set of 3",price:12},{id:"single",label:"Add One",price:5,variant:"outline"}],story:"No frills, no drama. Just solid blue dinner plates that show up and do their job every single meal."},
-  {id:"tall-botanical-mug",oneOfOne:true,collection:"Drinkware",section:"Morning Edition",title:"Botanical Leaf Mug",subtitle:"A tall ceramic mug with hand-painted leaf stems in warm colors.",description:"A tall ceramic mug with an olive green speckled outside and colorful painted leaf stems running up the side in navy, rust and gold. The dark interior and sturdy handle make it feel really premium.",image:"https://i.imgur.com/u4Hr885.jpeg",priceLine:"Single Mug — $5.50",options:[{id:"single",label:"Add One",price:5.50}],story:"From the morning desk — a tall ceramic mug with hand painted botanicals just landed in the shop. One of a kind and ready for whoever claims it first."},
-  {id:"autumn-leaf-cup",oneOfOne:true,collection:"Drinkware",section:"Morning Edition",title:"Autumn Leaf Ceramic Cup",subtitle:"A small round ceramic cup with 3D leaf details molded into the outside.",description:"A small cream colored ceramic cup with actual raised leaf shapes molded right into the surface — including a gold leaf that really pops. Has a comfortable little handle and a really unique feel.",image:"https://i.imgur.com/TiSQ5rV.jpeg",priceLine:"Single Cup — $5.00",options:[{id:"single",label:"Add One",price:5.00}],story:"From the morning desk — a small ceramic cup with raised autumn leaves just made it into the shop. Cozy, unique, and ready for whoever finds it first."},
-  {id:"green-amber-mug",oneOfOne:true,collection:"Drinkware",section:"Morning Edition",title:"Green & Amber Two-Tone Mug",subtitle:"A bold green mug with a warm amber glazed rim and interior.",description:"A clean ceramic mug with a bold grass green body and a warm amber glaze on the rim and inside. Simple, sturdy and the kind of mug that just looks good sitting on your counter.",image:"https://i.imgur.com/PpzpQFD.jpeg",priceLine:"Single Mug — $5.50",options:[{id:"single",label:"Add One",price:5.50}],story:"From the morning desk — a bold two tone mug with a green body and warm amber top just arrived in the shop. Simple and satisfying. First come first served."},
-  {id:"terracotta-mug",oneOfOne:true,collection:"Drinkware",section:"Morning Edition",title:"Terracotta Coffee Mug",subtitle:"A warm brushed terracotta mug that looks like it came from a pottery studio.",description:"A round ceramic mug with a brushed terracotta finish that has real texture to it — not just a flat color. It feels handmade and looks great with coffee or tea.",image:"https://i.imgur.com/G43vDEo.jpeg",priceLine:"Single Mug — $6.00",options:[{id:"single",label:"Add One",price:6.00}],story:"From the morning desk — a warm brushed terracotta mug just made it into the shop. The color alone is worth stopping for. One available, won't last long."},
+  {id:"blue-plastic-plates",collection:"Tableware",section:"Dining",title:"Blue Dinner Plates",subtitle:"Solid blue plates — sturdy and great for everyday meals.",description:"Solid blue dinner plates that are sturdy, easy to clean, and just work great for everyday use. A good simple option if you just need reliable plates on the table.",image:"https://i.imgur.com/f3BAVyl.jpeg",priceLine:"Set of 3 — $8 | Single Plate — $4",options:[{id:"set-3",label:"Add Set of 3",price:8},{id:"single",label:"Add One",price:4,variant:"outline"}],story:"No frills, no drama. Just solid blue dinner plates that show up and do their job every single meal."},
+  {id:"tall-botanical-mug",oneOfOne:true,collection:"Drinkware",section:"Morning Edition",title:"Botanical Leaf Mug",subtitle:"A tall ceramic mug with hand-painted leaf stems in warm colors.",description:"A tall ceramic mug with an olive green speckled outside and colorful painted leaf stems running up the side in navy, rust and gold. The dark interior and sturdy handle make it feel really premium.",image:"https://i.imgur.com/u4Hr885.jpeg",priceLine:"Single Mug — $4",options:[{id:"single",label:"Add One",price:4}],story:"From the morning desk — a tall ceramic mug with hand painted botanicals just landed in the shop. One of a kind and ready for whoever claims it first."},
+  {id:"autumn-leaf-cup",oneOfOne:true,collection:"Drinkware",section:"Morning Edition",title:"Autumn Leaf Ceramic Cup",subtitle:"A small round ceramic cup with 3D leaf details molded into the outside.",description:"A small cream colored ceramic cup with actual raised leaf shapes molded right into the surface — including a gold leaf that really pops. Has a comfortable little handle and a really unique feel.",image:"https://i.imgur.com/TiSQ5rV.jpeg",priceLine:"Single Cup — $4",options:[{id:"single",label:"Add One",price:4}],story:"From the morning desk — a small ceramic cup with raised autumn leaves just made it into the shop. Cozy, unique, and ready for whoever finds it first."},
+  {id:"green-amber-mug",oneOfOne:true,collection:"Drinkware",section:"Morning Edition",title:"Green & Amber Two-Tone Mug",subtitle:"A bold green mug with a warm amber glazed rim and interior.",description:"A clean ceramic mug with a bold grass green body and a warm amber glaze on the rim and inside. Simple, sturdy and the kind of mug that just looks good sitting on your counter.",image:"https://i.imgur.com/PpzpQFD.jpeg",priceLine:"Single Mug — $4",options:[{id:"single",label:"Add One",price:4}],story:"From the morning desk — a bold two tone mug with a green body and warm amber top just arrived in the shop. Simple and satisfying. First come first served."},
+  {id:"terracotta-mug",oneOfOne:true,collection:"Drinkware",section:"Morning Edition",title:"Terracotta Coffee Mug",subtitle:"A warm brushed terracotta mug that looks like it came from a pottery studio.",description:"A round ceramic mug with a brushed terracotta finish that has real texture to it — not just a flat color. It feels handmade and looks great with coffee or tea.",image:"https://i.imgur.com/G43vDEo.jpeg",priceLine:"Single Mug — $4",options:[{id:"single",label:"Add One",price:4}],story:"From the morning desk — a warm brushed terracotta mug just made it into the shop. The color alone is worth stopping for. One available, won't last long."},
   {id:"champagne-flutes",collection:"Drinkware",section:"Morning Edition",title:"Clear Champagne Flutes",subtitle:"Two classic champagne flutes — simple, elegant and ready to go.",description:"A pair of classic clear glass champagne flutes with a slim stem and a round flat base. Lightweight, clean and the kind of thing you'll actually use instead of leaving in a box.",image:"https://i.imgur.com/vc7YhUx.jpeg",priceLine:"Pair — $5 | Single — $3",options:[{id:"pair",label:"Add Pair",price:5},{id:"single",label:"Add One",price:3,variant:"outline"}],story:"From the glassware desk — a pair of classic champagne flutes just arrived in the shop. Simple, elegant, and ready for whatever you're celebrating."},
-  {id:"earth-tone-appetizer-plate",collection:"New Additions",section:"Dining",title:"Earth Tone Appetizer Plates",subtitle:"The smaller version of the earth tone dinner plates.",description:"Three small appetizer plates with the same southwestern geometric border as the earth tone dinner plates — same colors, same quality, just a smaller size perfect for sides or dessert.",image:"https://i.imgur.com/1jZWQOw.jpeg",priceLine:"Single — $5 | All 3 — $12",options:[{id:"set-3",label:"Add All 3",price:12},{id:"single",label:"Add One",price:5,variant:"outline"}],story:"From the plates desk — three matching appetizer plates to complete the earth tone dinner set. Same great pattern, smaller size, perfect for the full table setup."},
-  {id:"earth-tone-bundle",collection:"New Additions",section:"Dining",title:"Earth Tone Full Plate Set",subtitle:"The complete earth tone set — two big plates and three small ones.",description:"Two heavy earth tone dinner plates and three matching appetizer plates all in one bundle. If you want a table that looks completely put together without hunting for matching pieces, this is it.",image:"DUAL:https://i.imgur.com/WwVyCxT.jpeg|https://i.imgur.com/1jZWQOw.jpeg",priceLine:"Full Set — $24",options:[{id:"full-set",label:"Add Full Set",price:24}],story:"From the plates desk — the complete earth-tone set is here. Two big plates, three small plates, one great price. Everything you need for a table that looks intentional."},
-  {id:"bold-stripe-plate",oneOfOne:true,collection:"New Additions",section:"Dining",title:"Bold Stripe Dinner Plate",subtitle:"A heavy square-ish glass plate with dramatic stripes in red, amber and black.",description:"A large heavy glass dinner plate with a slightly rounded square shape and bold horizontal stripes in deep red, amber, gold and black. It has a really dramatic look that stands out from every other plate in the shop.",image:"https://i.imgur.com/qOiIkFT.jpeg",priceLine:"Single Plate — $7",options:[{id:"single",label:"Add One",price:7}],addedAt:"2026-04-05",story:"From the plates desk — a bold striped dinner plate just landed in the shop. Deep red, amber, gold and black in a design that stops you mid scroll. One available."},
+  {id:"earth-tone-appetizer-plate",collection:"Plates",section:"Dining",title:"Earth Tone Appetizer Plates",subtitle:"The smaller version of the earth tone dinner plates.",description:"Three small appetizer plates with the same southwestern geometric border as the earth tone dinner plates — same colors, same quality, just a smaller size perfect for sides or dessert.",image:"https://i.imgur.com/1jZWQOw.jpeg",priceLine:"Single — $5 | All 3 — $12",options:[{id:"set-3",label:"Add All 3",price:12},{id:"single",label:"Add One",price:5,variant:"outline"}],story:"From the plates desk — three matching appetizer plates to complete the earth tone dinner set. Same great pattern, smaller size, perfect for the full table setup."},
+  {id:"earth-tone-bundle",collection:"Sets",section:"Dining",title:"Earth Tone Full Plate Set",subtitle:"The complete earth tone set — two big plates and three small ones.",description:"Two heavy earth tone dinner plates and three matching appetizer plates all in one bundle. If you want a table that looks completely put together without hunting for matching pieces, this is it.",image:"DUAL:https://i.imgur.com/WwVyCxT.jpeg|https://i.imgur.com/1jZWQOw.jpeg",priceLine:"Full Set — $24",options:[{id:"full-set",label:"Add Full Set",price:24}],story:"From the plates desk — the complete earth-tone set is here. Two big plates, three small plates, one great price. Everything you need for a table that looks intentional."},
+  {id:"bold-stripe-plate",oneOfOne:true,collection:"New Additions",section:"Dining",title:"Bold Stripe Dinner Plate",subtitle:"A heavy square-ish glass plate with dramatic stripes in red, amber and black.",description:"A large heavy glass dinner plate with a slightly rounded square shape and bold horizontal stripes in deep red, amber, gold and black. It has a really dramatic look that stands out from every other plate in the shop.",image:"https://i.imgur.com/qOiIkFT.jpeg",priceLine:"Single Plate — $6",options:[{id:"single",label:"Add One",price:6}],addedAt:"2026-04-05",story:"From the plates desk — a bold striped dinner plate just landed in the shop. Deep red, amber, gold and black in a design that stops you mid scroll. One available."},
   {id:"blue-white-glass-plates",collection:"Plates",section:"Dining",title:"Light Blue & White Glass Plates",subtitle:"A set of three glass plates with a cool blue and white design.",description:"Three light blue and white glass plates with a clean flowing design that looks really elegant on any table. Great quality glass and the kind of plates that work for everyday meals or something a little more special.",image:"https://i.imgur.com/NAYrNYp.jpeg",priceLine:"Single — $5 | All 3 — $12",options:[{id:"set-3",label:"Add All 3",price:12},{id:"single",label:"Add One",price:5,variant:"outline"}],addedAt:"2026-04-07",story:"From the plates desk — three light blue and white glass plates just landed in the shop. Clean design, great quality, and a color that works with pretty much everything."},
   {id:"cat-dog-bowl",oneOfOne:true,collection:"Bowls",section:"Kitchen",title:"Cat & Dog Novelty Bowl",subtitle:"A small shallow bowl with a cat and dog figurine on the rim — one of a kind.",description:"A small shallow bowl in red, purple and white with a cat and dog figurine sticking up from the rim. Honestly we're not totally sure what it is either, but it's fun, it's one of a kind, and someone out there is going to love it.",image:"https://i.imgur.com/dhJP8Gz.jpeg",priceLine:"Single — $5",options:[{id:"single",label:"Add One",price:5}],addedAt:"2026-04-07",story:"From the bowls desk — a cat and dog novelty bowl just made it into the shop. We can't fully explain it but we're glad it's here. One available."},
   // ── SETS & BUNDLES ──
@@ -423,12 +506,14 @@ const products = [
   {id:"blue-white-plates-set",collection:"Sets",section:"Dining",title:"Light Blue & White Plate Set",subtitle:"All 3 light blue and white glass plates together.",description:"All three light blue and white glass plates bundled together at a discount. Clean flowing design, great quality glass, and a color that works with pretty much everything.",image:"https://i.imgur.com/NAYrNYp.jpeg",priceLine:"Full Set of 3 — $12",options:[{id:"full-set",label:"Add All 3",price:12}],story:"From the sets desk — all three light blue and white glass plates in one bundle. Clean, elegant and a great deal."},
   {id:"smooth-earth-plates-set",collection:"Sets",section:"Dining",title:"Smooth Earth Tone Plate Set",subtitle:"All 3 smooth earth tone dinner plates together.",description:"All three smooth earth tone dinner plates bundled together — soft gradient finish, warm brown rim, and the kind of plates that go with everything. A clean simple set at a great price.",image:"https://i.imgur.com/SLXy3Fd.jpeg",priceLine:"Full Set of 3 — $16",options:[{id:"full-set",label:"Add All 3",price:16}],story:"From the sets desk — all three smooth earth tone dinner plates in one bundle. Simple, clean and versatile."},
   {id:"deep-red-square-set",collection:"Sets",section:"Dining",title:"Deep Red Square Plate Set",subtitle:"All 3 deep red square glass plates together.",description:"All three deep red square glass plates bundled together — bold color, modern square shape, and seriously heavy glass. A striking set that makes any table look intentional.",image:"https://i.imgur.com/Dsw1Z6c.jpeg",priceLine:"Full Set of 3 — $12",options:[{id:"full-set",label:"Add All 3",price:12}],story:"From the sets desk — all three deep red square plates in one bundle. Bold, heavy and a great deal for the full set."},
+  {id:"wine-glasses-bundle-set",collection:"Sets",section:"Dining",title:"Classic Wine Glass Set",subtitle:"All 9 simple clear wine glasses — just $1 a piece when you buy the set.",description:"Nine clean classic wine glasses bundled together at an unbeatable price. At $1 a glass this is one of the best deals in the shop — perfect for hosting, stocking up, or gifting.",image:"https://i.imgur.com/KJgdRRs.jpeg",priceLine:"Full Set of 9 — $9 ($1 per glass!)",options:[{id:"full-set",label:"Add All 9 — Just $1 Each!",price:9}],story:"From the sets desk — nine classic wine glasses bundled together. A dollar a glass. You can't beat it."},
+  {id:"twisted-glasses-bundle-set",collection:"Sets",section:"Dining",title:"Twisted Dinner Glass Set",subtitle:"All 10 heavy twisted glass cups — a complete set at a great price.",description:"All ten heavy solid twisted glass cups bundled together. These feel premium in the hand, look incredible on a table, and at $1.60 a glass you are getting a serious deal on a seriously good set.",image:"https://i.imgur.com/QtkcT7j.jpeg",priceLine:"Full Set of 10 — $16",options:[{id:"full-set",label:"Add All 10",price:16}],story:"From the sets desk — all ten twisted dinner glasses in one bundle. Heavy, beautiful and priced to move."},
   {id:"lighthouse-full-set",collection:"Sets",section:"Dining",title:"Lighthouse Complete Collection",subtitle:"The full lighthouse set — 4 dinner plates and 8 matching soup bowls.",description:"All 12 pieces from the lighthouse collection in one bundle — four dinner plates and eight matching soup bowls. Everything you need for a full coastal themed table setting at a great price.",image:"DUAL:https://i.imgur.com/OMoutL2.jpeg|https://i.imgur.com/YIDDz9V.jpeg",priceLine:"Full Set — $40",options:[{id:"full-set",label:"Add Full Set",price:40}],story:"From the sets desk — the complete lighthouse collection. Four plates, eight bowls, one coastal table. Everything matches and everything is ready to go."},
   {id:"red-glass-full-set",collection:"Sets",section:"Dining",title:"Red Glass Complete Set",subtitle:"3 dinner plates, 4 appetizer plates and 3 bowls — all in deep red glass.",description:"The complete red glass collection — three dinner plates, four appetizer plates and three bowls all in the same bold deep red glass. Bold, matching and a serious upgrade for any table.",image:"DUAL:https://i.imgur.com/EdI3INH.jpeg|https://i.imgur.com/MEFyLMQ.jpeg",priceLine:"Full Set — $25",options:[{id:"full-set",label:"Add Full Set",price:25}],story:"From the sets desk — the complete red glass collection. Three dinner plates, four appetizer plates and three bowls all in one bundle. Bold color, great price."},
   {id:"white-floral-set",collection:"Sets",section:"Dining",title:"White Floral Rim Plate Set",subtitle:"All 5 white floral rim plates together at a discount.",description:"All five white floral rim plates bundled together — heavy glass, beautiful raised flower and fruit design around the rim, and a clean elegant look that works with any table.",image:"https://i.imgur.com/6ZJb0Jk.jpeg",priceLine:"Full Set of 5 — $18",options:[{id:"full-set",label:"Add All 5",price:18}],story:"From the sets desk — all five white floral rim plates in one bundle. Elegant, heavy glass and a price that makes sense for the whole set."},
   {id:"earth-tone-full-set",collection:"Sets",section:"Dining",title:"Earth Tone Complete Plate Set",subtitle:"2 dinner plates and 3 appetizer plates in matching earth tones.",description:"Two heavy earth tone dinner plates and three matching appetizer plates all bundled together — same bold geometric border and same great quality. Everything you need for a complete matching earth tone table.",image:"DUAL:https://i.imgur.com/WwVyCxT.jpeg|https://i.imgur.com/1jZWQOw.jpeg",priceLine:"Full Set — $24",options:[{id:"full-set",label:"Add Full Set",price:24}],story:"From the sets desk — the complete earth tone plate collection. Two big plates, three small plates, one great price."},
   {id:"swirl-full-set",collection:"Sets",section:"Dining",title:"Blue & Orange Swirl Plate Set",subtitle:"All 4 swirl plates — 2 ocean blue and 2 sunset orange.",description:"Two ocean blue and two sunset orange swirl plates together in one bundle. Heavy glass, hand-swirled finish, and a color combo that looks seriously intentional on any table.",image:"DUAL:https://i.imgur.com/SRb1eG2.jpeg|https://i.imgur.com/j8d3d1H.jpeg",priceLine:"Full Set of 4 — $16",options:[{id:"full-set",label:"Add All 4",price:16}],story:"From the sets desk — the complete swirl set. Two blue, two orange, one great price."},
-  {id:"wine-glasses-set",collection:"New Additions",section:"Morning Edition",title:"Classic Wine Glasses",subtitle:"A set of 9 simple clear wine glasses — clean and timeless.",description:"Nine simple clear wine glasses that are clean, lightweight and perfect for everyday use or hosting. Nothing fancy, just good reliable wine glasses at a price that makes sense.",image:"https://i.imgur.com/KJgdRRs.jpeg",priceLine:"Single — $1 | Full Set of 9 — $9",options:[{id:"set-9",label:"Add All 9",price:9},{id:"single",label:"Add One",price:1,variant:"outline"}],addedAt:"2026-04-08",story:"From the glassware desk — nine simple clear wine glasses just landed in the shop. Clean, classic and ready for whatever you're pouring."},
+  {id:"wine-glasses-set",collection:"New Additions",section:"Morning Edition",title:"Classic Wine Glasses",subtitle:"A set of 9 simple clear wine glasses — just $1 each!",description:"Nine simple clear wine glasses that are clean, lightweight and perfect for everyday use or hosting. Nothing fancy, just good reliable wine glasses at a price that makes sense.",image:"https://i.imgur.com/KJgdRRs.jpeg",priceLine:"Single — $1 | Full Set of 9 — $9 🏷️ ($1/glass!)",options:[{id:"set-9",label:"Add All 9 — $1 Each!",price:9},{id:"single",label:"Add One",price:1,variant:"outline"}],addedAt:"2026-04-08",story:"From the glassware desk — nine simple clear wine glasses just landed in the shop. Clean, classic and ready for whatever you're pouring."},
   {id:"budweiser-beerstein",oneOfOne:true,collection:"New Additions",section:"Morning Edition",title:"Budweiser Beerstein 1999",subtitle:"A vintage 1999 Budweiser collector beerstein — heavy ceramic with detailed artwork.",description:"A genuine 1999 Budweiser collector beerstein in heavy ceramic with detailed vintage artwork. The kind of piece that belongs in a display case or on a shelf where people can actually see it. One of a kind and not something you find every day.",image:"DUAL:https://i.imgur.com/z33bLY8.jpeg|https://i.imgur.com/xLBp5bk.jpeg",priceLine:"Single Stein — $20",options:[{id:"single",label:"Add One",price:20}],addedAt:"2026-04-08",story:"From the collector's desk — a genuine 1999 Budweiser beerstein just made it into the shop. Heavy ceramic, vintage artwork, and only one available. This one won't last long."},
   {id:"red-robin-beer-glass",oneOfOne:true,collection:"New Additions",section:"Morning Edition",title:"Red Robin Beer Glass",subtitle:"A cool red tinted beer glass from Red Robin.",description:"A tall beer glass in a rich red tint with the Red Robin logo on it. The kind of glass you pick up at a restaurant and wish you could take home — well now you can.",image:"https://i.imgur.com/BE2eBxi.jpeg",priceLine:"Single Glass — $4",options:[{id:"single",label:"Add One",price:4}],addedAt:"2026-04-08",story:"From the glassware desk — a Red Robin beer glass just landed in the shop. Cool red color, great shape, and only one available."},
   {id:"murphys-stout-glass",oneOfOne:true,collection:"New Additions",section:"Morning Edition",title:"Murphy's Irish Stout Glass",subtitle:"A classic Murphy's Irish Stout pint glass — one of a kind.",description:"A genuine Murphy's Irish Stout pint glass in the classic tulip shape. Clean, heavy and the kind of glass that makes a cold beer taste exactly right.",image:"https://i.imgur.com/QYsmhEC.jpeg",priceLine:"Single Glass — $4",options:[{id:"single",label:"Add One",price:4}],addedAt:"2026-04-08",story:"From the glassware desk — a Murphy's Irish Stout glass just landed in the shop. Classic shape, great glass, and only one available."},
@@ -448,13 +533,21 @@ const products = [
   {id:"sweetwater-420-glass",oneOfOne:true,collection:"New Additions",section:"Morning Edition",title:"SweetWater 420 Glass",subtitle:"A well-worn SweetWater 420 glass with character — and some scratches to prove it.",description:"A SweetWater 420 glass that has clearly lived a full life — scratched up and worn in but still totally cool with a big bold 420 on the side. Some pieces tell a story and this is one of them.",image:"https://i.imgur.com/bF8rr7B.jpeg",priceLine:"Single Glass — $3",options:[{id:"single",label:"Add One",price:3}],story:"From the glassware desk — a well-loved SweetWater 420 glass just landed in the shop. The scratches add character. One available."},
   {id:"ballast-point-glass",oneOfOne:true,collection:"New Additions",section:"Morning Edition",title:"Ballast Point Skeleton Glass",subtitle:"A Ballast Point glass with a skeleton kicking back in a hammock — one of the coolest ones we've had.",description:"A Ballast Point branded glass with an incredible illustration of a skeleton relaxing in a hammock with a drink in hand. Detailed, fun and genuinely one of the coolest glasses to come through the shop.",image:"https://i.imgur.com/CTLheaO.jpeg",priceLine:"Single Glass — $5",options:[{id:"single",label:"Add One",price:5}],story:"From the glassware desk — a Ballast Point skeleton hammock glass just arrived. The artwork alone is worth the price. Only one available."},
   {id:"smirnoff-golf-glass",oneOfOne:true,collection:"New Additions",section:"Morning Edition",title:"Smirnoff Golf Ball Glass",subtitle:"A heavy Smirnoff glass with a real half golf ball molded into the bottom.",description:"A seriously heavy Smirnoff branded glass with a half golf ball molded right into the base — you can feel it when you pick it up and it looks incredible from underneath. The heaviest glass in the shop by far.",image:"https://i.imgur.com/TkULwys.jpeg",priceLine:"Single Glass — $5",options:[{id:"single",label:"Add One",price:5}],story:"From the glassware desk — a heavy Smirnoff golf ball glass just landed in the shop. The base alone makes this thing worth owning. One available."},
+  {id:"sleek-black-tan-plate",oneOfOne:true,collection:"Plates",section:"Dining",title:"Sleek Black & Tan Dinner Plate",subtitle:"SOLD — A large heavy glass plate with bold black and tan designs.",description:"A large heavy glass dinner plate with a clean white base and bold black and tan geometric designs across the surface. This one has been sold but check back for similar finds.",image:"https://i.imgur.com/H7fYQnp.jpeg",priceLine:"SOLD OUT",options:[{id:"single",label:"Sold Out",price:7}],story:"From the plates desk — this one sold fast. Keep an eye out for similar pieces coming soon."},
+  {id:"budweiser-racing-glasses",collection:"Drinkware",section:"Morning Edition",title:"Budweiser Talladega Nights Beer Glasses",subtitle:"SOLD — Four collector Budweiser Racing beer glasses.",description:"Four heavy glass beer glasses from the Budweiser Racing Talladega Nights collection. These sold out fast — keep checking back for more collector glasses.",image:"https://i.imgur.com/Ebq6OLR.jpeg",priceLine:"SOLD OUT",options:[{id:"set-4",label:"Sold Out",price:12},{id:"single",label:"Sold Out",price:4}],story:"Gone. These went fast. More collector glasses dropping soon."},
+  {id:"blue-glass-cups-sold",collection:"Drinkware",section:"Morning Edition",title:"Blue Glass Drinking Cups",subtitle:"SOLD — Set of five blue glass drinking cups.",description:"Five blue glass cups that sold out quickly. Check back for similar glassware coming soon.",image:"https://i.imgur.com/ju7LV0y.jpeg",priceLine:"SOLD OUT",options:[{id:"set-5",label:"Sold Out",price:12}],story:"Sold out. More colorful glassware coming soon."},
+  {id:"mosaic-mandala-plate",oneOfOne:true,collection:"Plates",section:"Dining",title:"Mosaic Mandala Plate",subtitle:"SOLD — A stunning mosaic mandala decorative plate.",description:"A beautiful mosaic mandala plate that sold quickly. Keep an eye out for similar collector pieces coming to the shop.",image:"https://i.imgur.com/RKTq1KI.jpeg",priceLine:"SOLD OUT",options:[{id:"single",label:"Sold Out",price:12}],story:"Sold. One of the most eye-catching pieces we've had. More collector plates coming soon."},
+  {id:"vintage-romance-plate",oneOfOne:true,collection:"Plates",section:"Dining",title:"Vintage Romance Glass Plate",subtitle:"SOLD — A decorative glass plate with classic romantic artwork.",description:"A beautiful vintage-style glass dinner plate featuring detailed romantic scenes around the rim. Sold quickly — keep an eye out for similar finds.",image:"https://i.imgur.com/iLj6ICw.jpeg",priceLine:"SOLD OUT",options:[{id:"single",label:"Sold Out",price:10}],story:"Sold. A real find that didn't last long. More vintage pieces coming."},
+  {id:"charger-plates-sold",collection:"Plates",section:"Dining",title:"Metal Charger Plates",subtitle:"SOLD — A set of elegant metal charger plates.",description:"A set of metal charger plates that sold out. Charger plates add instant elegance to any table — keep checking back for more.",image:"https://i.imgur.com/VZKulw2.jpeg",priceLine:"SOLD OUT",options:[{id:"pair",label:"Sold Out",price:15}],story:"Sold. These went fast. More elegant tableware coming soon."},
+  {id:"brown-white-24-set-sold",collection:"Sets",section:"Dining",title:"Brown & White 24-Piece Dinnerware Set",subtitle:"SOLD — A complete 24-piece brown and white dinnerware set.",description:"A full 24-piece set with plates, bowls and cups in a classic brown and white design. This sold within hours of being listed.",image:"https://i.imgur.com/kU9q1S3.jpeg",priceLine:"SOLD OUT",options:[{id:"full-set",label:"Sold Out",price:40}],story:"Sold in hours. The most complete set we've ever had. Keep an eye out for more full sets coming to the shop."},
+  {id:"tallboy-beer-glasses",collection:"Drinkware",section:"Morning Edition",title:"Tall Boy Beer Glasses",subtitle:"SOLD — A set of four tall boy beer glasses.",description:"Four tall boy beer glasses that sold out fast. Classic shape, great for any beer drinker. Check back for more glassware.",image:"https://i.imgur.com/LacBNuM.jpeg",priceLine:"SOLD OUT",options:[{id:"set-4",label:"Sold Out",price:12}],story:"Gone. These moved fast. More beer glasses dropping soon."},
   {id:"forks",collection:"Silverware",section:"Tableware",title:"Stainless Steel Forks",subtitle:"Simple everyday forks — good quality and priced right.",description:"Standard stainless steel dinner forks that work for any meal — simple, clean and easy to mix into any silverware setup. Great if you're stocking up or filling in gaps.",image:"https://i.imgur.com/ZHjtpjV.jpeg",priceLine:"Single Fork — $0.75 | Bundle of 20 — $10",options:[{id:"bundle-20",label:"Add 20 Fork Bundle",price:10},{id:"single",label:"Add One",price:0.75,variant:"outline"}],story:"Reliable forks ready for action. Perfect for pasta nights, quick lunches, and the occasional late-night snack."},
   {id:"spoons",collection:"Silverware",section:"Tableware",title:"Stainless Steel Spoons",subtitle:"Versatile everyday spoons — good for everything from cereal to soup.",description:"Simple stainless steel spoons that handle everything from breakfast cereal to soup to ice cream without any complaints. The kind of silverware you just always want to have around.",image:"https://i.imgur.com/IZpaghE.jpeg",priceLine:"Single Spoon — $0.75 | Bundle of 20 — $10",options:[{id:"bundle-20",label:"Add 20 Spoon Bundle",price:10},{id:"single",label:"Add One",price:0.75,variant:"outline"}],story:"Breakfast approved. These spoons are the unsung heroes of cereal, soup, and dessert."},
   {id:"butter-knives",collection:"Silverware",section:"Tableware",title:"Butter Knives",subtitle:"Simple spreading knives — great for butter, jam or soft cheese.",description:"Stainless steel butter knives that are perfect for spreading butter, jam, cream cheese or anything else on toast or bread. Simple and practical and honestly something every kitchen needs.",image:"https://i.imgur.com/01K4jkn.jpeg",priceLine:"Single Knife — $0.75 | Bundle of 20 — $10",options:[{id:"bundle-20",label:"Add 20 Knife Bundle",price:10},{id:"single",label:"Add One",price:0.75,variant:"outline"}],story:"A small tool that makes breakfast better. Ideal for toast, bagels, and weekend brunch."},
 ];
 
 
-const PAGE_ORDER = ["Front Page","Sets","Plates","Bowls","Cups","Silverware","Full Inventory","Notes to the Editor"];
+const PAGE_ORDER = ["Front Page","Sets","Plates","Bowls","Cups","Silverware","Full Inventory","Dish Games","Dish Requests"];
 const PAGE_META = {
   "Front Page":{kicker:"Breaking News",headline:"The Latest From The Daily Dish",subhead:"Featured stories, fresh finds, and curated tableware from today's edition."},
   "Sets":{kicker:"Sets & Bundles",headline:"Better Together — Shop The Sets",subhead:"Plates, bowls and cups bundled together so your table always matches."},
@@ -464,7 +557,8 @@ const PAGE_META = {
   "Silverware":{kicker:"Silverware",headline:"Kitchen Items Seeking New Homes",subhead:"Bundles, basics, and practical pieces that still have personality."},
   "New Additions":{kicker:"🆕 New Additions",headline:"Fresh From The Field",subhead:"Brand new pieces just added to the shop — be the first to grab them before they're gone."},
   "Full Inventory":{kicker:"Full Inventory",headline:"Everything In Today's Paper",subhead:"Browse every available item in one place, regardless of section."},
-  "Notes to the Editor":{kicker:"Notes to the Editor",headline:"Leave Your Mark on The Daily Dish",subhead:"Every letter is read by the editor — your voice shapes the next edition."},
+  "Dish Games":{kicker:"🎮 The Game Room",headline:"Play With Your Food",subhead:"Two games built entirely around The Daily Dish — because why not."},
+  "Dish Requests":{kicker:"Dish Requests",headline:"Leave Your Mark on The Daily Dish",subhead:"Every letter is read by the editor — your voice shapes the next edition."},
 };
 
 // ─────────────────────────────────────────────
@@ -551,6 +645,16 @@ const INVENTORY = {
   "cocacola-glasses__both":1,"cocacola-glasses__single":2,
   "red-bumpy-bowl__both":1,"red-bumpy-bowl__single":2,
   "red-ceramic-plates__set-5":1,"red-ceramic-plates__single":5,
+  "wine-glasses-bundle-set__full-set":1,
+  "twisted-glasses-bundle-set__full-set":1,
+  "mosaic-mandala-plate__single":0,
+  "vintage-romance-plate__single":0,
+  "charger-plates-sold__pair":0,
+  "brown-white-24-set-sold__full-set":0,
+  "tallboy-beer-glasses__set-4":0,
+  "sleek-black-tan-plate__single":0,
+  "budweiser-racing-glasses__set-4":0,"budweiser-racing-glasses__single":0,
+  "blue-glass-cups-sold__set-5":0,
   // ── SILVERWARE ──
   "forks__bundle-20":1,"forks__single":20,
   "spoons__bundle-20":1,"spoons__single":20,
@@ -591,25 +695,32 @@ function isNewAddition(p){
   return hrs <= 48;
 }
 
+function sortSoldLast(arr){
+  const soldOut = arr.filter(p=>p.options.every(o=>isSoldOut(p.id,o.id)));
+  const available = arr.filter(p=>!p.options.every(o=>isSoldOut(p.id,o.id)));
+  return [...available,...soldOut];
+}
 function getPageProducts(page){
   if(page==="Front Page") return [];
-  if(page==="Full Inventory") return products.filter(p=>p.collection!=="Sets");
-  if(page==="Sets") return ["lighthouse-full-set","red-glass-full-set","earth-tone-full-set","white-floral-set","deep-red-square-set","colorful-plates-set","brown-mugs-set","blue-cups-set","popcorn-bowl-set","blue-white-plates-set","smooth-earth-plates-set","swirl-full-set"].map(id=>products.find(p=>p.id===id)).filter(Boolean);
-  if(page==="Plates") return products.filter(p=>{const t=p.title.toLowerCase();return (t.includes("plate")||t.includes("charger"))&&p.collection!=="Sets";});
-  if(page==="Bowls") return products.filter(p=>p.title.toLowerCase().includes("bowl")||p.id==="red-bumpy-bowl");
+  if(page==="Full Inventory") return products.filter(p=>p.collection!=="Sets"&&!p.options.every(o=>isSoldOut(p.id,o.id)));
+  if(page==="Sets") return ["wine-glasses-bundle-set","twisted-glasses-bundle-set","lighthouse-full-set","red-glass-full-set","earth-tone-full-set","white-floral-set","deep-red-square-set","colorful-plates-set","brown-mugs-set","blue-white-plates-set","smooth-earth-plates-set","swirl-full-set","brown-white-24-set-sold","blue-cups-set"].map(id=>products.find(p=>p.id===id)).filter(Boolean);
+  if(page==="Plates") return sortSoldLast(products.filter(p=>{const t=p.title.toLowerCase();return (t.includes("plate")||t.includes("charger"))&&p.collection!=="Sets";}));
+  if(page==="Bowls") return sortSoldLast(products.filter(p=>(p.title.toLowerCase().includes("bowl")||p.id==="red-bumpy-bowl")&&p.id!=="centerpiece-bowl"&&p.id!=="popcorn-bowl-set"));
   if(page==="Cups"){
     const cheapGlasses = ["wine-glasses-set","twisted-dinner-glasses","cocacola-glasses","unique-wine-glass","terrapin-turtle-glass","red-robin-beer-glass","murphys-stout-glass","southeastern-whiskey-glass","sweetwater-420-glass","sweetwater-brewing-glass","sweetwater-ipa-glass","don-pedro-whiskey-glass","longhorn-whiskey-small","longhorn-whiskey-large","ballast-point-glass","smirnoff-golf-glass","budweiser-beerstein"];
     const mugs = ["tall-botanical-mug","autumn-leaf-cup","green-amber-mug","terracotta-mug","champagne-flutes"];
-    const drinkware = products.filter(p=>p.collection==="Drinkware"&&!cheapGlasses.includes(p.id)&&!mugs.includes(p.id));
+    const soldOut = ["budweiser-racing-glasses","blue-glass-cups-sold","tallboy-beer-glasses"];
+    const drinkware = products.filter(p=>p.collection==="Drinkware"&&![...cheapGlasses,...mugs,...soldOut].includes(p.id));
     return [
       ...cheapGlasses.map(id=>products.find(p=>p.id===id)).filter(Boolean),
       ...mugs.map(id=>products.find(p=>p.id===id)).filter(Boolean),
-      ...drinkware
+      ...drinkware,
+      ...soldOut.map(id=>products.find(p=>p.id===id)).filter(Boolean),
     ];
   }
   if(page==="Silverware") return products.filter(p=>p.collection==="Silverware");
   if(page==="New Additions") return products.filter(p=>isNewAddition(p));
-  return products.filter(p=>p.section===page);
+  return sortSoldLast(products.filter(p=>p.section===page));
 }
 
 // ─────────────────────────────────────────────
@@ -643,9 +754,81 @@ function addToCart(productId, optionId){
   updateCartUI();
   openCart();
   showToast(`Added: ${product.title}`);
+  launchConfetti();
 }
 
 function removeFromCart(key){ delete cart[key]; updateCartUI(); }
+
+// ─────────────────────────────────────────────
+// 🎆 FIREWORKS & CONFETTI
+// ─────────────────────────────────────────────
+function launchConfetti(){
+  const colors=["#e53e3e","#d4a843","#065f46","#1a2d5a","#f4ecd8","#c2781e","#3b82f6","#f97316","#ec4899","#8b5cf6","#10b981","#fbbf24"];
+
+  // Confetti rain — 90 pieces
+  for(let i=0;i<90;i++){
+    setTimeout(()=>{
+      const el=document.createElement("div");
+      el.className="confetti-piece";
+      const sz=5+Math.random()*10;
+      el.style.cssText=`left:${Math.random()*100}vw;top:-10px;background:${colors[Math.floor(Math.random()*colors.length)]};width:${sz}px;height:${sz}px;border-radius:${Math.random()>.4?"50%":"2px"};animation-duration:${1.4+Math.random()*2}s;animation-delay:${Math.random()*0.5}s;`;
+      document.body.appendChild(el);
+      el.addEventListener("animationend",()=>el.remove());
+    }, Math.random()*400);
+  }
+
+  // 10 firework rockets AFTER confetti
+  const positions=[
+    {x:15,y:30},{x:85,y:25},{x:50,y:18},
+    {x:28,y:42},{x:72,y:38},{x:50,y:55},
+    {x:10,y:22},{x:90,y:48},{x:38,y:28},{x:65,y:20}
+  ];
+  positions.forEach(({x,y},i)=>{
+    setTimeout(()=>launchRocket(x,y,colors), 1400+i*200);
+  });
+}
+
+function launchRocket(xPct,yPct,colors){
+  // Trail shooting up
+  const trail=document.createElement("div");
+  trail.style.cssText=`position:fixed;left:calc(${xPct}vw - 1px);bottom:-10px;width:3px;height:0;background:linear-gradient(to top,rgba(255,200,50,.9),rgba(255,100,50,.5),transparent);pointer-events:none;z-index:9996;border-radius:3px;transition:height 0.28s ease-out,bottom 0.28s ease-out;`;
+  document.body.appendChild(trail);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    trail.style.height="35vh";
+    trail.style.bottom=`${yPct}vh`;
+  }));
+  setTimeout(()=>{
+    trail.remove();
+    const burstColors=[...colors].sort(()=>Math.random()-.5).slice(0,5);
+    // 56 burst particles
+    for(let i=0;i<56;i++){
+      const angle=(i/56)*360;
+      const dist=110+Math.random()*160;
+      const rad=angle*(Math.PI/180);
+      const tx=Math.cos(rad)*dist, ty=Math.sin(rad)*dist;
+      const sz=5+Math.random()*9;
+      const c=burstColors[i%burstColors.length];
+      const el=document.createElement("div");
+      el.style.cssText=`position:fixed;left:${xPct}vw;top:${100-yPct}vh;width:${sz}px;height:${sz}px;border-radius:50%;background:${c};box-shadow:0 0 ${sz*3}px ${c},0 0 ${sz*6}px ${c}44;pointer-events:none;z-index:9997;animation:burst ${.65+Math.random()*.55}s cubic-bezier(.25,.46,.45,.94) forwards;--tx:${tx}px;--ty:${ty}px;`;
+      document.body.appendChild(el);
+      el.addEventListener("animationend",()=>el.remove());
+    }
+    // 16 sparkle streaks
+    for(let i=0;i<16;i++){
+      const angle=(i/16)*360, rad=angle*(Math.PI/180);
+      const len=40+Math.random()*60;
+      const el=document.createElement("div");
+      el.style.cssText=`position:fixed;left:${xPct}vw;top:${100-yPct}vh;width:2px;height:${len}px;background:linear-gradient(to bottom,rgba(255,255,255,.95),transparent);border-radius:2px;pointer-events:none;z-index:9996;transform-origin:top center;animation:burst ${.5+Math.random()*.4}s ease-out forwards;--tx:${Math.cos(rad)*90}px;--ty:${Math.sin(rad)*90}px;`;
+      document.body.appendChild(el);
+      el.addEventListener("animationend",()=>el.remove());
+    }
+    // Flash
+    const flash=document.createElement("div");
+    flash.style.cssText=`position:fixed;left:${xPct}vw;top:${100-yPct}vh;width:6px;height:6px;border-radius:50%;background:white;box-shadow:0 0 60px 40px rgba(255,255,255,.6);pointer-events:none;z-index:9998;animation:flash .15s ease-out forwards;transform:translate(-50%,-50%);`;
+    document.body.appendChild(flash);
+    flash.addEventListener("animationend",()=>flash.remove());
+  }, 300);
+}
 function incQty(key){ if(cart[key]) cart[key].qty++; updateCartUI(); }
 function decQty(key){ if(!cart[key]) return; cart[key].qty--; if(cart[key].qty<=0) delete cart[key]; updateCartUI(); }
 
@@ -748,6 +931,16 @@ function goToPage(page){
   renderNav();
   renderPage();
   window.scrollTo({top:0,behavior:"smooth"});
+  // Page flip on the whole card
+  const card = document.querySelector(".page-card");
+  if(card){
+    card.classList.remove("page-flip");
+    void card.offsetWidth;
+    card.classList.add("page-flip");
+    card.addEventListener("animationend",()=>card.classList.remove("page-flip"),{once:true});
+  }
+  // Typewriter replay — faster on navigation
+  startTypewriter(true);
 }
 function nextPage(){ const i=PAGE_ORDER.indexOf(activePage); goToPage(PAGE_ORDER[(i+1)%PAGE_ORDER.length]); }
 function prevPage(){ const i=PAGE_ORDER.indexOf(activePage); goToPage(PAGE_ORDER[(i-1+PAGE_ORDER.length)%PAGE_ORDER.length]); }
@@ -775,7 +968,8 @@ function renderPage(){
 
   const body=document.getElementById("page-body");
   if(activePage==="Front Page"){ body.innerHTML=renderFrontPage(); }
-  else if(activePage==="Notes to the Editor"){ body.innerHTML=renderLettersPage(); }
+  else if(activePage==="Dish Games"){ body.innerHTML=renderGamesPage(); }
+  else if(activePage==="Dish Requests"){ body.innerHTML=renderLettersPage(); }
   else if(activePage==="New Additions"){ body.innerHTML=renderNewAdditionsPage(); }
   else { body.innerHTML=renderSection(); }
 }
@@ -793,6 +987,11 @@ function renderFrontPage(){
     products.find(p=>p.id==="tribal-diamond-bowl"),
     products.find(p=>p.id==="pumpkin-patch-bowl"),
     products.find(p=>p.id==="blue-rimmed-deep-plate"),
+    products.find(p=>p.id==="grapevine-plate"),
+    products.find(p=>p.id==="ballast-point-glass"),
+    products.find(p=>p.id==="southwest-ranch-plate"),
+    products.find(p=>p.id==="smirnoff-golf-glass"),
+    products.find(p=>p.id==="american-eagle-plate"),
   ].filter(Boolean);
   const vintageSpotlight = products.filter(p=>p.id==="lighthouse-bowls"||p.id==="wine-glasses-set"||p.id==="black-white-split-bowl"||p.id==="purple-flower-square-plate").sort((a,b)=>{const order=["lighthouse-bowls","wine-glasses-set","black-white-split-bowl","purple-flower-square-plate"];return order.indexOf(a.id)-order.indexOf(b.id);});
   const editorPicks = products.filter(p=>p.id==="lighthouse-plates"||p.id==="lighthouse-bowls"||p.id==="red-dinner-plates"||p.id==="red-appetizer-plates"||p.id==="red-bowls");
@@ -846,6 +1045,7 @@ function renderFrontPage(){
             <button style="font-family:var(--serif);padding:11px 20px;font-size:13px;font-weight:700;border:none;border-radius:8px;background:linear-gradient(135deg,#b8860b,#d4a843);color:#1a1008;cursor:pointer" onclick="addToCart('${dealOfDay.id}','${dealOfDay.options[0].id}')">
               ${dealOfDay.options[0].label} (${money(dealOfDay.options[0].price)})
             </button>
+            <button style="font-family:var(--serif);padding:11px 20px;font-size:13px;font-weight:700;border:none;border-radius:8px;background:rgba(212,168,67,.15);color:rgba(212,168,67,.9);cursor:pointer" onclick="viewProduct('${dealOfDay.id}')">View Details →</button>
             <button style="font-family:var(--serif);padding:11px 20px;font-size:13px;font-weight:700;border:1px solid rgba(212,168,67,.3);border-radius:8px;background:transparent;color:rgba(212,168,67,.7);cursor:pointer" onclick="goToPage('${getPageForProduct(dealOfDay)}')">Browse Section →</button>
           </div>
         </div>
@@ -882,63 +1082,111 @@ function renderFrontPage(){
 
     <!-- EDITOR'S PICKS + LATEST ARRIVALS -->
     <div class="two-col" style="margin-bottom:22px">
-      <div style="background:#fce8ee;border:3px solid #1f1b16;border-radius:14px;overflow:hidden;box-shadow:3px 3px 0 #1f1b16;margin-bottom:0">
-        <div style="padding:14px 18px;border-bottom:2px solid #1f1b16;background:#f9d5df">
-          <p style="font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#9d174d;margin-bottom:4px">Editor's Picks</p>
-          <h3 style="font-family:var(--display);font-size:clamp(16px,2.5vw,22px);font-weight:900;text-transform:uppercase;color:#1f1b16;line-height:1.1">Today's Top Stories</h3>
+
+      <!-- TODAY'S TOP STORIES — breaking news style -->
+      <div style="background:linear-gradient(160deg,#fefaf4,#fdf3e3);border:3px solid #1f1b16;border-radius:14px;overflow:hidden;box-shadow:3px 3px 0 #1f1b16;margin-bottom:0">
+        <div style="padding:12px 18px;border-bottom:2px solid #1f1b16;background:linear-gradient(90deg,#e8c97a,#d4a843);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <div>
+            <p style="font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:#5c3a00;margin-bottom:3px">🗞️ Editor's Desk</p>
+            <h3 style="font-family:var(--display);font-size:clamp(15px,2.2vw,21px);font-weight:900;text-transform:uppercase;color:#1f1b16;line-height:1.1">Today's Top Stories</h3>
+          </div>
+          <span style="background:#1f1b16;color:#e8c97a;font-family:var(--display);font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:999px">🔴 Live</span>
         </div>
-        <div class="fp-body" style="background:#fce8ee">
-          ${editorPicks.map(p=>`
-            <div class="sidebar-item">
-              <p class="sidebar-item-title">${p.title}</p>
-              <p class="sidebar-item-price">${p.priceLine}</p>
-              <p class="sidebar-item-story">${p.story}</p>
-              <div style="display:flex;gap:8px;flex-wrap:wrap">
-                <button class="product-add-btn solid" onclick="addToCart('${p.id}','${p.options[0].id}')">Add (${money(p.options[0].price)})</button>
-                <button class="product-add-btn outline" onclick="goToPage('${getPageForProduct(p)}')">Open →</button>
+        <div style="background:transparent;padding:0">
+          ${[
+            {p:products.find(p=>p.id==="ballast-point-glass"), headline:"Skeleton Found Relaxing in Hammock", story:"Investigators at The Daily Dish confirm the Ballast Point skeleton glass has officially entered the building. Witnesses describe the artwork as — and we quote — absurdly cool. One available. Authorities urge swift action."},
+            {p:products.find(p=>p.id==="american-eagle-plate"), headline:"Patriotic Plate Causes Scene at Local Shop", story:"A gold-trimmed bald eagle collector plate has been spotted turning heads at The Daily Dish. Sources close to the situation confirm it looks far too good to be priced at twelve dollars. One left in stock and the clock is ticking."},
+            {p:products.find(p=>p.id==="cobalt-blue-pitcher"), headline:"Cobalt Pitcher Walks In Like It Owns The Place", story:"A deep cobalt blue ceramic pitcher with gold trim and hand-painted florals arrived at The Daily Dish this week and immediately made everything around it look underdressed. Museum quality. Ten dollar price tag. Make it make sense."},
+            {p:products.find(p=>p.id==="twisted-dinner-glasses"), headline:"Ten Twisted Glasses Arrive In Dramatic Fashion", story:"The twisted dinner glass set has landed and The Daily Dish newsroom is buzzing. Ten heavy solid glass cups with a gorgeous spiraling design — the kind of set that makes guests ask where you got them. Full set just sixteen dollars."},
+            {p:products.find(p=>p.id==="lighthouse-plates"), headline:"Coastal Tableware Report: Lighthouse Plates Hold Strong", story:"Editors on the ground confirm the lighthouse dinner plates remain one of the most beloved sets in the shop. A full nautical scene wrapped in glass, priced at six dollars a plate — correspondents say the coastal energy is unmatched."},
+            {p:products.find(p=>p.id==="smirnoff-golf-glass"), headline:"Smirnoff Glass Has A Secret On The Bottom", story:"Reports are flooding in from the glassware desk. The Smirnoff golf ball glass has a real half golf ball molded into the base. Pick it up. Feel the weight. The Daily Dish confirms this is the heaviest glass in the entire shop. Five dollars. One available."},
+          ].filter(x=>x.p).map(({p,headline,story})=>`
+            <div style="border-bottom:1px solid rgba(31,27,22,.1);padding:14px 18px;display:flex;gap:12px;align-items:flex-start;background:transparent">
+              <img src="${p.image.startsWith('DUAL:') ? p.image.split('DUAL:')[1].split('|')[0] : p.image}" alt="${p.title}" style="width:64px;height:64px;object-fit:cover;border-radius:6px;border:2px solid #1f1b16;flex-shrink:0;cursor:pointer;transition:transform .2s" onclick="viewProduct('${p.id}')" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onerror="this.src='${FALLBACK}'"/>
+              <div style="flex:1;min-width:0">
+                <p style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#92400e;margin-bottom:3px;font-family:var(--serif)">Breaking</p>
+                <p style="font-family:var(--display);font-size:13px;font-weight:900;text-transform:uppercase;color:#1f1b16;line-height:1.2;margin-bottom:5px;cursor:pointer" onclick="viewProduct('${p.id}')">${headline}</p>
+                <p style="font-size:12px;line-height:1.6;color:#3d3530;margin-bottom:8px">${story}</p>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+                  <span style="font-size:11px;font-weight:700;color:#92400e;font-family:var(--serif)">${p.priceLine}</span>
+                  <button class="product-add-btn solid" style="padding:5px 12px;font-size:11px" onclick="addToCart('${p.id}','${p.options[0].id}')">Add (${money(p.options[0].price)})</button>
+                  <button class="product-add-btn outline" style="padding:5px 12px;font-size:11px" onclick="viewProduct('${p.id}')">View →</button>
+                </div>
               </div>
             </div>
           `).join("")}
         </div>
       </div>
+
+      <!-- NEW FINDS FROM THE FIELD — photo cards -->
       <div style="background:#e8f0fc;border:3px solid #1f1b16;border-radius:14px;overflow:hidden;box-shadow:3px 3px 0 #1f1b16;margin-bottom:0">
-        <div style="padding:14px 18px;border-bottom:2px solid #1f1b16;background:#c8d8f5">
-          <p style="font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#1e40af;margin-bottom:4px">Latest Arrivals</p>
-          <h3 style="font-family:var(--display);font-size:clamp(16px,2.5vw,22px);font-weight:900;text-transform:uppercase;color:#1f1b16;line-height:1.1">New Finds From The Field</h3>
+        <div style="padding:12px 18px;border-bottom:2px solid #1f1b16;background:#c8d8f5;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <div>
+            <p style="font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:#1e40af;margin-bottom:3px">📦 Field Report</p>
+            <h3 style="font-family:var(--display);font-size:clamp(15px,2.2vw,21px);font-weight:900;text-transform:uppercase;color:#1f1b16;line-height:1.1">New Finds From The Field</h3>
+          </div>
+          <span style="background:#1e40af;color:white;font-family:var(--display);font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:999px">✨ Just In</span>
         </div>
-        <div class="fp-body" style="background:#e8f0fc">
-          ${latestArrivals.map(it=>`
-            <div class="sidebar-item">
-              <p class="sidebar-item-title">${it.title}</p>
-              <p class="sidebar-item-price">${it.priceLine}</p>
-              <p class="sidebar-item-story">${it.story}</p>
+        <div style="background:#e8f0fc;display:grid;grid-template-columns:1fr 1fr;gap:0">
+          ${latestArrivals.map((it,i)=>`
+            <div style="border-right:${i%2===0?'2px solid rgba(31,27,22,.15)':'none'};border-bottom:2px solid rgba(31,27,22,.15);overflow:hidden;cursor:pointer;position:relative" onclick="viewProduct('${it.id}')">
+              <div style="position:relative;overflow:hidden;height:110px">
+                <img src="${it.image.startsWith('DUAL:') ? it.image.split('DUAL:')[1].split('|')[0] : it.image}" alt="${it.title}" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:transform .45s cubic-bezier(.25,.46,.45,.94);will-change:transform" onmouseover="this.style.transform='scale(1.08)';this.style.objectFit='contain'" onmouseout="this.style.transform='scale(1)';this.style.objectFit='cover'" onerror="this.src='${FALLBACK}'"/>
+                <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(31,27,22,.7) 0%,transparent 55%)"></div>
+                ${it.oneOfOne ? '<div style="position:absolute;top:6px;right:6px;background:#e53e3e;color:white;font-size:8px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:999px;font-family:var(--display)">Only 1</div>' : ''}
+                <p style="position:absolute;bottom:6px;left:8px;right:8px;font-family:var(--display);font-size:11px;font-weight:900;text-transform:uppercase;color:white;line-height:1.2">${it.title}</p>
+              </div>
+              <div style="padding:8px 10px;background:#e8f0fc">
+                <p style="font-size:11px;font-weight:700;color:#1e40af;font-family:var(--serif);margin-bottom:6px">${it.priceLine}</p>
+                <button class="product-add-btn solid" style="width:100%;font-size:11px;padding:6px 8px;text-align:center" onclick="event.stopPropagation();addToCart('${it.id}','${it.options[0].id}')">Add (${money(it.options[0].price)})</button>
+              </div>
             </div>
           `).join("")}
         </div>
       </div>
+
     </div>
 
-    <!-- COLLECTOR'S SPOTLIGHT -->
-    <div class="fp-section" style="margin-bottom:22px">
-      <div class="fp-section-header"><div>
-        <p class="fp-kicker">Collector's Spotlight</p>
-        <h3 class="fp-title">From The Archive</h3>
-      </div></div>
-      <div class="fp-body">
-        <p style="font-size:13px;line-height:1.7;margin-bottom:16px">A rotating feature of the shop's most eye-catching vintage pieces — the kinds of finds that make the paper worth reading.</p>
-        <div class="three-col">
-          ${vintageSpotlight.map((item, i)=>`
-            <div style="border-top:2px solid var(--ink);padding-top:14px${i===3?';display:none' :''}" class="${i===3?'archive-mobile-only':''}">
-              <img src="${item.image}" alt="${item.title}" style="width:100%;height:120px;object-fit:cover;object-position:center;border-radius:8px;border:2px solid var(--ink);margin-bottom:10px" onerror="this.src='${FALLBACK}'"/>
-              <p class="sidebar-item-title">${item.title}</p>
-              <p class="sidebar-item-price">${item.priceLine}</p>
-              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
-                <button class="product-add-btn solid" onclick="addToCart('${item.id}','${item.options[0].id}')">Add</button>
-                <button class="product-add-btn outline" onclick="goToPage('${getPageForProduct(item)}')">View</button>
+    <!-- DEALS SECTION -->
+    <div style="margin-bottom:22px;background:#0f1f0a;border:3px solid #1f1b16;border-radius:14px;overflow:hidden;box-shadow:4px 4px 0 #1f1b16">
+      <div style="padding:14px 20px;border-bottom:2px solid rgba(74,222,128,.2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;background:rgba(74,222,128,.06)">
+        <div>
+          <p style="font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:rgba(74,222,128,.7);margin-bottom:4px">💸 Today's Best Value</p>
+          <h3 style="font-family:var(--display);font-size:clamp(18px,3.5vw,26px);font-weight:900;text-transform:uppercase;color:#f4ecd8;line-height:1.1">Deals of The Day</h3>
+        </div>
+        <span style="background:linear-gradient(135deg,#14532d,#16a34a);color:#dcfce7;font-family:var(--display);font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;padding:6px 14px;border-radius:999px">🔥 Best Prices</span>
+      </div>
+      <div style="padding:16px 20px">
+        <p style="font-size:13px;line-height:1.7;color:rgba(244,236,216,.75);margin-bottom:16px">The best deals in the shop — handpicked by the editor for maximum value. These won't last long.</p>
+        <div class="three-col" style="gap:14px">
+          ${[
+            products.find(p=>p.id==="wine-glasses-set"),
+            products.find(p=>p.id==="terrapin-turtle-glass"),
+            products.find(p=>p.id==="green-tea-plates"),
+            products.find(p=>p.id==="cat-dog-bowl"),
+            products.find(p=>p.id==="fall-harvest-plates"),
+            products.find(p=>p.id==="red-bumpy-bowl"),
+            products.find(p=>p.id==="blue-plastic-plates"),
+          ].filter(Boolean).map((item,i)=>`
+            <div class="${i===3?'archive-mobile-only':''}" style="${i===3?'display:none;':''}border:2px solid rgba(74,222,128,.25);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.04);transition:transform .2s;cursor:pointer" onclick="viewProduct('${item.id}')">
+              <div style="position:relative;overflow:hidden;height:130px">
+                <img src="${item.image.startsWith('DUAL:')?item.image.split('DUAL:')[1].split('|')[0]:item.image}" alt="${item.title}" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:transform .45s cubic-bezier(.25,.46,.45,.94);will-change:transform" onmouseover="this.style.transform='scale(1.08)';this.style.objectFit='contain'" onmouseout="this.style.transform='scale(1)';this.style.objectFit='cover'" onerror="this.src='${FALLBACK}'"/>
+                <div style="position:absolute;top:6px;left:6px;background:linear-gradient(135deg,#14532d,#16a34a);color:#dcfce7;font-family:var(--display);font-size:9px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:999px">Deal</div>
+              </div>
+              <div style="padding:10px 12px">
+                <p style="font-family:var(--display);font-size:11px;font-weight:900;text-transform:uppercase;color:#f4ecd8;line-height:1.2;margin-bottom:4px">${item.title}</p>
+                <p style="font-size:12px;font-weight:700;color:#4ade80;font-family:var(--serif);margin-bottom:8px">${item.priceLine}</p>
+                <div style="display:flex;gap:6px">
+                  <button class="product-add-btn solid" style="flex:1;font-size:11px;padding:6px 8px;background:linear-gradient(135deg,#14532d,#16a34a);border-color:#16a34a" onclick="event.stopPropagation();addToCart('${item.id}','${item.options[0].id}')">Add — ${money(item.options[0].price)}</button>
+                  <button class="product-add-btn outline" style="font-size:11px;padding:6px 10px;border-color:rgba(74,222,128,.4);color:#4ade80" onclick="event.stopPropagation();viewProduct('${item.id}')">→</button>
+                </div>
               </div>
             </div>
           `).join("")}
         </div>
+      </div>
+      <div style="padding:8px 20px;background:rgba(74,222,128,.05);border-top:1px solid rgba(74,222,128,.15)">
+        <p style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(74,222,128,.4)">💸 Updated daily · Limited quantities · First come first served</p>
       </div>
     </div>
 
@@ -1006,12 +1254,7 @@ function renderSection(){
     <div class="product-grid">
       ${pageProducts.map(p=>`
         <div class="product-card">
-          ${p.image.startsWith("DUAL:") ? `
-            <div style="display:grid;grid-template-columns:1fr 1fr;height:200px;border-bottom:var(--border)">
-              <img src="${p.image.split("DUAL:")[1].split("|")[0]}" alt="${p.title}" style="width:100%;height:100%;object-fit:cover;object-position:center;border-right:var(--border)" onerror="this.src='${FALLBACK}'"/>
-              <img src="${p.image.split("|")[1]}" alt="${p.title}" style="width:100%;height:100%;object-fit:cover;object-position:center" onerror="this.src='${FALLBACK}'"/>
-            </div>
-          ` : `<img src="${p.image}" alt="${p.title}" onerror="this.src='${FALLBACK}'"/>`}
+          ${(()=>{const allSoldOut=p.options.every(o=>isSoldOut(p.id,o.id));const imgHtml=p.image.startsWith("DUAL:")?`<div style="display:grid;grid-template-columns:1fr 1fr;height:200px;border-bottom:var(--border)"><img src="${p.image.split("DUAL:")[1].split("|")[0]}" alt="${p.title}" style="width:100%;height:100%;object-fit:cover;object-position:center;border-right:var(--border)" onerror="this.src='${FALLBACK}'"/><img src="${p.image.split("|")[1]}" alt="${p.title}" style="width:100%;height:100%;object-fit:cover;object-position:center" onerror="this.src='${FALLBACK}'"/></div>`:`<img src="${p.image}" alt="${p.title}" onerror="this.src='${FALLBACK}'" style="${allSoldOut?'filter:grayscale(.6)':''}"/>`;return allSoldOut?`<div class="sold-stamp-wrap">${imgHtml}<div class="sold-stamp">✕ Sold Out</div></div>`:imgHtml;})()}
           <div class="product-card-body">
             <div class="product-card-top">
               <h3 class="product-title">${p.title}</h3>
@@ -1102,7 +1345,7 @@ function renderLettersPage(){
       <div class="fp-section-header">
         <div>
           <p class="fp-kicker">Write In</p>
-          <h3 class="fp-title">Notes to the Editor</h3>
+          <h3 class="fp-title">Dish Requests</h3>
         </div>
         <span style="font-size:20px">✉️</span>
       </div>
@@ -1151,7 +1394,7 @@ async function submitLetter(){
   const name=document.getElementById("letter-name").value.trim();
   const email=document.getElementById("letter-email").value.trim();
   const message=document.getElementById("letter-message").value.trim();
-  const status=document.getElementById("letter-status");
+buildPopup(); // show on all devices
   if(!name||!message){
     status.style.display="block";
     status.style.background="#fef2f2";
@@ -1183,6 +1426,809 @@ updateCartUI();
   const vol = Math.floor((now - new Date("2026-04-01")) / (1000*60*60*24)) + 1;
   document.getElementById("edition-date").textContent = `Vol. 1 · No. ${vol} · ${dateStr}`;
 })();
+
+// ─────────────────────────────────────────────
+// STOP THE PRESSES POPUP
+// ─────────────────────────────────────────────
+const HOT_ITEMS = [
+  {id:"black-white-split-bowl",img:"https://i.imgur.com/POgGZEG.jpeg",label:"Black & White Split Bowl",price:"$9 — Only 1 Left"},
+  {id:"american-eagle-plate",img:"https://i.imgur.com/0ie0rvR.jpeg",label:"American Eagle Collector Plate",price:"$10 — Only 1 Left"},
+  {id:"terracotta-mug",img:"https://i.imgur.com/G43vDEo.jpeg",label:"Terracotta Coffee Mug",price:"$4 — Only 1 Left"},
+  {id:"wine-glasses-set",img:"https://i.imgur.com/KJgdRRs.jpeg",label:"Wine Glasses — $1 Each!",price:"Full Set of 9 — $9"},
+  {id:"lighthouse-full-set",img:"https://i.imgur.com/YIDDz9V.jpeg",label:"Lighthouse Complete Set",price:"$40 — Plates & Bowls"},
+  {id:"southwest-ranch-plate",img:"https://i.imgur.com/us8luRh.jpeg",label:"Southwest Pattern Plate",price:"$8 — Only 1 Left"},
+];
+
+function buildPopup(){
+  const grid = document.getElementById("stp-items");
+  if(!grid) return;
+  grid.innerHTML = HOT_ITEMS.map(item=>`
+    <div class="stp-item" onclick="closePopupAndGo('${item.id}')">
+      <div class="stp-hot-ring"></div>
+      <div class="stp-pulse"></div>
+      <img src="${item.img}" alt="${item.label}" onerror="this.src='${FALLBACK}'"/>
+      <div class="stp-item-info">
+        <p class="stp-item-title">${item.label}</p>
+        <p class="stp-item-price">${item.price}</p>
+      </div>
+    </div>
+  `).join("");
+}
+
+function closePopup(){
+  const overlay = document.getElementById("stp-overlay");
+  if(overlay){ overlay.style.animation="fadeOutOverlay .25s ease forwards"; setTimeout(()=>overlay.remove(),250); }
+  startTypewriter();
+}
+
+function closePopupAndGo(productId){
+  closePopup();
+  setTimeout(()=>{
+    const p = products.find(x=>x.id===productId);
+    if(p) goToPage(getPageForProduct(p));
+  }, 300);
+}
+
+function handleOverlayClick(e){
+  if(e.target.id==="stp-overlay") closePopup();
+}
+
+// Add fadeOut keyframe dynamically
+const styleSheet = document.createElement("style");
+styleSheet.textContent = "@keyframes fadeOutOverlay{to{opacity:0}}";
+document.head.appendChild(styleSheet);
+
+buildPopup(); // show on all devices
+
+// ─────────────────────────────────────────────
+// TYPEWRITER — runs after popup closes
+// ─────────────────────────────────────────────
+function startTypewriter(fast=false){
+  const title = document.getElementById("tw-title");
+  const sub = document.getElementById("tw-sub");
+  if(!title||!sub) return;
+  const ts = fast ? ".7s" : "1.2s";
+  const ss = fast ? ".9s" : "1.4s";
+  const td = fast ? ".7s" : "1.3s";
+  const sd = fast ? "1.7s" : "3s";
+  const th = fast ? "1.4s" : "2s";
+  const sh = fast ? "2.7s" : "3.7s";
+  title.style.animation = "none";
+  sub.style.animation = "none";
+  void title.offsetWidth;
+  title.style.animation = `typeTitle ${ts} steps(11,end) .05s forwards, blinkTitle .7s step-end ${td} 1, hideCursor 0s ${th} forwards`;
+  sub.style.animation = `typeSub ${ss} steps(22,end) ${fast?".8s":"1.5s"} forwards, blinkSub .7s step-end ${sd} 1, hideSubCursor 0s ${sh} forwards, fadeInSub 0s ${fast?".8s":"1.5s"} forwards`;
+}
+// ─────────────────────────────────────────────
+// DISH GAMES PAGE
+// ─────────────────────────────────────────────
+function renderGamesPage(){
+  return `
+    <div style="max-width:800px;margin:0 auto">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px">
+        <button onclick="startDishPong()" style="font-family:var(--display);background:var(--ink);color:var(--cream);border:3px solid var(--ink);border-radius:14px;padding:20px;font-size:16px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;box-shadow:4px 4px 0 rgba(0,0,0,.3)">
+          🏓 Dish Pong
+          <p style="font-size:11px;font-weight:400;opacity:.6;margin-top:6px;text-transform:none;letter-spacing:0;line-height:1.4">Plates bounce back and forth. Hit as many as you can!</p>
+        </button>
+        <button onclick="startStackGame()" style="font-family:var(--display);background:linear-gradient(135deg,#1a2d5a,#0c1a3a);color:var(--cream);border:3px solid var(--ink);border-radius:14px;padding:20px;font-size:16px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;box-shadow:4px 4px 0 rgba(0,0,0,.3)">
+          🍽️ Stack The Dishes
+          <p style="font-size:11px;font-weight:400;opacity:.6;margin-top:6px;text-transform:none;letter-spacing:0;line-height:1.4">Drop dishes and stack them high!</p>
+        </button>
+      </div>
+      <div id="game-area" style="border:3px solid var(--ink);border-radius:14px;overflow:hidden;box-shadow:4px 4px 0 var(--ink);background:#111;display:none;flex-direction:column;position:relative">
+        <div style="background:var(--ink);padding:10px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+          <span id="game-title" style="font-family:var(--display);color:var(--cream);font-size:14px;font-weight:900;text-transform:uppercase;letter-spacing:.1em"></span>
+          <div style="display:flex;align-items:center;gap:12px">
+            <span id="game-score" style="font-family:var(--display);color:#d4a843;font-size:14px;font-weight:900"></span>
+            <button onclick="stopGame()" style="font-family:var(--serif);background:rgba(255,255,255,.1);color:var(--cream);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer">✕ Exit</button>
+          </div>
+        </div>
+        <canvas id="game-canvas" style="display:block;width:100%;touch-action:none"></canvas>
+        <div id="dish-reveal" style="background:#f5f0e8;border-top:2px solid var(--ink);padding:12px 16px;display:none;align-items:center;gap:12px;flex-shrink:0">
+          <img id="reveal-img" style="width:50px;height:50px;object-fit:cover;border-radius:6px;border:2px solid var(--ink);flex-shrink:0" src=""/>
+          <div style="flex:1;min-width:0">
+            <p id="reveal-title" style="font-family:var(--display);font-size:12px;font-weight:900;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></p>
+            <p id="reveal-price" style="font-size:11px;opacity:.7"></p>
+          </div>
+          <button id="reveal-btn" style="font-family:var(--serif);background:var(--ink);color:var(--cream);border:none;border-radius:6px;padding:7px 14px;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0">View →</button>
+        </div>
+      </div>
+      <div style="margin-top:20px;border:2px solid var(--ink);border-radius:10px;overflow:hidden">
+        <div style="background:var(--ink);color:var(--cream);padding:10px 16px">
+          <p style="font-family:var(--display);font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.1em">🏆 Your Best Scores</p>
+        </div>
+        <div style="padding:14px 16px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div style="text-align:center;border:2px solid var(--ink);border-radius:8px;padding:12px">
+            <p style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;opacity:.5;margin-bottom:4px">🏓 Dish Pong</p>
+            <p id="pong-best" style="font-family:var(--display);font-size:24px;font-weight:900">0</p>
+          </div>
+          <div style="text-align:center;border:2px solid var(--ink);border-radius:8px;padding:12px">
+            <p style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;opacity:.5;margin-bottom:4px">🍽️ Stack The Dishes</p>
+            <p id="stack-best" style="font-family:var(--display);font-size:24px;font-weight:900">0</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+
+
+// ─────────────────────────────────────────────
+function viewProduct(productId, fromFrontPage=false){
+  const p = products.find(x=>x.id===productId);
+  if(!p) return;
+  const body = document.getElementById("page-body");
+  const imgSrc = p.image.startsWith("DUAL:") ? p.image.split("DUAL:")[1].split("|")[0] : p.image;
+  const img2 = p.image.startsWith("DUAL:") ? p.image.split("|")[1] : null;
+  const allSoldOut = p.options.every(o=>isSoldOut(p.id,o.id));
+  const sectionPage = getPageForProduct(p);
+
+  body.innerHTML = `
+    <div style="max-width:720px;margin:0 auto">
+
+      <!-- Navigation buttons -->
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px">
+        <button onclick="goToPage('Front Page')" style="font-family:var(--serif);background:none;border:2px solid var(--ink);border-radius:999px;padding:8px 18px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.05em;display:inline-flex;align-items:center;gap:6px;transition:all .15s" onmouseover="this.style.background='#1f1b16';this.style.color='#f5f0e8'" onmouseout="this.style.background='none';this.style.color='inherit'">🗞️ Front Page</button>
+        <button onclick="goToPage('${sectionPage}')" style="font-family:var(--serif);background:#1f1b16;color:#f5f0e8;border:2px solid #1f1b16;border-radius:999px;padding:8px 18px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.05em;display:inline-flex;align-items:center;gap:6px;transition:all .15s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Browse ${sectionPage} →</button>
+      </div>
+
+      <!-- Hero image — full bleed, beautiful -->
+      <div style="position:relative;border:3px solid var(--ink);border-radius:16px;overflow:hidden;box-shadow:6px 6px 0 var(--ink);margin-bottom:20px;background:#1a1a1a">
+        ${img2 ? `
+          <!-- Dual image side by side with glow -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;height:260px">
+            <div style="position:relative;overflow:hidden;border-right:3px solid var(--ink)">
+              <img src="${imgSrc}" alt="${p.title}" style="width:100%;height:100%;object-fit:contain;object-position:center;background:#1a1a1a;padding:8px;transition:transform .5s cubic-bezier(.25,.46,.45,.94)" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'" onerror="this.src='${FALLBACK}'"/>
+              <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.5) 0%,transparent 50%)"></div>
+              <p style="position:absolute;bottom:10px;left:12px;color:white;font-family:var(--display);font-size:11px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;opacity:.9">Front</p>
+            </div>
+            <div style="position:relative;overflow:hidden">
+              <img src="${img2}" alt="${p.title}" style="width:100%;height:100%;object-fit:contain;object-position:center;background:#1a1a1a;padding:8px;transition:transform .5s cubic-bezier(.25,.46,.45,.94)" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'" onerror="this.src='${FALLBACK}'"/>
+              <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.5) 0%,transparent 50%)"></div>
+              <p style="position:absolute;bottom:10px;left:12px;color:white;font-family:var(--display);font-size:11px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;opacity:.9">Back</p>
+            </div>
+          </div>
+        ` : `
+          <!-- Single full bleed image with gradient overlay -->
+          <div style="position:relative;height:360px;overflow:hidden">
+            <img src="${imgSrc}" alt="${p.title}" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:transform .6s cubic-bezier(.25,.46,.45,.94)" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'" onerror="this.src='${FALLBACK}'"/>
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65) 0%,rgba(0,0,0,.1) 50%,transparent 100%)"></div>
+            <!-- Title overlay on image -->
+            <div style="position:absolute;bottom:0;left:0;right:0;padding:24px 24px 20px">
+              <p style="font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:6px;font-family:var(--serif)">${p.collection}</p>
+              <h2 style="font-family:var(--display);font-size:clamp(22px,5vw,34px);font-weight:900;text-transform:uppercase;color:white;line-height:1.1;text-shadow:0 2px 12px rgba(0,0,0,.5)">${p.title}</h2>
+            </div>
+            ${p.oneOfOne ? `<div style="position:absolute;top:14px;right:14px;background:linear-gradient(135deg,#b45309,#d97706);color:white;font-family:var(--display);font-size:10px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:6px 14px;border-radius:999px;box-shadow:0 4px 12px rgba(0,0,0,.3)">⚠️ Only 1 Left</span>` : ""}
+          </div>
+        `}
+      </div>
+
+      <!-- Content card -->
+      <div style="border:3px solid var(--ink);border-radius:16px;overflow:hidden;box-shadow:4px 4px 0 var(--ink);background:var(--cream)">
+
+        <!-- Info header -->
+        <div style="padding:20px 24px;border-bottom:2px solid var(--ink);background:linear-gradient(135deg,#faf7f2,#f5f0e8)">
+          ${img2 ? `
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px">
+              <div>
+                <p style="font-size:10px;letter-spacing:.25em;text-transform:uppercase;opacity:.5;margin-bottom:4px">${p.collection}</p>
+                <h2 style="font-family:var(--display);font-size:clamp(18px,4vw,28px);font-weight:900;text-transform:uppercase;line-height:1.1">${p.title}</h2>
+              </div>
+              ${p.oneOfOne ? `<span style="background:#b45309;color:white;font-family:var(--display);font-size:10px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border-radius:999px;white-space:nowrap;flex-shrink:0">⚠️ Only 1 Left</span>` : ""}
+            </div>
+          ` : ""}
+          <p style="font-style:italic;font-size:14px;line-height:1.6;opacity:.75;border-left:3px solid var(--ink);padding-left:14px">${p.subtitle}</p>
+        </div>
+
+        <!-- Description -->
+        <div style="padding:20px 24px;border-bottom:2px solid var(--ink)">
+          <p style="font-size:10px;letter-spacing:.25em;text-transform:uppercase;opacity:.4;margin-bottom:8px">About This Piece</p>
+          <p style="font-size:14px;line-height:1.85;color:#2d2620">${p.description}</p>
+        </div>
+
+        <!-- Newsroom story -->
+        <div style="padding:20px 24px;border-bottom:2px solid var(--ink);background:linear-gradient(135deg,#1a1208,#2a1f08)">
+          <p style="font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:rgba(212,168,67,.7);margin-bottom:8px">🗞️ From The Newsroom</p>
+          <p style="font-size:13px;line-height:1.8;font-style:italic;color:rgba(244,236,216,.85)">${p.story}</p>
+        </div>
+
+        <!-- Price + Add to cart -->
+        <div style="padding:20px 24px;background:linear-gradient(135deg,#faf7f2,#f5f0e8)">
+          <p style="font-weight:900;font-size:20px;margin-bottom:16px;font-family:var(--display);letter-spacing:.02em">${p.priceLine}</p>
+          ${allSoldOut ? `
+            <div style="display:flex;align-items:center;gap:10px;background:#1f1b16;border-radius:10px;padding:14px 18px">
+              <span style="font-size:20px">✕</span>
+              <div>
+                <p style="color:white;font-family:var(--display);font-size:14px;font-weight:900;letter-spacing:.05em;text-transform:uppercase">Sold Out</p>
+                <p style="color:rgba(255,255,255,.5);font-size:12px;margin-top:2px">Check back soon — new drops land regularly</p>
+              </div>
+            </div>
+          ` : `
+            <div style="display:flex;flex-wrap:wrap;gap:10px">
+              ${p.options.map(o=>{
+                const soldOut=isSoldOut(p.id,o.id);
+                return `<button class="product-add-btn ${o.variant==="outline"?"outline":"solid"}" onclick="addToCart('${p.id}','${o.id}')" ${soldOut?"disabled":""} style="${soldOut?"opacity:.4;cursor:not-allowed;":""}font-size:14px;padding:13px 24px;border-radius:10px">${soldOut?"Sold Out":o.label+" ("+money(o.price)+")"}</button>`;
+              }).join("")}
+            </div>
+          `}
+        </div>
+
+      </div>
+    </div>
+  `;
+
+  body.classList.remove("page-flip");
+  void body.offsetWidth;
+  body.classList.add("page-flip");
+  body.addEventListener("animationend",()=>body.classList.remove("page-flip"),{once:true});
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+// ─────────────────────────────────────────────
+// DISH GAMES ENGINE
+// ─────────────────────────────────────────────
+let gameLoop = null;
+let gameRunning = false;
+
+// ─────────────────────────────────────────────
+// ─────────────────────────────────────────────
+// DISH GAMES — clean, smooth, performant
+// ─────────────────────────────────────────────
+let _gl = null;         // game loop RAF id
+let _gRunning = false;  // is game running
+let _gMY = 0;           // mouse/touch Y
+let _gKH = null;        // key handler ref
+let _gMH = null;        // mouse handler ref
+let _gDishes = null;    // cached dish list
+let _gImgs = {};        // preloaded images
+
+function _dishes(){
+  if(_gDishes) return _gDishes;
+  _gDishes = products
+    .filter(p=>!p.image.startsWith("DUAL:")&&p.collection!=="Sets"&&p.collection!=="Silverware")
+    .map(p=>({img:p.image,title:p.title,price:p.priceLine,id:p.id}));
+  // Preload all images
+  _gDishes.forEach((d,i)=>{
+    const img=new Image(); img.crossOrigin="anonymous"; img.src=d.img; _gImgs[i]=img;
+  });
+  return _gDishes;
+}
+
+function _gImg(i){ return _gImgs[i%(_dishes().length)]; }
+
+function stopGame(){
+  _gRunning=false;
+  if(_gl){ cancelAnimationFrame(_gl); _gl=null; }
+  if(_gKH){ window.removeEventListener("keydown",_gKH); _gKH=null; }
+  if(_gMH){ window.removeEventListener("mousemove",_gMH); _gMH=null; }
+  const a=document.getElementById("game-area"); if(a) a.style.display="none";
+  const dr=document.getElementById("dish-reveal"); if(dr) dr.style.display="none";
+  const c=document.getElementById("game-canvas"); if(c) c.onclick=null;
+}
+
+function _reveal(di){
+  const d=_dishes()[di%_dishes().length];
+  const dr=document.getElementById("dish-reveal"); if(!dr) return;
+  document.getElementById("reveal-img").src=d.img;
+  document.getElementById("reveal-title").textContent=d.title;
+  document.getElementById("reveal-price").textContent=d.price;
+  document.getElementById("reveal-btn").onclick=()=>viewProduct(d.id);
+  dr.style.display="flex";
+}
+
+function _saveBest(key,val){
+  try{
+    const prev=parseInt(localStorage.getItem(key)||"0");
+    if(val>prev){ localStorage.setItem(key,val); return true; }
+  }catch(e){}
+  return false;
+}
+
+function _setScore(val,gameKey){
+  const el=document.getElementById("game-score");
+  if(el) el.textContent="Score: "+val;
+  if(_saveBest(gameKey,val)){
+    const id=gameKey==="dd-pong"?"pong-best":"stack-best";
+    const el2=document.getElementById(id);
+    if(el2) el2.textContent=val;
+  }
+}
+
+function _gameSetup(title){
+  _dishes(); // ensure preloaded
+  const area=document.getElementById("game-area");
+  if(!area){ goToPage("Dish Games"); setTimeout(()=>title==="pong"?startDishPong():startStackGame(),120); return null; }
+  stopGame();
+  area.style.display="flex";
+  const t=document.getElementById("game-title");
+  if(t) t.textContent=title==="pong"?"🏓 Dish Pong":"🍽️ Stack The Dishes";
+  const dr=document.getElementById("dish-reveal"); if(dr) dr.style.display="none";
+  const canvas=document.getElementById("game-canvas");
+  if(!canvas) return null;
+  const isMob=window.innerWidth<=768;
+  const W=area.clientWidth||Math.min(window.innerWidth-32,700);
+  return {area,canvas,isMob,W};
+}
+
+// ════════════════════════════════════════════
+// 🏓 DISH PONG
+// ════════════════════════════════════════════
+function startDishPong(){
+  const setup=_gameSetup("pong"); if(!setup) return;
+  const {canvas,isMob,W}=setup;
+  const H=isMob?380:480;
+  canvas.width=W; canvas.height=H; canvas.style.height=H+"px";
+  const ctx=canvas.getContext("2d");
+
+  // Dish ball setup
+  let di=0;
+  const BR=isMob?22:26;
+  const PAD=isMob?12:18;
+  const PW=12;
+  const PH=isMob?72:90;
+
+  // State
+  let score=0;
+  let spd=isMob?4.8:5.5;
+  let bx=W/2, by=H/2;
+  let bdx=spd*(Math.random()>.5?1:-1);
+  let bdy=spd*(Math.random()*1.4-0.7);
+  let py=H/2-PH/2;   // player
+  let py2=H/2-PH/2;  // AI
+  let flash=0;
+  _gRunning=true;
+  _gMY=H/2;
+
+  // Mouse
+  _gMH=e=>{ const r=canvas.getBoundingClientRect(); _gMY=(e.clientY-r.top)*(H/r.height); };
+  window.addEventListener("mousemove",_gMH);
+  // Touch
+  canvas.ontouchmove=e=>{ e.preventDefault(); const r=canvas.getBoundingClientRect(); _gMY=(e.touches[0].clientY-r.top)*(H/r.height); };
+  // Keys
+  _gKH=e=>{
+    if(e.key==="ArrowUp"||e.key==="w"){ e.preventDefault(); py=Math.max(0,py-24); }
+    if(e.key==="ArrowDown"||e.key==="s"){ e.preventDefault(); py=Math.min(H-PH,py+24); }
+  };
+  window.addEventListener("keydown",_gKH);
+
+  function over(){
+    _gRunning=false;
+    ctx.fillStyle="rgba(0,0,0,.8)"; ctx.fillRect(0,0,W,H);
+    ctx.textAlign="center";
+    ctx.fillStyle="#d4a843"; ctx.font="bold "+(isMob?30:38)+"px Georgia,serif";
+    ctx.fillText("GAME OVER",W/2,H/2-38);
+    ctx.fillStyle="white"; ctx.font=(isMob?17:21)+"px Georgia,serif";
+    ctx.fillText("Score: "+score,W/2,H/2+6);
+    ctx.fillStyle="rgba(255,255,255,.45)"; ctx.font=(isMob?13:15)+"px Georgia,serif";
+    ctx.fillText("Tap to play again",W/2,H/2+44);
+    canvas.onclick=()=>{ canvas.onclick=null; startDishPong(); };
+  }
+
+  function frame(){
+    if(!_gRunning) return;
+    _gl=requestAnimationFrame(frame);
+
+    // Player follows mouse/touch smoothly
+    py+=((_gMY-PH/2)-py)*0.22;
+    py=Math.max(0,Math.min(H-PH,py));
+
+    // AI — PERFECT tracking, always centres on ball
+    // Gets there slightly delayed so it's beatable early
+    const aiLag = Math.max(0.12, 0.32 - score*0.006);
+    py2+=((by-PH/2)-py2)*aiLag;
+    py2=Math.max(0,Math.min(H-PH,py2));
+
+    // Move ball
+    bx+=bdx; by+=bdy;
+
+    // Wall bounce
+    if(by-BR<=0){ by=BR; bdy=Math.abs(bdy); }
+    if(by+BR>=H){ by=H-BR; bdy=-Math.abs(bdy); }
+
+    // Player hit (left paddle)
+    if(bdx<0&&bx-BR<=PAD+PW&&bx-BR>PAD-2&&by>py&&by<py+PH){
+      const rel=(by-(py+PH/2))/(PH/2);
+      spd=Math.min(isMob?14:16, spd+0.35);
+      bdx=spd;
+      bdy=rel*spd*0.85;
+      bx=PAD+PW+BR+1;
+      score++;
+      _setScore(score,"dd-pong");
+      di++; _reveal(di); flash=7;
+    }
+
+    // AI hit (right paddle)
+    if(bdx>0&&bx+BR>=W-PAD-PW&&bx+BR<W-PAD+2&&by>py2&&by<py2+PH){
+      const rel=(by-(py2+PH/2))/(PH/2);
+      spd=Math.min(isMob?14:16, spd+0.35);
+      bdx=-spd;
+      bdy=rel*spd*0.85;
+      bx=W-PAD-PW-BR-1;
+      score++;
+      _setScore(score,"dd-pong");
+      di++; _reveal(di); flash=7;
+    }
+
+    // Miss
+    if(bx<-40||bx>W+40){ cancelAnimationFrame(_gl); _gl=null; over(); return; }
+
+    // ── DRAW — dinner table ──
+
+    // Rich walnut wood table
+    const tableBg=ctx.createLinearGradient(0,0,W,H);
+    tableBg.addColorStop(0,"#1e0f06"); tableBg.addColorStop(0.3,"#5c3317");
+    tableBg.addColorStop(0.5,"#7a4820"); tableBg.addColorStop(0.7,"#5c3317");
+    tableBg.addColorStop(1,"#1e0f06");
+    ctx.fillStyle=tableBg; ctx.fillRect(0,0,W,H);
+
+    // Wood grain lines
+    ctx.save(); ctx.globalAlpha=0.05;
+    for(let i=0;i<18;i++){
+      ctx.strokeStyle="#fff"; ctx.lineWidth=1;
+      ctx.beginPath();
+      ctx.moveTo(0,(i*H/17)+Math.sin(i*1.4)*5);
+      ctx.bezierCurveTo(W/3,(i*H/17)+Math.cos(i)*4, W*2/3,(i*H/17)-Math.cos(i)*4, W,(i*H/17)+Math.sin(i*1.4)*5);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // Candlelight glow from both sides
+    ctx.save(); ctx.globalAlpha=0.06;
+    ctx.beginPath(); ctx.arc(PAD+30,H/2,H*0.55,0,Math.PI*2);
+    ctx.fillStyle="#ffbb33"; ctx.fill();
+    ctx.beginPath(); ctx.arc(W-PAD-30,H/2,H*0.55,0,Math.PI*2);
+    ctx.fill(); ctx.restore();
+
+    // Table edge highlights
+    const tg=ctx.createLinearGradient(0,0,0,16);
+    tg.addColorStop(0,"rgba(255,180,80,.18)"); tg.addColorStop(1,"transparent");
+    ctx.fillStyle=tg; ctx.fillRect(0,0,W,16);
+    const bg2=ctx.createLinearGradient(0,H-16,0,H);
+    bg2.addColorStop(0,"transparent"); bg2.addColorStop(1,"rgba(0,0,0,.5)");
+    ctx.fillStyle=bg2; ctx.fillRect(0,H-16,W,16);
+
+    // Center seam / net
+    ctx.save(); ctx.setLineDash([6,10]);
+    ctx.strokeStyle="rgba(255,200,100,.12)"; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(W/2,0); ctx.lineTo(W/2,H); ctx.stroke();
+    ctx.restore();
+
+    // Player paddle (gold warm wood)
+    const pg=ctx.createLinearGradient(PAD,py,PAD+PW,py+PH);
+    pg.addColorStop(0,"#fde68a"); pg.addColorStop(0.5,"#d97706"); pg.addColorStop(1,"#92400e");
+    ctx.fillStyle=pg; ctx.beginPath(); ctx.roundRect(PAD,py,PW,PH,5); ctx.fill();
+    ctx.strokeStyle="rgba(255,230,120,.7)"; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.roundRect(PAD,py,PW,PH,5); ctx.stroke();
+
+    // AI paddle (deep red)
+    const ag=ctx.createLinearGradient(W-PAD-PW,py2,W-PAD,py2+PH);
+    ag.addColorStop(0,"#f87171"); ag.addColorStop(0.5,"#b91c1c"); ag.addColorStop(1,"#7f1d1d");
+    ctx.fillStyle=ag; ctx.beginPath(); ctx.roundRect(W-PAD-PW,py2,PW,PH,5); ctx.fill();
+    ctx.strokeStyle="rgba(255,100,100,.4)"; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.roundRect(W-PAD-PW,py2,PW,PH,5); ctx.stroke();
+
+    // Labels
+    ctx.font="bold 10px Georgia,serif"; ctx.textAlign="center";
+    ctx.fillStyle="rgba(255,210,130,.4)";
+    ctx.fillText("YOU",PAD+PW/2+22,H-8);
+    ctx.fillText("AI",W-PAD-PW/2-20,H-8);
+
+    // Ball shadow on table
+    ctx.save();
+    ctx.shadowColor="rgba(0,0,0,.5)"; ctx.shadowBlur=12; ctx.shadowOffsetY=6;
+    ctx.beginPath(); ctx.arc(bx,by,BR,0,Math.PI*2);
+    ctx.fillStyle="rgba(0,0,0,.25)"; ctx.fill();
+    ctx.restore();
+
+    // Ball — dish image clipped to circle, cover scaled, with flash glow
+    ctx.save();
+    if(flash>0){ ctx.shadowColor="#fde68a"; ctx.shadowBlur=22; flash--; }
+    ctx.beginPath(); ctx.arc(bx,by,BR,0,Math.PI*2); ctx.clip();
+    const img=_gImg(di);
+    if(img&&img.complete&&img.naturalWidth>0){
+      const iw=img.naturalWidth||1, ih=img.naturalHeight||1;
+      const scale=Math.max((BR*2)/iw,(BR*2)/ih);
+      const sw=iw*scale, sh=ih*scale;
+      ctx.drawImage(img,bx-sw/2,by-sh/2,sw,sh);
+    } else {
+      ctx.fillStyle="#d4a843"; ctx.fill();
+    }
+    ctx.restore();
+    // Rim
+    ctx.strokeStyle="rgba(255,255,255,.7)"; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(bx,by,BR,0,Math.PI*2); ctx.stroke();
+
+    // Score
+    ctx.fillStyle="rgba(255,255,255,.6)"; ctx.font="bold "+(isMob?16:18)+"px Georgia,serif";
+    ctx.textAlign="center"; ctx.fillText(score,W/2,22);
+
+    // Speed bar
+    const maxSpd=isMob?14:16;
+    const barW=(spd/maxSpd)*(W*0.3);
+    ctx.fillStyle="rgba(255,255,255,.08)"; ctx.fillRect(W/2-W*0.15,H-8,W*0.3,4);
+    ctx.fillStyle=`hsl(${120-((spd/maxSpd)*120)},80%,55%)`; ctx.fillRect(W/2-W*0.15,H-8,barW,4);
+
+    if(score===0){
+      ctx.fillStyle="rgba(255,255,255,.3)"; ctx.font=(isMob?12:13)+"px Georgia,serif";
+      ctx.fillText(isMob?"Swipe to move paddle":"Mouse or arrow keys to move",W/2,H/2+BR+22);
+    }
+  }
+  frame();
+}
+
+// ════════════════════════════════════════════
+// 🍽️ STACK THE DISHES — camera follow
+// ════════════════════════════════════════════
+// ════════════════════════════════════════════
+// 🍽️ STACK THE DISHES — circular plates, camera follow, WOW factor
+// ════════════════════════════════════════════
+function startStackGame(){
+  const setup=_gameSetup("stack"); if(!setup) return;
+  const {canvas,isMob,W}=setup;
+  const H=isMob?460:540;
+  canvas.width=W; canvas.height=H; canvas.style.height=H+"px";
+  const ctx=canvas.getContext("2d");
+
+  // Plates are CIRCLES — radius sized so they look like real dishes
+  const R=isMob?44:54; // radius of each plate
+  const DIAM=R*2;
+
+  // World Y: 0=ground, increases upward
+  // camY = world Y shown at canvas bottom
+  let camY=0;
+  let camTarget=0;
+
+  // Stack: array of {wx (center x), wy (center y world), di}
+  let di=0;
+  let stack=[{wx:W/2, wy:R, di:di}];
+
+  // Falling plate
+  let fdi=1%_dishes().length;
+  let fx=W/2;      // center x
+  let fwy=R*3+60;  // world y center (above stack)
+  let fdx=(Math.random()>.5?1:-1)*8;
+  let score=0, spd=8;
+  let dropped=false;
+  let landAnim=null; // {wx,wy,alpha,di} for landing flash
+  _gRunning=true;
+
+  // Preload at high priority
+  _dishes();
+
+  function updateCamera(){
+    const topWY = stack[stack.length-1].wy;
+    const target = Math.max(0, topWY + R*3 - H*0.55);
+    camTarget = target;
+  }
+
+  function worldToScreen(wy){ return H - (wy - camY); }
+
+  // Draw a beautiful plate — circle with real dish image inside
+  function drawPlate(cx, cy, r, img, alpha=1, glow=null){
+    ctx.save();
+    ctx.globalAlpha=alpha;
+
+    // Glow effect
+    if(glow){
+      ctx.shadowColor=glow;
+      ctx.shadowBlur=24;
+    }
+
+    // Plate shadow
+    ctx.save();
+    ctx.shadowColor="rgba(0,0,0,.5)";
+    ctx.shadowBlur=12;
+    ctx.shadowOffsetY=4;
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fillStyle="rgba(0,0,0,.3)"; ctx.fill();
+    ctx.restore();
+
+    // Clip to circle and draw image
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.clip();
+    if(img&&img.complete&&img.naturalWidth>0){
+      // Draw image COVER style — fill the circle without stretching
+      const iw=img.naturalWidth, ih=img.naturalHeight;
+      const scale=Math.max(DIAM/iw, DIAM/ih);
+      const sw=iw*scale, sh=ih*scale;
+      ctx.drawImage(img, cx-sw/2, cy-sh/2, sw, sh);
+    } else {
+      // Placeholder while loading
+      ctx.fillStyle="#c8a97a"; ctx.fill();
+    }
+
+    // Plate rim — ceramic look
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.strokeStyle="rgba(255,255,255,.7)"; ctx.lineWidth=3; ctx.stroke();
+    ctx.strokeStyle="rgba(0,0,0,.2)"; ctx.lineWidth=1.5; ctx.stroke();
+
+    // Inner rim highlight
+    ctx.beginPath(); ctx.arc(cx,cy,r*0.75,0,Math.PI*2);
+    ctx.strokeStyle="rgba(255,255,255,.15)"; ctx.lineWidth=1.5; ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function drop(){
+    if(dropped||!_gRunning) return;
+    dropped=true;
+
+    const top=stack[stack.length-1];
+    const dist=Math.abs(fx-top.wx);
+    const maxDist=R*1.6;
+
+    if(dist>maxDist){
+      // Missed — game over
+      cancelAnimationFrame(_gl); _gl=null; _gRunning=false;
+
+      // Dramatic fall animation
+      let fallV=0, fallY=worldToScreen(fwy);
+      const fallX=W/2-(fx-W/2)*0.5;
+      let rot=0, rotV=(Math.random()-.5)*0.3;
+      let fallAlpha=1;
+
+      function fallAnim(){
+        ctx.fillStyle="#0d1117"; ctx.fillRect(0,0,W,H);
+        drawStack();
+        fallV+=0.8; fallY+=fallV;
+        rot+=rotV; fallAlpha-=0.03;
+        ctx.save();
+        ctx.translate(W/2+(fx-W/2)*0.5, fallY);
+        ctx.rotate(rot);
+        drawPlate(0,0,R,_gImg(fdi),Math.max(0,fallAlpha));
+        ctx.restore();
+        if(fallAlpha>0) requestAnimationFrame(fallAnim);
+        else showGameOver();
+      }
+      fallAnim();
+      return;
+    }
+
+    // Perfect or partial — plate lands with satisfying snap
+    const precision = Math.max(0, 1 - dist/maxDist);
+    const newWX = fx; // center stays where it fell
+    const newWY = top.wy + DIAM*0.82; // slight overlap for stacking look
+
+    di++;
+    const newDi=di%_dishes().length;
+    stack.push({wx:newWX, wy:newWY, di:newDi});
+    _reveal(fdi);
+    score++;
+    _setScore(score,"dd-stack");
+    spd=Math.min(isMob?18:22, 8+score*0.6);
+
+    // Landing flash
+    landAnim={wx:newWX, wy:newWY, r:R, alpha:1, precision};
+
+    // Next plate
+    fdi=(di+1)%_dishes().length;
+    fx=W/2+(Math.random()-.5)*W*0.4;
+    fwy=newWY+DIAM*1.4;
+    fdx=(Math.random()>.5?1:-1)*spd;
+    dropped=false;
+    updateCamera();
+  }
+
+  function showGameOver(){
+    ctx.fillStyle="rgba(0,0,0,.85)"; ctx.fillRect(0,0,W,H);
+    ctx.textAlign="center";
+    // Cracked plate emoji
+    ctx.font=(isMob?52:64)+"px serif"; ctx.fillText("🍽️",W/2,H/2-60);
+    ctx.fillStyle="#e53e3e"; ctx.font="bold "+(isMob?28:36)+"px Georgia,serif";
+    ctx.fillText("PLATE DROPPED!",W/2,H/2-10);
+    ctx.fillStyle="white"; ctx.font=(isMob?17:20)+"px Georgia,serif";
+    ctx.fillText("Score: "+score,W/2,H/2+28);
+    ctx.fillStyle="rgba(255,255,255,.45)"; ctx.font=(isMob?13:15)+"px Georgia,serif";
+    ctx.fillText("Tap to play again",W/2,H/2+62);
+    canvas.onclick=()=>{ canvas.onclick=null; startStackGame(); };
+  }
+
+  function drawStack(){
+    stack.forEach((s,i)=>{
+      const cy=worldToScreen(s.wy);
+      if(cy<-DIAM||cy>H+DIAM) return;
+      const isTop=i===stack.length-1;
+      drawPlate(s.wx, cy, R, _gImg(s.di), 1, isTop?"#d4a843":null);
+      if(isTop){
+        // Gold crown ring on top plate
+        ctx.beginPath(); ctx.arc(s.wx,cy,R+4,0,Math.PI*2);
+        ctx.strokeStyle="rgba(212,168,67,0.4)"; ctx.lineWidth=2; ctx.stroke();
+      }
+    });
+  }
+
+  canvas.onclick=drop;
+  canvas.ontouchend=e=>{ e.preventDefault(); drop(); };
+  _gKH=e=>{ if(e.code==="Space"||e.key===" "){ e.preventDefault(); drop(); }};
+  window.addEventListener("keydown",_gKH);
+
+  updateCamera(); camY=camTarget;
+
+  function frame(){
+    if(!_gRunning) return;
+    _gl=requestAnimationFrame(frame);
+
+    if(!dropped){
+      fx+=fdx;
+      if(fx-R<=0){ fx=R; fdx=Math.abs(fdx); }
+      if(fx+R>=W){ fx=W-R; fdx=-Math.abs(fdx); }
+    }
+
+    // Smooth camera follow
+    updateCamera();
+    camY+=(camTarget-camY)*0.07;
+
+    // ── DRAW ──
+    // Rich dark background with subtle gradient
+    const bg=ctx.createLinearGradient(0,0,0,H);
+    bg.addColorStop(0,"#0d1117"); bg.addColorStop(1,"#1a1208");
+    ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+
+    // Subtle grid
+    ctx.strokeStyle="rgba(255,255,255,.03)"; ctx.lineWidth=1;
+    for(let x=0;x<W;x+=40){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+    for(let y=0;y<H;y+=40){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+
+    // Ground platform
+    const groundSY=worldToScreen(0);
+    if(groundSY<H+20){
+      const grd=ctx.createLinearGradient(0,groundSY-8,0,groundSY+12);
+      grd.addColorStop(0,"#d4a843"); grd.addColorStop(1,"#92400e");
+      ctx.fillStyle=grd; ctx.fillRect(0,groundSY-4,W,16);
+      ctx.fillStyle="rgba(212,168,67,.15)";
+      ctx.fillRect(0,groundSY+12,W,H);
+    }
+
+    // Draw stack
+    drawStack();
+
+    // Landing flash animation
+    if(landAnim){
+      const cy=worldToScreen(landAnim.wy);
+      ctx.save();
+      ctx.globalAlpha=landAnim.alpha*0.6;
+      ctx.beginPath(); ctx.arc(landAnim.wx,cy,R*(1+0.5*(1-landAnim.alpha)),0,Math.PI*2);
+      ctx.strokeStyle="#d4a843"; ctx.lineWidth=3; ctx.stroke();
+      ctx.restore();
+      landAnim.alpha-=0.06;
+      if(landAnim.alpha<=0) landAnim=null;
+    }
+
+    // Falling plate with green glow
+    if(!dropped){
+      const fcy=worldToScreen(fwy);
+      if(fcy>-DIAM){
+        // Drop guide — dashed line to stack top
+        const topCY=worldToScreen(stack[stack.length-1].wy);
+        ctx.save(); ctx.setLineDash([5,8]);
+        ctx.strokeStyle="rgba(74,222,128,.2)"; ctx.lineWidth=1;
+        ctx.beginPath(); ctx.moveTo(fx,fcy+R); ctx.lineTo(fx,topCY); ctx.stroke();
+        ctx.restore();
+        drawPlate(fx, fcy, R, _gImg(fdi), 1, "#4ade80");
+        // Drop arrow
+        ctx.fillStyle="rgba(74,222,128,.8)"; ctx.font="bold 16px serif";
+        ctx.textAlign="center"; ctx.fillText("▼",fx,fcy-R-8);
+      }
+    }
+
+    // HUD — score + height
+    ctx.fillStyle="rgba(13,17,23,.75)"; ctx.fillRect(0,0,W,40);
+    ctx.fillStyle="white"; ctx.font="bold "+(isMob?15:17)+"px Georgia,serif";
+    ctx.textAlign="center"; ctx.fillText("Score: "+score,W/2,26);
+    ctx.fillStyle="rgba(212,168,67,.7)"; ctx.font="11px Georgia,serif";
+    ctx.textAlign="left"; ctx.fillText("🍽️ "+stack.length+" high",10,26);
+    ctx.textAlign="right";
+    const pct=Math.round((1-Math.min(spd,13)/13)*100);
+    ctx.fillStyle=pct>50?"#4ade80":"#f97316";
+    ctx.fillText("Speed "+(14-Math.round(pct/10))+"/14",W-10,26);
+
+    if(score===0&&!dropped){
+      ctx.fillStyle="rgba(255,255,255,.35)"; ctx.font=(isMob?12:14)+"px Georgia,serif";
+      ctx.textAlign="center"; ctx.fillText(isMob?"Tap to drop the plate":"Click or Space to drop",W/2,H-14);
+    }
+  }
+  frame();
+}
+
 </script>
 </body>
 </html>
