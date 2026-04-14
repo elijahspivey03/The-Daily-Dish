@@ -274,7 +274,19 @@ button{cursor:pointer;font-family:var(--serif)}
   /* Game page — full width canvas, leaderboard stacks below */
   #game-layout{grid-template-columns:1fr!important}
   #game-area{border-radius:10px}
+  .games-lb-panel{margin-top:4px}
 }
+
+/* ── MOBILE FULLSCREEN GAME MODE ── */
+body.game-fullscreen{overflow:hidden}
+body.game-fullscreen .masthead,
+body.game-fullscreen .navbar,
+body.game-fullscreen .wrap > *:not(#game-fullscreen-container){display:none!important}
+#game-fullscreen-container{display:none;position:fixed;inset:0;z-index:200;background:#0a0a0f;flex-direction:column}
+#game-fullscreen-container.active{display:flex}
+#game-fullscreen-bar{background:var(--ink);padding:8px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:10px}
+#game-fullscreen-canvas-wrap{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+#game-fullscreen-canvas-wrap canvas{display:block;max-width:100%;max-height:100%;touch-action:none;user-select:none;-webkit-tap-highlight-color:transparent}
 /* ── STOP THE PRESSES POPUP ── */
 #stp-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;animation:fadeInOverlay .3s ease}
 @keyframes fadeInOverlay{from{opacity:0}to{opacity:1}}
@@ -337,6 +349,20 @@ button{cursor:pointer;font-family:var(--serif)}
       <p style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;opacity:.5;font-family:var(--serif)">🔴 Live inventory — first come first served</p>
       <button onclick="closePopup()" style="font-family:var(--serif);padding:10px 24px;font-size:13px;font-weight:700;border:2px solid var(--ink);border-radius:6px;background:var(--ink);color:var(--cream);cursor:pointer">Enter The Shop →</button>
     </div>
+  </div>
+</div>
+
+<!-- MOBILE FULLSCREEN GAME CONTAINER -->
+<div id="game-fullscreen-container">
+  <div id="game-fullscreen-bar">
+    <span id="game-fullscreen-title" style="font-family:var(--display);color:var(--cream);font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.08em"></span>
+    <div style="display:flex;align-items:center;gap:12px">
+      <span id="game-fullscreen-score" style="color:#f4ecd8;font-size:13px;font-weight:700">Score: 0</span>
+      <button onclick="exitMobileGame()" style="font-family:var(--serif);background:transparent;color:var(--cream);border:2px solid rgba(255,255,255,.35);border-radius:999px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer">✕ Exit</button>
+    </div>
+  </div>
+  <div id="game-fullscreen-canvas-wrap">
+    <!-- canvas injected here by JS -->
   </div>
 </div>
 
@@ -743,11 +769,11 @@ function getPageForProduct(p){
 const NEW_ADDITION_IDS = new Set([
   "sweetwater-420-glass-new","samuel-adams-glass","guinness-beer-glass",
   "wrought-iron-ipa-glass","thirsty-frog-glass","bud-light-apple-glass",
-  "bubba-gump-glass","butte-creek-glass","orange-sweetwater-glass",
+  "bubba-gump-glass","butte-creek-glass",
   "black-drinking-glasses","blue-glass-drinking-pair","fruit-mug-set",
   "glass-jar-mugs","orange-teal-plate-set",
   "flower-rim-plates","smooth-black-ceramic-plates","blue-white-swirl-set",
-  "octopus-bowl","brown-gold-square-plates","large-white-square-plates",
+  "brown-gold-square-plates","large-white-square-plates",
   "heavy-glass-beer-mugs",
 ]);
 function isNewAddition(p){
@@ -1040,256 +1066,225 @@ function renderPage(){
 // ─────────────────────────────────────────────
 function renderFrontPage(){
   const dealOfDay = products.find(p=>p.id==="blue-white-swirl-set")||products[0];
-  const latestArrivals = [
-    products.find(p=>p.id==="sweetwater-420-glass-new"),
-    products.find(p=>p.id==="samuel-adams-glass"),
-    products.find(p=>p.id==="guinness-beer-glass"),
-    products.find(p=>p.id==="wrought-iron-ipa-glass"),
-    products.find(p=>p.id==="thirsty-frog-glass"),
-    products.find(p=>p.id==="bud-light-apple-glass"),
-    products.find(p=>p.id==="bubba-gump-glass"),
-    products.find(p=>p.id==="butte-creek-glass"),
-    products.find(p=>p.id==="orange-sweetwater-glass"),
-    products.find(p=>p.id==="heavy-glass-beer-mugs"),
-    products.find(p=>p.id==="fruit-mug-set"),
-    products.find(p=>p.id==="glass-jar-mugs"),
-  ].filter(Boolean);
-  const vintageSpotlight = products.filter(p=>p.id==="lighthouse-bowls"||p.id==="wine-glasses-set"||p.id==="american-eagle-plate"||p.id==="purple-flower-square-plate").sort((a,b)=>{const order=["lighthouse-bowls","wine-glasses-set","american-eagle-plate","purple-flower-square-plate"];return order.indexOf(a.id)-order.indexOf(b.id);});
-  const editorPicks = products.filter(p=>p.id==="budweiser-beerstein"||p.id==="cobalt-blue-pitcher"||p.id==="ballast-point-glass"||p.id==="smirnoff-golf-glass"||p.id==="twisted-dinner-glasses");
+
+  // Top stories — in-stock items only
+  const topStories = [
+    {id:"flower-rim-plates",   headline:"Flower Rim Plates Bring Spring To Your Table",        story:"Two glass plates with a delicate flower rim that look considerably more expensive than they are. Six dollars each, grab both for ten."},
+    {id:"brown-gold-square-plates", headline:"Square Plates That Break Convention",            story:"Four heavy glass square plates in rich brown and gold. The shape, the color, the weight — all of it works. Set of four for fifteen dollars."},
+    {id:"smooth-black-ceramic-plates", headline:"Black Plates Make A Statement",               story:"Two smooth black ceramic dinner plates with a cool rim design. Heavy, clean, and the kind of plates that make any meal look intentional. Six each or both for ten."},
+    {id:"large-white-square-plates", headline:"White Square Plates: The Blank Canvas",        story:"Four large white square dinner plates. No frills, no patterns — just clean glass that makes every meal look plated on purpose. Four each or the set for fourteen."},
+    {id:"orange-teal-plate-set", headline:"Orange & Teal Plates Show Up Ready To Party",      story:"Four heavy glass dinner plates in a bold orange and teal colorway. Lightly scratched, heavily characterful, priced right at ten dollars for the set."},
+    {id:"blue-white-swirl-set", headline:"Blue & White Swirl Set: A Complete Table Story",    story:"Four dinner plates and three matching bowls in a stunning blue and white swirl pattern. The complete set for just twenty-two dollars — today's front page pick."},
+  ].map(({id,headline,story})=>({p:products.find(x=>x.id===id),headline,story}))
+   .filter(({p})=>p&&!p.options.every(o=>isSoldOut(p.id,o.id)));
+
+  const deals = [
+    "wine-glasses-set","twisted-dinner-glasses","red-ceramic-plates",
+    "champagne-flutes","autumn-leaves-plate","american-eagle-plate"
+  ].map(id=>products.find(p=>p.id===id)).filter(p=>p&&!p.options.every(o=>isSoldOut(p.id,o.id)));
 
   return `
-    <!-- HERO -->
-    <div style="margin-bottom:22px;background:#0c1a3a;border:3px solid #1f1b16;border-radius:14px;overflow:hidden;box-shadow:4px 4px 0 #1f1b16">
-      <div style="padding:14px 20px;border-bottom:2px solid rgba(59,130,246,.25);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;background:rgba(59,130,246,.08)">
-        <div>
-          <p style="font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:rgba(147,197,253,.8);margin-bottom:4px">🗞️ Today's Feature</p>
-          <h3 style="font-family:var(--display);font-size:clamp(18px,3.5vw,26px);font-weight:900;text-transform:uppercase;color:#f4ecd8;line-height:1.1">Today's Front Page Pick</h3>
-        </div>
-        <span style="background:linear-gradient(135deg,#1e3a8a,#3b82f6);color:#fff;font-family:var(--serif);font-weight:700;font-size:11px;padding:6px 14px;border-radius:999px;letter-spacing:.05em">🍽️ Complete Set</span>
+  <style>
+    /* ── Front page specific ── */
+    .fp-hero{display:grid;grid-template-columns:1fr 1fr}
+    @media(max-width:680px){.fp-hero{grid-template-columns:1fr}}
+    .fp-deals{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    @media(max-width:600px){.fp-deals{grid-template-columns:repeat(2,1fr);gap:8px}}
+    .fp-new-add-grid{display:grid;grid-template-columns:1fr auto}
+    @media(max-width:520px){.fp-new-add-grid{grid-template-columns:1fr;} .fp-new-add-cta{border-top:2px solid rgba(194,120,30,.25);border-right:none!important;flex-direction:row!important;justify-content:space-between!important;padding:14px 16px!important;gap:10px!important;min-width:0!important;text-align:left!important} .fp-new-add-cta button{width:auto!important}}
+    .fp-why{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+    .fp-section-box{border:3px solid var(--ink);border-radius:14px;overflow:hidden;box-shadow:4px 4px 0 var(--ink);margin-bottom:22px}
+    .fp-section-hd{padding:12px 18px;border-bottom:2px solid var(--ink);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+    .fp-kicker-sm{font-size:9px;letter-spacing:.28em;text-transform:uppercase;margin-bottom:3px;font-family:var(--serif)}
+    .fp-title-lg{font-family:var(--display);font-size:clamp(15px,3vw,21px);font-weight:900;text-transform:uppercase;line-height:1.1}
+    .fp-badge{font-family:var(--display);font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:999px}
+    /* ── Top Stories grid ── */
+    .fp-stories{display:grid;grid-template-columns:repeat(3,1fr);gap:0;padding:0}
+    @media(max-width:700px){.fp-stories{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:400px){.fp-stories{grid-template-columns:1fr}}
+    .fp-story-card{display:flex;flex-direction:column;border-right:1px solid rgba(31,27,22,.12);border-bottom:1px solid rgba(31,27,22,.12);cursor:pointer;transition:background .15s;background:transparent}
+    .fp-story-card:hover{background:rgba(212,168,67,.07)}
+    .fp-story-card:nth-child(3n){border-right:none}
+    @media(max-width:700px){.fp-story-card:nth-child(3n){border-right:1px solid rgba(31,27,22,.12)} .fp-story-card:nth-child(2n){border-right:none}}
+    @media(max-width:400px){.fp-story-card{border-right:none!important}}
+    .fp-story-img{width:100%;height:clamp(110px,20vw,160px);object-fit:cover;object-position:center;display:block;border-bottom:1px solid rgba(31,27,22,.12)}
+    .fp-story-body{padding:14px 16px;flex:1;display:flex;flex-direction:column}
+    .fp-story-kicker{font-size:8px;letter-spacing:.22em;text-transform:uppercase;color:#92400e;margin-bottom:4px;font-family:var(--serif)}
+    .fp-story-headline{font-family:var(--display);font-size:clamp(12px,2vw,14px);font-weight:900;text-transform:uppercase;color:var(--ink);line-height:1.25;margin-bottom:6px}
+    .fp-story-text{font-size:11px;line-height:1.6;color:#3d3530;flex:1;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+    .fp-story-price{font-size:12px;font-weight:700;color:#92400e;font-family:var(--serif);margin-bottom:8px}
+    .fp-story-actions{display:flex;gap:5px;margin-top:auto}
+  </style>
+
+  <!-- ═══ HERO — Front Page Pick ═══ -->
+  <div class="fp-section-box" style="background:#0c1a3a;border-color:#0c1a3a">
+    <div style="padding:14px 20px;border-bottom:2px solid rgba(59,130,246,.25);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;background:rgba(59,130,246,.1)">
+      <div>
+        <p style="font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:rgba(147,197,253,.75);margin-bottom:3px">🗞️ Today's Feature</p>
+        <h3 style="font-family:var(--display);font-size:clamp(17px,3.5vw,24px);font-weight:900;text-transform:uppercase;color:#f4ecd8;line-height:1.1">Today's Front Page Pick</h3>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr" class="hero-grid">
-        <div style="position:relative;display:flex;align-items:center;justify-content:center;min-height:300px;overflow:hidden;border-right:1px solid rgba(59,130,246,.2);background:linear-gradient(160deg,#0c1a3a,#0f2255,#1a3a6a)">
-          <div style="position:absolute;inset:0;background:radial-gradient(ellipse 75% 75% at 50% 50%,rgba(59,130,246,.12) 0%,transparent 70%)"></div>
-          <!-- Swirl decorative SVG labels -->
-          <svg class="desktop-only" style="position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none" xmlns="http://www.w3.org/2000/svg">
-            <line x1="8%" y1="14%" x2="28%" y2="36%" stroke="rgba(147,197,253,.4)" stroke-width="1" stroke-dasharray="4,4"/>
-            <text x="2%" y="12%" fill="rgba(147,197,253,.6)" font-size="9" font-family="serif" letter-spacing="1">4 PLATES</text>
-            <line x1="92%" y1="14%" x2="72%" y2="36%" stroke="rgba(147,197,253,.4)" stroke-width="1" stroke-dasharray="4,4"/>
-            <text x="70%" y="12%" fill="rgba(147,197,253,.6)" font-size="9" font-family="serif" letter-spacing="1">3 BOWLS</text>
-            <line x1="8%" y1="86%" x2="28%" y2="68%" stroke="rgba(147,197,253,.4)" stroke-width="1" stroke-dasharray="4,4"/>
-            <text x="1%" y="92%" fill="rgba(147,197,253,.5)" font-size="9" font-family="serif" letter-spacing="1">COMPLETE</text>
-            <line x1="92%" y1="86%" x2="72%" y2="68%" stroke="rgba(147,197,253,.4)" stroke-width="1" stroke-dasharray="4,4"/>
-            <text x="69%" y="92%" fill="rgba(147,197,253,.5)" font-size="9" font-family="serif" letter-spacing="1">SET — $22</text>
-          </svg>
-          <div style="padding:20px;position:relative;z-index:2;display:flex;align-items:center;justify-content:center;width:100%">
-            <div style="width:88%;max-width:300px;aspect-ratio:1;border:2px solid rgba(147,197,253,.4);border-radius:14px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.6),0 0 40px rgba(59,130,246,.15);background:rgba(255,255,255,.04)">
-              <img src="https://i.imgur.com/QFdd2ad.jpeg" style="width:100%;height:100%;object-fit:contain;object-position:center;padding:8px" onerror="this.src='${FALLBACK}'"/>
+      <span style="background:linear-gradient(135deg,#1e3a8a,#3b82f6);color:#fff;font-family:var(--serif);font-weight:700;font-size:11px;padding:5px 13px;border-radius:999px">🍽️ Complete Set</span>
+    </div>
+    <div class="fp-hero">
+      <!-- Image side -->
+      <div style="position:relative;display:flex;align-items:center;justify-content:center;min-height:280px;overflow:hidden;border-right:1px solid rgba(59,130,246,.2);background:linear-gradient(160deg,#0c1a3a,#0f2255,#1a3a6a)">
+        <div style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 70% at 50% 50%,rgba(59,130,246,.16) 0%,transparent 72%)"></div>
+        <img src="https://i.imgur.com/QFdd2ad.jpeg" style="position:relative;z-index:2;width:92%;max-width:320px;height:auto;object-fit:contain;display:block;filter:drop-shadow(0 8px 24px rgba(0,0,0,.6)) drop-shadow(0 0 32px rgba(59,130,246,.18))" onerror="this.src='${FALLBACK}'"/>
+      </div>
+      <!-- Text side -->
+      <div style="padding:clamp(18px,4vw,28px);display:flex;flex-direction:column;justify-content:center;background:rgba(59,130,246,.03)">
+        <div style="width:36px;height:2px;background:linear-gradient(90deg,#3b82f6,transparent);margin-bottom:12px"></div>
+        <h3 style="font-family:var(--display);font-size:clamp(16px,3vw,20px);font-weight:900;text-transform:uppercase;color:#f4ecd8;margin-bottom:7px;line-height:1.2">${dealOfDay.title}</h3>
+        <p style="font-style:italic;font-size:13px;margin-bottom:10px;color:rgba(212,168,67,.7);line-height:1.5">${dealOfDay.subtitle}</p>
+        <p style="font-size:13px;line-height:1.75;color:rgba(244,236,216,.8);margin-bottom:14px">${dealOfDay.story}</p>
+        <div style="margin-bottom:16px;display:inline-flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+          <span style="font-family:var(--display);font-size:clamp(28px,5vw,38px);font-weight:900;color:#93c5fd;line-height:1">$22</span>
+          <span style="font-family:var(--serif);font-size:13px;color:rgba(147,197,253,.6);font-style:italic">for the complete set of 7 pieces</span>
+        </div>
+        <p style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(74,222,128,.7);margin-bottom:14px">✓ Plates · Bowls · Ready to ship</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <button style="font-family:var(--serif);padding:10px 18px;font-size:13px;font-weight:700;border:none;border-radius:8px;background:linear-gradient(135deg,#1e3a8a,#3b82f6);color:#fff;cursor:pointer;flex:1;min-width:120px" onclick="addToCart('${dealOfDay.id}','${dealOfDay.options[0].id}')">${dealOfDay.options[0].label} (${money(dealOfDay.options[0].price)})</button>
+          <button style="font-family:var(--serif);padding:10px 14px;font-size:13px;font-weight:700;border:2px solid rgba(147,197,253,.3);border-radius:8px;background:transparent;color:rgba(147,197,253,.85);cursor:pointer" onclick="viewProduct('${dealOfDay.id}')">Details →</button>
+        </div>
+      </div>
+    </div>
+    <div style="padding:8px 18px;background:rgba(59,130,246,.06);border-top:1px solid rgba(59,130,246,.15)">
+      <p style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(147,197,253,.35);text-align:center">🗞️ 4 Dinner Plates + 3 Bowls · Complete Matching Set · Just $22</p>
+    </div>
+  </div>
+
+  <!-- ═══ NEW ADDITIONS TEASER ═══ -->
+  <div class="fp-section-box" style="background:#1c1208;border-color:#1c1208">
+    <div style="padding:14px 20px;border-bottom:2px solid rgba(194,120,30,.3);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;background:rgba(194,120,30,.1)">
+      <div>
+        <p style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#c2781e;margin-bottom:3px">🆕 Just Landed</p>
+        <h3 style="font-family:var(--display);font-size:clamp(17px,3.5vw,24px);font-weight:900;text-transform:uppercase;color:#f4ecd8;line-height:1.1">New Additions To The Shop</h3>
+      </div>
+      <span style="background:linear-gradient(135deg,#92400e,#c2781e);color:#f4ecd8;font-family:var(--serif);font-weight:700;font-size:11px;padding:5px 13px;border-radius:999px">🍺 Fresh Drop</span>
+    </div>
+    <div class="fp-new-add-grid" style="gap:0;align-items:stretch">
+      <!-- Left: teaser thumbnails -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);border-right:2px solid rgba(194,120,30,.25)">
+        ${["sweetwater-420-glass-new","guinness-beer-glass","wrought-iron-ipa-glass","bud-light-apple-glass",
+           "bubba-gump-glass","fruit-mug-set","blue-glass-drinking-pair","heavy-glass-beer-mugs"
+          ].map(id=>products.find(p=>p.id===id)).filter(p=>p&&!p.options.every(o=>isSoldOut(p.id,o.id))).slice(0,8).map((it,i)=>`
+          <div style="position:relative;overflow:hidden;aspect-ratio:1;border-right:${i%4!==3?'1px solid rgba(194,120,30,.2)':'none'};border-bottom:1px solid rgba(194,120,30,.2);cursor:pointer" onclick="viewProduct('${it.id}')">
+            <img src="${it.image}" alt="${it.title}" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" onerror="this.src='${FALLBACK}'"/>
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(28,18,8,.7) 0%,transparent 55%)"></div>
+            ${it.oneOfOne?'<div style="position:absolute;top:3px;right:3px;background:#e53e3e;color:white;font-size:7px;font-weight:900;padding:1px 5px;border-radius:999px;font-family:var(--display)">1</div>':''}
+          </div>
+        `).join("")}
+      </div>
+      <!-- Right: CTA panel -->
+      <div class="fp-new-add-cta" style="display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px 22px;gap:12px;min-width:160px;text-align:center">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#92400e,#c2781e);display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 4px 12px rgba(146,64,14,.4)">🆕</div>
+        <div>
+          <p style="font-family:var(--display);font-size:13px;font-weight:900;text-transform:uppercase;color:#f4ecd8;line-height:1.2;margin-bottom:4px">Fresh Drops</p>
+          <p style="font-family:var(--serif);font-size:11px;line-height:1.6;color:rgba(244,236,216,.65)">New pieces just landed — grab them before they're gone.</p>
+        </div>
+        <button onclick="goToPage('New Additions')" style="font-family:var(--serif);padding:9px 16px;font-size:12px;font-weight:700;border:2px solid rgba(194,120,30,.6);border-radius:10px;background:linear-gradient(135deg,#92400e,#c2781e);color:#f4ecd8;cursor:pointer;white-space:nowrap;box-shadow:0 4px 12px rgba(146,64,14,.3);width:100%">View All →</button>
+      </div>
+    </div>
+    <div style="padding:7px 18px;background:rgba(194,120,30,.08);border-top:2px solid rgba(194,120,30,.18)">
+      <p style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#c2781e;opacity:.6;text-align:center">New drops landing regularly · First come first served · Limited stock</p>
+    </div>
+  </div>
+
+  <!-- ═══ TODAY'S TOP STORIES ═══ -->
+  <div class="fp-section-box" style="background:linear-gradient(160deg,#fefaf4,#fdf3e3);margin-bottom:22px">
+    <div style="padding:14px 22px;border-bottom:2px solid var(--ink);background:linear-gradient(90deg,#e8c97a,#d4a843);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+      <div>
+        <p style="font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:#5c3a00;margin-bottom:3px;font-family:var(--serif)">🗞️ Editor's Desk</p>
+        <h3 style="font-family:var(--display);font-size:clamp(18px,4vw,26px);font-weight:900;text-transform:uppercase;color:var(--ink);line-height:1.1">Today's Top Stories</h3>
+      </div>
+      <span style="background:var(--ink);color:#e8c97a;font-family:var(--display);font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border-radius:999px;flex-shrink:0">🔴 Live</span>
+    </div>
+    <div class="fp-stories">
+      ${topStories.map(({p,headline,story})=>`
+        <div class="fp-story-card" onclick="viewProduct('${p.id}')">
+          <img class="fp-story-img" src="${p.image.startsWith('DUAL:')?p.image.split('DUAL:')[1].split('|')[0]:p.image}" alt="${p.title}" onerror="this.src='${FALLBACK}'"/>
+          <div class="fp-story-body">
+            <p class="fp-story-kicker">Breaking News</p>
+            <p class="fp-story-headline">${headline}</p>
+            <p class="fp-story-text">${story}</p>
+            <p class="fp-story-price">${p.priceLine}</p>
+            <div class="fp-story-actions" onclick="event.stopPropagation()">
+              <button class="product-add-btn solid" style="flex:1;font-size:10px;padding:6px 8px;${p.options.every(o=>isSoldOut(p.id,o.id))?"opacity:.4;cursor:not-allowed;":""}" onclick="${p.options.every(o=>isSoldOut(p.id,o.id))?"":"addToCart('"+p.id+"','"+p.options[0].id+"')"}" ${p.options.every(o=>isSoldOut(p.id,o.id))?"disabled":""}>${p.options.every(o=>isSoldOut(p.id,o.id))?"Sold Out":"Add ("+money(p.options[0].price)+")"}</button>
+              <button class="product-add-btn outline" style="font-size:10px;padding:6px 10px" onclick="viewProduct('${p.id}')">View →</button>
             </div>
           </div>
-          <p style="position:absolute;bottom:10px;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(147,197,253,.5);z-index:2">4 Dinner Plates · 3 Bowls · 1 Great Price</p>
         </div>
-        <div style="padding:28px;display:flex;flex-direction:column;justify-content:center;background:rgba(59,130,246,.03)">
-          <div style="width:40px;height:2px;background:linear-gradient(90deg,#3b82f6,transparent);margin-bottom:14px"></div>
-          <h3 style="font-family:var(--display);font-size:20px;font-weight:900;text-transform:uppercase;color:#f4ecd8;margin-bottom:8px;line-height:1.2">${dealOfDay.title}</h3>
-          <p style="font-style:italic;font-size:13px;margin-bottom:12px;color:rgba(212,168,67,.7)">${dealOfDay.subtitle}</p>
-          <p style="font-size:13px;line-height:1.75;color:rgba(244,236,216,.8);margin-bottom:16px">${dealOfDay.story}</p>
-          <p style="font-weight:700;margin-bottom:16px;font-size:18px;color:#93c5fd">${dealOfDay.priceLine}</p>
-          <div style="display:flex;flex-wrap:wrap;gap:8px">
-            <button style="font-family:var(--serif);padding:11px 20px;font-size:13px;font-weight:700;border:none;border-radius:8px;background:linear-gradient(135deg,#1e3a8a,#3b82f6);color:#fff;cursor:pointer" onclick="addToCart('${dealOfDay.id}','${dealOfDay.options[0].id}')">
-              ${dealOfDay.options[0].label} (${money(dealOfDay.options[0].price)})
-            </button>
-            <button style="font-family:var(--serif);padding:11px 20px;font-size:13px;font-weight:700;border:none;border-radius:8px;background:rgba(212,168,67,.15);color:rgba(212,168,67,.9);cursor:pointer" onclick="viewProduct('${dealOfDay.id}')">View Details →</button>
-            <button style="font-family:var(--serif);padding:11px 20px;font-size:13px;font-weight:700;border:1px solid rgba(212,168,67,.3);border-radius:8px;background:transparent;color:rgba(212,168,67,.7);cursor:pointer" onclick="goToPage('${getPageForProduct(dealOfDay)}')">Browse Section →</button>
-          </div>
-        </div>
-      </div>
-      <div style="padding:8px 20px;background:rgba(59,130,246,.05);border-top:1px solid rgba(59,130,246,.15)">
-        <p style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(212,168,67,.4)">🗞️ Handpicked by The Daily Dish · Vintage collector piece · Only 1 available</p>
-      </div>
+      `).join("")}
     </div>
+  </div>
 
-    <!-- NEW ADDITIONS TEASER -->
-    <div style="margin-bottom:22px;background:#1c1208;border:3px solid #1f1b16;border-radius:14px;overflow:hidden;box-shadow:4px 4px 0 #1f1b16">
-      <div style="padding:14px 20px;border-bottom:2px solid rgba(194,120,30,.3);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;background:rgba(194,120,30,.08)">
-        <div>
-          <p style="font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#c2781e;margin-bottom:4px">🆕 Just Landed</p>
-          <h3 style="font-family:var(--display);font-size:clamp(18px,3.5vw,26px);font-weight:900;text-transform:uppercase;color:#f4ecd8;line-height:1.1">New Additions To The Shop</h3>
-        </div>
-        <span style="background:linear-gradient(135deg,#92400e,#c2781e);color:#f4ecd8;font-family:var(--serif);font-weight:700;font-size:11px;padding:6px 14px;border-radius:999px;letter-spacing:.05em">🍺 Fresh Drop</span>
+  <!-- ═══ DEALS OF THE DAY ═══ -->
+  <div class="fp-section-box" style="background:#0f1f0a;border-color:#0f1f0a;margin-bottom:22px">
+    <div style="padding:14px 20px;border-bottom:2px solid rgba(74,222,128,.2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;background:rgba(74,222,128,.06)">
+      <div>
+        <p style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:rgba(74,222,128,.7);margin-bottom:3px">💸 Today's Best Value</p>
+        <h3 style="font-family:var(--display);font-size:clamp(17px,3.5vw,24px);font-weight:900;text-transform:uppercase;color:#f4ecd8;line-height:1.1">Deals of The Day</h3>
       </div>
-      <div style="padding:16px 20px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center">
-        <div>
-          <p style="font-size:13px;line-height:1.75;color:rgba(244,236,216,.8);margin-bottom:14px">Brand new pieces just added — be the first to grab them before they're gone. Glasses, bowls, plates and more landing regularly.</p>
-          <button onclick="goToPage('New Additions')" style="font-family:var(--serif);padding:10px 20px;font-size:13px;font-weight:700;border:none;border-radius:8px;background:linear-gradient(135deg,#92400e,#c2781e);color:#f4ecd8;cursor:pointer;white-space:nowrap;box-shadow:0 4px 12px rgba(146,64,14,.3)">🆕 View New Additions →</button>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:6px;opacity:.3">
-          <div style="width:40px;height:4px;border-radius:4px;background:#c2781e"></div>
-          <div style="width:28px;height:4px;border-radius:4px;background:#c2781e"></div>
-          <div style="width:34px;height:4px;border-radius:4px;background:#c2781e"></div>
-        </div>
-      </div>
-      <div style="padding:8px 20px;background:rgba(194,120,30,.08);border-top:2px solid rgba(194,120,30,.2)">
-        <p style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#c2781e;opacity:.7">🍺 New drops landing regularly · First come first served · Limited stock</p>
-      </div>
+      <span style="background:linear-gradient(135deg,#14532d,#16a34a);color:#dcfce7;font-family:var(--display);font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;padding:5px 12px;border-radius:999px">🔥 Best Prices</span>
     </div>
-
-    <!-- EDITOR'S PICKS + LATEST ARRIVALS -->
-    <div class="two-col" style="margin-bottom:22px">
-
-      <!-- TODAY'S TOP STORIES — breaking news style -->
-      <div style="background:linear-gradient(160deg,#fefaf4,#fdf3e3);border:3px solid #1f1b16;border-radius:14px;overflow:hidden;box-shadow:3px 3px 0 #1f1b16;margin-bottom:0">
-        <div style="padding:12px 18px;border-bottom:2px solid #1f1b16;background:linear-gradient(90deg,#e8c97a,#d4a843);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-          <div>
-            <p style="font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:#5c3a00;margin-bottom:3px">🗞️ Editor's Desk</p>
-            <h3 style="font-family:var(--display);font-size:clamp(15px,2.2vw,21px);font-weight:900;text-transform:uppercase;color:#1f1b16;line-height:1.1">Today's Top Stories</h3>
-          </div>
-          <span style="background:#1f1b16;color:#e8c97a;font-family:var(--display);font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:999px">🔴 Live</span>
-        </div>
-        <div style="background:transparent;padding:0">
-          ${[
-            {p:products.find(p=>p.id==="octopus-bowl"), headline:"Octopus Bowl Arrives With A Chip On Its Shoulder", story:"The Daily Dish can confirm that the most interesting bowl in the shop just arrived. White and red with a full octopus in the center — there's a small chip, which is why it's priced at eight dollars. The octopus doesn't seem to mind. One available."},
-            {p:products.find(p=>p.id==="flower-rim-plates"), headline:"Flower Rim Plates Bring Spring To Your Table", story:"Two glass plates with a delicate flower rim just landed at The Daily Dish and they look considerably more expensive than they are. Sources at the shop confirm they are, in fact, six dollars each. Grab both for ten."},
-            {p:products.find(p=>p.id==="brown-gold-square-plates"), headline:"Square Plates Break Convention, Look Great Doing It", story:"Four heavy glass square dinner plates in a rich brown and gold finish showed up this week and immediately made round plates look boring. The square shape, the warm color, the weight — all of it works. Set of four for fifteen dollars."},
-            {p:products.find(p=>p.id==="smooth-black-ceramic-plates"), headline:"Black Plates Make A Statement At The Dinner Table", story:"Two smooth black ceramic dinner plates with a cool rim design have arrived at The Daily Dish. Heavy, clean, and the kind of plates that make whatever you're cooking look like it came from a restaurant. Six dollars each or both for ten."},
-            {p:products.find(p=>p.id==="large-white-square-plates"), headline:"White Square Plates: The Blank Canvas Every Cook Needs", story:"Four large white square dinner plates are now in stock. No frills, no patterns, just clean white glass that makes every meal look plated on purpose. Four dollars a piece or the full set for fourteen."},
-            {p:products.find(p=>p.id==="orange-teal-plate-set"), headline:"Orange and Teal Plates Show Up Ready To Party", story:"Four heavy glass dinner plates in a bold orange and teal colorway hit the shop this week. Lightly scratched, heavily characterful, and priced right at ten dollars for the set. The kind of plates that start conversations."},
-          ].filter(x=>x.p).map(({p,headline,story})=>`
-            <div style="border-bottom:1px solid rgba(31,27,22,.1);padding:14px 18px;display:flex;gap:12px;align-items:flex-start;background:transparent">
-              <img src="${p.image.startsWith('DUAL:') ? p.image.split('DUAL:')[1].split('|')[0] : p.image}" alt="${p.title}" style="width:64px;height:64px;object-fit:cover;border-radius:6px;border:2px solid #1f1b16;flex-shrink:0;cursor:pointer;transition:transform .2s" onclick="viewProduct('${p.id}')" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onerror="this.src='${FALLBACK}'"/>
-              <div style="flex:1;min-width:0">
-                <p style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#92400e;margin-bottom:3px;font-family:var(--serif)">Breaking</p>
-                <p style="font-family:var(--display);font-size:13px;font-weight:900;text-transform:uppercase;color:#1f1b16;line-height:1.2;margin-bottom:5px;cursor:pointer" onclick="viewProduct('${p.id}')">${headline}</p>
-                <p style="font-size:12px;line-height:1.6;color:#3d3530;margin-bottom:8px">${story}</p>
-                <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
-                  <span style="font-size:11px;font-weight:700;color:#92400e;font-family:var(--serif)">${p.priceLine}</span>
-                  <button class="product-add-btn solid" style="padding:5px 12px;font-size:11px;${p.options.every(o=>isSoldOut(p.id,o.id))?"opacity:.45;cursor:not-allowed;text-decoration:line-through;":""}" onclick="${p.options.every(o=>isSoldOut(p.id,o.id))?"return false;":`addToCart('${p.id}','${p.options[0].id}')`}" ${p.options.every(o=>isSoldOut(p.id,o.id))?"disabled":""}>${p.options.every(o=>isSoldOut(p.id,o.id))?"Sold Out":`Add (${money(p.options[0].price)})`}</button>
-                  <button class="product-add-btn outline" style="padding:5px 12px;font-size:11px" onclick="viewProduct('${p.id}')">View →</button>
-                </div>
-              </div>
+    <div style="padding:14px 16px">
+      <div class="fp-deals">
+        ${deals.map(item=>`
+          <div style="border:2px solid rgba(74,222,128,.2);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.03);cursor:pointer" onclick="viewProduct('${item.id}')">
+            <div style="position:relative;overflow:hidden;height:clamp(80px,18vw,120px)">
+              <img src="${item.image.startsWith('DUAL:')?item.image.split('DUAL:')[1].split('|')[0]:item.image}" alt="${item.title}" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s" onmouseover="this.style.transform='scale(1.07)'" onmouseout="this.style.transform='scale(1)'" onerror="this.src='${FALLBACK}'"/>
+              <div style="position:absolute;top:5px;left:5px;background:linear-gradient(135deg,#14532d,#16a34a);color:#dcfce7;font-family:var(--display);font-size:8px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:999px">Deal</div>
             </div>
-          `).join("")}
-        </div>
-      </div>
-
-      <!-- NEW FINDS FROM THE FIELD — photo cards -->
-      <div style="background:#e8f0fc;border:3px solid #1f1b16;border-radius:14px;overflow:hidden;box-shadow:3px 3px 0 #1f1b16;margin-bottom:0">
-        <div style="padding:12px 18px;border-bottom:2px solid #1f1b16;background:#c8d8f5;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-          <div>
-            <p style="font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:#1e40af;margin-bottom:3px">📦 Field Report</p>
-            <h3 style="font-family:var(--display);font-size:clamp(15px,2.2vw,21px);font-weight:900;text-transform:uppercase;color:#1f1b16;line-height:1.1">New Finds From The Field</h3>
-          </div>
-          <span style="background:#1e40af;color:white;font-family:var(--display);font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:999px">✨ Just In</span>
-        </div>
-        <div style="background:#e8f0fc;display:grid;grid-template-columns:1fr 1fr;gap:0">
-          ${latestArrivals.map((it,i)=>`
-            <div style="border-right:${i%2===0?'2px solid rgba(31,27,22,.15)':'none'};border-bottom:2px solid rgba(31,27,22,.15);overflow:hidden;cursor:pointer;position:relative" onclick="viewProduct('${it.id}')">
-              <div style="position:relative;overflow:hidden;height:110px">
-                <img src="${it.image.startsWith('DUAL:') ? it.image.split('DUAL:')[1].split('|')[0] : it.image}" alt="${it.title}" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:transform .45s cubic-bezier(.25,.46,.45,.94);will-change:transform" onmouseover="this.style.transform='scale(1.08)';this.style.objectFit='contain'" onmouseout="this.style.transform='scale(1)';this.style.objectFit='cover'" onerror="this.src='${FALLBACK}'"/>
-                <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(31,27,22,.7) 0%,transparent 55%)"></div>
-                ${it.oneOfOne ? '<div style="position:absolute;top:6px;right:6px;background:#e53e3e;color:white;font-size:8px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:999px;font-family:var(--display)">Only 1</div>' : ''}
-                <p style="position:absolute;bottom:6px;left:8px;right:8px;font-family:var(--display);font-size:11px;font-weight:900;text-transform:uppercase;color:white;line-height:1.2">${it.title}</p>
-              </div>
-              <div style="padding:8px 10px;background:#e8f0fc">
-                <p style="font-size:11px;font-weight:700;color:#1e40af;font-family:var(--serif);margin-bottom:6px">${it.priceLine}</p>
-                <button class="product-add-btn solid" style="width:100%;font-size:11px;padding:6px 8px;text-align:center" onclick="event.stopPropagation();addToCart('${it.id}','${it.options[0].id}')">Add (${money(it.options[0].price)})</button>
-              </div>
+            <div style="padding:8px 10px">
+              <p style="font-family:var(--display);font-size:clamp(10px,2vw,12px);font-weight:900;text-transform:uppercase;color:#f4ecd8;line-height:1.2;margin-bottom:3px">${item.title}</p>
+              <p style="font-size:11px;font-weight:700;color:#4ade80;margin-bottom:7px">${item.priceLine}</p>
+              <button class="product-add-btn solid" style="width:100%;font-size:10px;padding:5px 6px;background:linear-gradient(135deg,#14532d,#16a34a);border-color:#16a34a" onclick="event.stopPropagation();addToCart('${item.id}','${item.options[0].id}')">${money(item.options[0].price)}</button>
             </div>
-          `).join("")}
-        </div>
-      </div>
-
-    </div>
-
-    <!-- DEALS SECTION -->
-    <div style="margin-bottom:22px;background:#0f1f0a;border:3px solid #1f1b16;border-radius:14px;overflow:hidden;box-shadow:4px 4px 0 #1f1b16">
-      <div style="padding:14px 20px;border-bottom:2px solid rgba(74,222,128,.2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;background:rgba(74,222,128,.06)">
-        <div>
-          <p style="font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:rgba(74,222,128,.7);margin-bottom:4px">💸 Today's Best Value</p>
-          <h3 style="font-family:var(--display);font-size:clamp(18px,3.5vw,26px);font-weight:900;text-transform:uppercase;color:#f4ecd8;line-height:1.1">Deals of The Day</h3>
-        </div>
-        <span style="background:linear-gradient(135deg,#14532d,#16a34a);color:#dcfce7;font-family:var(--display);font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;padding:6px 14px;border-radius:999px">🔥 Best Prices</span>
-      </div>
-      <div style="padding:16px 20px">
-        <p style="font-size:13px;line-height:1.7;color:rgba(244,236,216,.75);margin-bottom:16px">The best deals in the shop — handpicked by the editor for maximum value. These won't last long.</p>
-        <div class="three-col" style="gap:14px">
-          ${[
-            products.find(p=>p.id==="wine-glasses-set"),
-            products.find(p=>p.id==="twisted-dinner-glasses"),
-            products.find(p=>p.id==="red-ceramic-plates"),
-            products.find(p=>p.id==="green-tea-plates"),
-            products.find(p=>p.id==="champagne-flutes"),
-            products.find(p=>p.id==="autumn-leaves-plate"),
-            products.find(p=>p.id==="american-eagle-plate"),
-          ].filter(Boolean).map((item,i)=>`
-            <div class="${i===3?'archive-mobile-only':''}" style="${i===3?'display:none;':''}border:2px solid rgba(74,222,128,.25);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.04);transition:transform .2s;cursor:pointer" onclick="viewProduct('${item.id}')">
-              <div style="position:relative;overflow:hidden;height:130px">
-                <img src="${item.image.startsWith('DUAL:')?item.image.split('DUAL:')[1].split('|')[0]:item.image}" alt="${item.title}" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:transform .45s cubic-bezier(.25,.46,.45,.94);will-change:transform" onmouseover="this.style.transform='scale(1.08)';this.style.objectFit='contain'" onmouseout="this.style.transform='scale(1)';this.style.objectFit='cover'" onerror="this.src='${FALLBACK}'"/>
-                <div style="position:absolute;top:6px;left:6px;background:linear-gradient(135deg,#14532d,#16a34a);color:#dcfce7;font-family:var(--display);font-size:9px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:999px">Deal</div>
-              </div>
-              <div style="padding:10px 12px">
-                <p style="font-family:var(--display);font-size:11px;font-weight:900;text-transform:uppercase;color:#f4ecd8;line-height:1.2;margin-bottom:4px">${item.title}</p>
-                <p style="font-size:12px;font-weight:700;color:#4ade80;font-family:var(--serif);margin-bottom:8px">${item.priceLine}</p>
-                <div style="display:flex;gap:6px">
-                  <button class="product-add-btn solid" style="flex:1;font-size:11px;padding:6px 8px;background:linear-gradient(135deg,#14532d,#16a34a);border-color:#16a34a" onclick="event.stopPropagation();addToCart('${item.id}','${item.options[0].id}')">Add — ${money(item.options[0].price)}</button>
-                  <button class="product-add-btn outline" style="font-size:11px;padding:6px 10px;border-color:rgba(74,222,128,.4);color:#4ade80" onclick="event.stopPropagation();viewProduct('${item.id}')">→</button>
-                </div>
-              </div>
-            </div>
-          `).join("")}
-        </div>
-      </div>
-      <div style="padding:8px 20px;background:rgba(74,222,128,.05);border-top:1px solid rgba(74,222,128,.15)">
-        <p style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(74,222,128,.4)">💸 Updated daily · Limited quantities · First come first served</p>
+          </div>
+        `).join("")}
       </div>
     </div>
+    <div style="padding:7px 18px;background:rgba(74,222,128,.05);border-top:1px solid rgba(74,222,128,.12)">
+      <p style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(74,222,128,.35);text-align:center">💸 Updated daily · Limited quantities · First come first served</p>
+    </div>
+  </div>
 
-    <!-- ABOUT -->
-    <div class="fp-section">
-      <div class="fp-section-header"><div>
-        <p class="fp-kicker">About the Paper</p>
-        <h3 class="fp-title">The Story Behind The Daily Dish</h3>
-      </div></div>
-      <div class="fp-body">
-        <p class="about-body">The Daily Dish started as a simple idea: what if a small online shop could feel like reading a newspaper? Instead of headlines about politics or sports, the stories here are about plates, bowls, mugs, and the everyday objects that make a kitchen feel like home.</p>
-        <p class="about-body">I began collecting dishes from thrift stores and secondhand shops because each piece felt unique. Some are colorful, some are simple, but every item has character. Rather than building a typical online store, I wanted to create something fun — a place where browsing dishes feels like flipping through the pages of a newspaper. Every piece I find, I ask myself one question — would I want this in my own kitchen?</p>
-        <p class="about-body">The Daily Dish is a small kitchen shop built around great dishes, unique pieces, and a fun way to find tableware you'll actually love.</p>
-        <hr class="about-divider"/>
-        <p style="font-family:var(--display);font-size:22px;font-weight:900;text-transform:uppercase;text-align:center;margin-bottom:16px">Why Should You Buy From The Daily Dish?</p>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:22px">
-          <div style="border:2px solid var(--ink);border-radius:12px;padding:18px;background:var(--cream);text-align:center">
-            <div style="font-size:28px;margin-bottom:10px">🔍</div>
-            <p style="font-weight:700;text-transform:uppercase;font-size:13px;margin-bottom:6px">Handpicked Finds</p>
-            <p style="font-size:12px;line-height:1.6;opacity:.8">Every item is personally selected by our team — no bulk buying, no filler. Just pieces worth owning.</p>
+  <!-- ═══ ABOUT ═══ -->
+  <div class="fp-section-box" style="background:var(--cream)">
+    <div style="padding:14px 20px;border-bottom:2px solid var(--ink);background:var(--parchment)">
+      <p style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;opacity:.55;margin-bottom:3px">About the Paper</p>
+      <h3 style="font-family:var(--display);font-size:clamp(18px,4vw,26px);font-weight:900;text-transform:uppercase;line-height:1.1">The Story Behind The Daily Dish</h3>
+    </div>
+    <div style="padding:clamp(16px,4vw,24px)">
+      <p style="font-size:14px;line-height:1.85;margin-bottom:12px">The Daily Dish started as a simple idea — what if a small online shop could feel like reading a newspaper? Every item here is handpicked from thrift stores and secondhand shops. Some are colorful, some are simple, but every piece has character you can't find at a big box store.</p>
+      <p style="font-size:14px;line-height:1.85;margin-bottom:18px">Every piece I find, I ask myself one question — would I want this in my own kitchen? If the answer is yes, it ends up here.</p>
+      <hr style="border:none;border-top:2px solid var(--ink);margin:18px 0"/>
+      <p style="font-family:var(--display);font-size:clamp(16px,4vw,22px);font-weight:900;text-transform:uppercase;text-align:center;margin-bottom:14px">Why Buy From The Daily Dish?</p>
+      <div class="fp-why">
+        ${[
+          {e:"🔍",t:"Handpicked",d:"Every item personally selected. No bulk buying, no filler."},
+          {e:"💰",t:"Affordable",d:"Premium pieces at real prices. Most items under $15."},
+          {e:"✨",t:"One of a Kind",d:"Character you can't find anywhere else. Each piece is unique."},
+          {e:"📦",t:"Ship or Pick Up",d:"Local pickup free or shipped straight to your door."},
+          {e:"💌",t:"Request Anything",d:"Write a letter and Elijah will hunt it down on his next search."},
+        ].map(({e,t,d})=>`
+          <div style="border:2px solid var(--ink);border-radius:12px;padding:16px;background:var(--cream);text-align:center">
+            <div style="font-size:26px;margin-bottom:8px">${e}</div>
+            <p style="font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:5px">${t}</p>
+            <p style="font-size:11px;line-height:1.6;opacity:.75">${d}</p>
           </div>
-          <div style="border:2px solid var(--ink);border-radius:12px;padding:18px;background:var(--cream);text-align:center">
-            <div style="font-size:28px;margin-bottom:10px">💰</div>
-            <p style="font-weight:700;text-transform:uppercase;font-size:13px;margin-bottom:6px">Affordable Prices</p>
-            <p style="font-size:12px;line-height:1.6;opacity:.8">Premium quality dishes at prices that make sense. Most items under $15 — sets included.</p>
-          </div>
-          <div style="border:2px solid var(--ink);border-radius:12px;padding:18px;background:var(--cream);text-align:center">
-            <div style="font-size:28px;margin-bottom:10px">✨</div>
-            <p style="font-weight:700;text-transform:uppercase;font-size:13px;margin-bottom:6px">One of a Kind</p>
-            <p style="font-size:12px;line-height:1.6;opacity:.8">These aren't mass produced. Each piece has character — the kind you can't find at a big box store.</p>
-          </div>
-          <div style="border:2px solid var(--ink);border-radius:12px;padding:18px;background:var(--cream);text-align:center">
-            <div style="font-size:28px;margin-bottom:10px">📦</div>
-            <p style="font-weight:700;text-transform:uppercase;font-size:13px;margin-bottom:6px">Ship or Pick Up</p>
-            <p style="font-size:12px;line-height:1.6;opacity:.8">Choose local pickup for free or ship straight to your door. Packed with care every time.</p>
-          </div>
-          <div style="border:2px solid var(--ink);border-radius:12px;padding:18px;background:var(--cream);text-align:center">
-            <div style="font-size:28px;margin-bottom:10px">💌</div>
-            <p style="font-weight:700;text-transform:uppercase;font-size:13px;margin-bottom:6px">Request Anything</p>
-            <p style="font-size:12px;line-height:1.6;opacity:.8">Don't see what you need? Write a letter and Elijah will hunt it down on his next search for new dishes.</p>
-          </div>
-        </div>
-        <hr class="about-divider"/>
-        <p style="font-style:italic;font-size:13px;margin-bottom:14px;text-align:center">Written by <strong>Elijah Spivey</strong><br/>Founder, The Daily Dish</p>
-        <p style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:8px;text-align:center">Contact The Daily Dish</p>
-        <p class="contact-item" style="text-align:center">📷 Instagram: <a href="https://instagram.com/thedailydish.official" target="_blank" style="color:var(--ink)">@thedailydish.official</a></p>
-        <p class="contact-item" style="text-align:center">📘 Facebook: <a href="https://facebook.com/thedailydish.official" target="_blank" style="color:var(--ink)">@thedailydish.official</a></p>
-        <p class="contact-item" style="text-align:center">✉️ Email: <a href="mailto:thedailydishshop@gmail.com" style="color:var(--ink)">thedailydishshop@gmail.com</a></p>
+        `).join("")}
+      </div>
+      <hr style="border:none;border-top:2px solid var(--ink);margin:18px 0"/>
+      <p style="font-style:italic;font-size:13px;margin-bottom:14px;text-align:center">Written by <strong>Elijah Spivey</strong><br/>Founder, The Daily Dish</p>
+      <div style="text-align:center">
+        <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:10px;opacity:.6">Contact The Daily Dish</p>
+        <p style="font-size:13px;margin-bottom:5px">📷 <a href="https://instagram.com/thedailydish.official" target="_blank" style="color:var(--ink);font-weight:700">@thedailydish.official</a> on Instagram</p>
+        <p style="font-size:13px;margin-bottom:5px">📘 <a href="https://facebook.com/thedailydish.official" target="_blank" style="color:var(--ink);font-weight:700">@thedailydish.official</a> on Facebook</p>
+        <p style="font-size:13px">✉️ <a href="mailto:thedailydishshop@gmail.com" style="color:var(--ink);font-weight:700">thedailydishshop@gmail.com</a></p>
       </div>
     </div>
+  </div>
   `;
 }
 
@@ -1547,129 +1542,128 @@ function startTypewriter(fast=false){
 // ─────────────────────────────────────────────
 function renderGamesPage(){
   return `
+  <style>
+    /* ── Games page specific ── */
+    .game-cabinets{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
+    @media(max-width:700px){.game-cabinets{grid-template-columns:1fr;gap:12px}}
+    .cabinet{cursor:pointer;border:3px solid var(--ink);border-radius:16px;overflow:hidden;box-shadow:5px 5px 0 var(--ink);background:#0d0d1a;transition:transform .18s,box-shadow .18s;-webkit-tap-highlight-color:transparent}
+    .cabinet:active{transform:scale(.97)}
+    @media(hover:hover){.cabinet:hover{transform:translateY(-5px);box-shadow:7px 10px 0 var(--ink)}}
+    .cabinet-screen{text-align:center;position:relative;overflow:hidden;border-bottom:3px solid var(--ink);padding:clamp(16px,4vw,26px) 16px clamp(14px,3vw,20px)}
+    .cabinet-screen::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,.014) 3px,rgba(255,255,255,.014) 4px);pointer-events:none}
+    .cabinet-emoji{font-size:clamp(48px,10vw,64px);margin-bottom:8px;position:relative;display:block;line-height:1}
+    .cabinet-name{font-family:var(--display);font-size:clamp(16px,4vw,22px);font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:white;position:relative;line-height:1.1}
+    .cabinet-tagline{font-family:var(--serif);font-size:clamp(10px,2.2vw,11px);letter-spacing:.08em;text-transform:uppercase;margin-top:5px;position:relative}
+    .cabinet-body{background:linear-gradient(135deg,#1a1208,#2a1f08);padding:clamp(12px,3vw,16px)}
+    .cabinet-rules{font-family:var(--serif);font-size:clamp(12px,2.8vw,13px);line-height:1.6;color:rgba(244,236,216,.85);margin-bottom:10px}
+    .cabinet-chips{display:flex;gap:6px;flex-wrap:wrap}
+    .chip{font-size:clamp(10px,2.5vw,11px);border-radius:6px;padding:4px 9px;font-family:var(--serif);white-space:nowrap}
+    .cabinet-play{padding:clamp(9px,2vw,12px) 16px;text-align:center;font-family:var(--display);font-size:clamp(12px,3vw,14px);font-weight:900;text-transform:uppercase;letter-spacing:.12em}
+    /* Leaderboard on mobile goes below cabinets in one column */
+    .games-lb-panel{display:grid;gap:14px}
+    @media(max-width:700px){
+      .game-cabinets{margin-bottom:16px}
+      .cabinet-body{padding:12px 14px}
+    }
+  </style>
+
   <div style="max-width:1060px;margin:0 auto">
 
-    <!-- ═══ ARCADE MARQUEE ═══ -->
-    <div style="margin-bottom:20px;border:4px solid var(--ink);border-radius:18px;overflow:hidden;box-shadow:6px 6px 0 var(--ink);position:relative;background:#0a0a0f">
-      <!-- Scanline overlay -->
-      <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,.018) 3px,rgba(255,255,255,.018) 4px);pointer-events:none;z-index:1"></div>
-      <!-- Glow blobs -->
-      <div style="position:absolute;top:-40px;left:-40px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(229,62,62,.25) 0%,transparent 70%);pointer-events:none"></div>
-      <div style="position:absolute;top:-40px;right:-40px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,.2) 0%,transparent 70%);pointer-events:none"></div>
-      <div style="position:absolute;bottom:-60px;left:50%;transform:translateX(-50%);width:300px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(74,222,128,.12) 0%,transparent 70%);pointer-events:none"></div>
+    <!-- ═══ MARQUEE ═══ -->
+    <div style="margin-bottom:20px;border:4px solid var(--ink);border-radius:18px;overflow:hidden;box-shadow:6px 6px 0 var(--ink);background:#0a0a0f;position:relative">
+      <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,.018) 3px,rgba(255,255,255,.018) 4px);pointer-events:none"></div>
+      <div style="position:absolute;top:-40px;left:-40px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(229,62,62,.22) 0%,transparent 70%);pointer-events:none"></div>
+      <div style="position:absolute;top:-40px;right:-40px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,.18) 0%,transparent 70%);pointer-events:none"></div>
 
-      <!-- Top ticker bar — newspaper meets arcade -->
-      <div style="background:linear-gradient(90deg,#e53e3e,#b91c1c);padding:6px 20px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;border-bottom:2px solid rgba(255,255,255,.15)">
-        <span style="font-family:var(--display);font-size:10px;font-weight:900;letter-spacing:.25em;text-transform:uppercase;color:white">🕹️ The Daily Dish</span>
-        <span style="font-family:var(--serif);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.75)">The Dish Games · Insert Coin</span>
-        <span style="font-family:var(--display);font-size:10px;font-weight:900;letter-spacing:.25em;text-transform:uppercase;color:white">Game Room 🕹️</span>
+      <!-- Red top bar -->
+      <div style="background:linear-gradient(90deg,#c81d1d,#e53e3e,#c81d1d);padding:5px 16px;display:flex;align-items:center;justify-content:center;gap:10px;position:relative;z-index:2;border-bottom:2px solid rgba(255,255,255,.15)">
+        <span style="font-size:14px">🕹️</span>
+        <span style="font-family:var(--display);font-size:clamp(9px,2.2vw,11px);font-weight:900;letter-spacing:.2em;text-transform:uppercase;color:white">The Daily Dish · Game Room</span>
+        <span style="font-size:14px">🕹️</span>
       </div>
 
-      <!-- Marquee title area -->
-      <div style="padding:28px 24px 24px;text-align:center;position:relative;z-index:2">
-        <!-- Decorative rule like a newspaper -->
-        <div style="display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:14px">
-          <div style="flex:1;max-width:80px;height:2px;background:linear-gradient(90deg,transparent,rgba(212,168,67,.6))"></div>
-          <span style="font-family:var(--serif);font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:rgba(212,168,67,.7)">★ Extra! Extra! ★</span>
-          <div style="flex:1;max-width:80px;height:2px;background:linear-gradient(90deg,rgba(212,168,67,.6),transparent)"></div>
+      <!-- Title block -->
+      <div style="padding:clamp(20px,5vw,32px) 20px clamp(18px,4vw,26px);text-align:center;position:relative;z-index:2">
+        <div style="display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:12px">
+          <div style="flex:1;max-width:60px;height:1px;background:linear-gradient(90deg,transparent,rgba(212,168,67,.5))"></div>
+          <span style="font-family:var(--serif);font-size:clamp(9px,2vw,10px);letter-spacing:.25em;text-transform:uppercase;color:rgba(212,168,67,.65)">★ Extra! Extra! ★</span>
+          <div style="flex:1;max-width:60px;height:1px;background:linear-gradient(90deg,rgba(212,168,67,.5),transparent)"></div>
         </div>
 
-        <!-- Big arcade title -->
-        <h2 style="font-family:var(--display);font-size:clamp(36px,8vw,72px);font-weight:900;text-transform:uppercase;letter-spacing:.06em;line-height:.95;background:linear-gradient(180deg,#fff 0%,#f4ecd8 40%,#d4a843 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-shadow:none;margin-bottom:6px">The Dish<br>Games</h2>
+        <h2 style="font-family:var(--display);font-size:clamp(32px,9vw,70px);font-weight:900;text-transform:uppercase;letter-spacing:.04em;line-height:.92;background:linear-gradient(180deg,#ffffff 0%,#f4ecd8 35%,#d4a843 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px">The Dish<br>Games</h2>
 
-        <!-- Subtitle newspaper-style -->
-        <p style="font-family:var(--serif);font-size:13px;font-style:italic;color:rgba(212,168,67,.7);letter-spacing:.08em;margin-bottom:18px">Where you can smash some dishes and actually get away with it</p>
+        <p style="font-family:var(--serif);font-size:clamp(12px,3vw,14px);font-style:italic;color:rgba(212,168,67,.7);margin-bottom:16px;padding:0 8px;line-height:1.5">Where you can smash some dishes and actually get away with it</p>
 
-        <!-- Blinking insert coin -->
-        <div id="insert-coin" style="display:inline-block;border:2px solid rgba(255,255,0,.5);border-radius:999px;padding:5px 18px;font-family:var(--display);font-size:11px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,0,.8);animation:coinBlink 1.2s step-end infinite">▶ Select a Game Below ◀</div>
+        <div style="display:inline-block;border:2px solid rgba(255,255,0,.45);border-radius:999px;padding:5px 16px;font-family:var(--display);font-size:clamp(9px,2.5vw,11px);font-weight:900;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,0,.8);animation:coinBlink 1.2s step-end infinite">▶ Tap a Game to Play ◀</div>
       </div>
     </div>
 
-    <!-- ═══ GAME SELECT CABINETS ═══ -->
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px">
+    <!-- ═══ GAME CABINETS ═══ -->
+    <div class="game-cabinets">
 
-      <!-- PONG CABINET -->
-      <div onclick="startDishPong()" style="cursor:pointer;border:3px solid var(--ink);border-radius:16px;overflow:hidden;box-shadow:5px 5px 0 var(--ink);background:#0d0d1a;transition:transform .15s,box-shadow .15s" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='7px 9px 0 var(--ink)'" onmouseout="this.style.transform='';this.style.boxShadow='5px 5px 0 var(--ink)'">
-        <!-- Cabinet screen -->
-        <div style="background:linear-gradient(160deg,#0a0a1e,#12124a,#0a0a1e);padding:22px 16px 18px;text-align:center;position:relative;overflow:hidden;border-bottom:3px solid var(--ink)">
-          <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,.015) 3px,rgba(255,255,255,.015) 4px);pointer-events:none"></div>
-          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.3) 0%,transparent 70%);pointer-events:none"></div>
-          <div style="font-size:clamp(42px,6vw,58px);margin-bottom:8px;position:relative;filter:drop-shadow(0 0 12px rgba(147,197,253,.6))">🏓</div>
-          <p style="font-family:var(--display);font-size:clamp(14px,2.5vw,20px);font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:white;position:relative">Dish Pong</p>
-          <p style="font-family:var(--serif);font-size:10px;color:rgba(147,197,253,.65);letter-spacing:.1em;text-transform:uppercase;margin-top:4px;position:relative">2-Player VS AI</p>
+      <!-- PONG -->
+      <div class="cabinet" onclick="startDishPong()">
+        <div class="cabinet-screen" style="background:linear-gradient(160deg,#080820,#10104a,#080820)">
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.28) 0%,transparent 70%);pointer-events:none"></div>
+          <span class="cabinet-emoji" style="filter:drop-shadow(0 0 14px rgba(147,197,253,.7))">🏓</span>
+          <p class="cabinet-name">Dish Pong</p>
+          <p class="cabinet-tagline" style="color:rgba(147,197,253,.6)">You vs. The AI</p>
         </div>
-        <!-- Cabinet body -->
-        <div style="background:linear-gradient(135deg,#1a1208,#2a1f08);padding:14px 16px">
-          <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:10px">
-            <span style="background:#6366f1;color:white;font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:999px;white-space:nowrap;flex-shrink:0;margin-top:1px">HOW TO PLAY</span>
-            <p style="font-family:var(--serif);font-size:12px;line-height:1.55;color:rgba(244,236,216,.8)">Move your paddle to bounce the dish. Each rally = 1 point. Ball gets faster every hit. Miss the ball and it's game over.</p>
-          </div>
-          <div style="display:flex;gap:6px;flex-wrap:wrap">
-            <span style="font-size:10px;background:rgba(99,102,241,.2);color:#a5b4fc;border:1px solid rgba(99,102,241,.35);border-radius:6px;padding:3px 8px;font-family:var(--serif)">🖱️ Mouse / drag</span>
-            <span style="font-size:10px;background:rgba(99,102,241,.2);color:#a5b4fc;border:1px solid rgba(99,102,241,.35);border-radius:6px;padding:3px 8px;font-family:var(--serif)">⌨️ Arrow keys</span>
+        <div class="cabinet-body">
+          <p class="cabinet-rules">Drag to move your paddle and keep the dish in play. Each hit scores a point. Miss once and it's over — the ball gets faster every rally.</p>
+          <div class="cabinet-chips">
+            <span class="chip" style="background:rgba(99,102,241,.18);color:#a5b4fc;border:1px solid rgba(99,102,241,.3)">👆 Drag to move</span>
+            <span class="chip" style="background:rgba(99,102,241,.18);color:#a5b4fc;border:1px solid rgba(99,102,241,.3)">1 miss = game over</span>
           </div>
         </div>
-        <div style="background:var(--ink);padding:10px 16px;text-align:center">
-          <span style="font-family:var(--display);font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:#a5b4fc">▶ PLAY NOW</span>
-        </div>
+        <div class="cabinet-play" style="background:linear-gradient(90deg,#1e1b4b,#312e81);color:#a5b4fc;border-top:2px solid rgba(99,102,241,.4)">▶ PLAY NOW</div>
       </div>
 
-      <!-- STACK CABINET -->
-      <div onclick="startStackGame()" style="cursor:pointer;border:3px solid var(--ink);border-radius:16px;overflow:hidden;box-shadow:5px 5px 0 var(--ink);background:#0d0d1a;transition:transform .15s,box-shadow .15s" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='7px 9px 0 var(--ink)'" onmouseout="this.style.transform='';this.style.boxShadow='5px 5px 0 var(--ink)'">
-        <div style="background:linear-gradient(160deg,#0a0f1e,#0c2060,#0a0f1e);padding:22px 16px 18px;text-align:center;position:relative;overflow:hidden;border-bottom:3px solid var(--ink)">
-          <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,.015) 3px,rgba(255,255,255,.015) 4px);pointer-events:none"></div>
-          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,.3) 0%,transparent 70%);pointer-events:none"></div>
-          <div style="font-size:clamp(42px,6vw,58px);margin-bottom:8px;position:relative;filter:drop-shadow(0 0 12px rgba(212,168,67,.7))">🍽️</div>
-          <p style="font-family:var(--display);font-size:clamp(14px,2.5vw,20px);font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:white;position:relative">Stack The Dishes</p>
-          <p style="font-family:var(--serif);font-size:10px;color:rgba(212,168,67,.65);letter-spacing:.1em;text-transform:uppercase;margin-top:4px;position:relative">How High Can You Go?</p>
+      <!-- STACK -->
+      <div class="cabinet" onclick="startStackGame()">
+        <div class="cabinet-screen" style="background:linear-gradient(160deg,#0a0f1a,#0c1e50,#0a0f1a)">
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,.28) 0%,transparent 70%);pointer-events:none"></div>
+          <span class="cabinet-emoji" style="filter:drop-shadow(0 0 14px rgba(212,168,67,.75))">🍽️</span>
+          <p class="cabinet-name">Stack The Dishes</p>
+          <p class="cabinet-tagline" style="color:rgba(212,168,67,.6)">How High Can You Go?</p>
         </div>
-        <div style="background:linear-gradient(135deg,#1a1208,#2a1f08);padding:14px 16px">
-          <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:10px">
-            <span style="background:#d97706;color:white;font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:999px;white-space:nowrap;flex-shrink:0;margin-top:1px">HOW TO PLAY</span>
-            <p style="font-family:var(--serif);font-size:12px;line-height:1.55;color:rgba(244,236,216,.8)">A plate swings side to side. Tap to drop it onto the stack. Stack them as high as you can. Miss the stack and it's over.</p>
-          </div>
-          <div style="display:flex;gap:6px;flex-wrap:wrap">
-            <span style="font-size:10px;background:rgba(217,119,6,.2);color:#fcd34d;border:1px solid rgba(217,119,6,.35);border-radius:6px;padding:3px 8px;font-family:var(--serif)">👆 Tap / click</span>
-            <span style="font-size:10px;background:rgba(217,119,6,.2);color:#fcd34d;border:1px solid rgba(217,119,6,.35);border-radius:6px;padding:3px 8px;font-family:var(--serif)">⌨️ Spacebar</span>
+        <div class="cabinet-body">
+          <p class="cabinet-rules">A plate swings side to side. Tap or press to drop it onto the stack. Build as high as you can — miss the stack and the game's over.</p>
+          <div class="cabinet-chips">
+            <span class="chip" style="background:rgba(212,168,67,.15);color:#fcd34d;border:1px solid rgba(212,168,67,.3)">👆 Tap to drop</span>
+            <span class="chip" style="background:rgba(212,168,67,.15);color:#fcd34d;border:1px solid rgba(212,168,67,.3)">Miss = game over</span>
           </div>
         </div>
-        <div style="background:var(--ink);padding:10px 16px;text-align:center">
-          <span style="font-family:var(--display);font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:#fcd34d">▶ PLAY NOW</span>
-        </div>
+        <div class="cabinet-play" style="background:linear-gradient(90deg,#1c1a06,#3a3005);color:#fcd34d;border-top:2px solid rgba(212,168,67,.35)">▶ PLAY NOW</div>
       </div>
 
-      <!-- NINJA CABINET -->
-      <div onclick="startDishNinja()" style="cursor:pointer;border:3px solid var(--ink);border-radius:16px;overflow:hidden;box-shadow:5px 5px 0 var(--ink);background:#0d0d1a;transition:transform .15s,box-shadow .15s" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='7px 9px 0 var(--ink)'" onmouseout="this.style.transform='';this.style.boxShadow='5px 5px 0 var(--ink)'">
-        <div style="background:linear-gradient(160deg,#1a0505,#4a0808,#1a0505);padding:22px 16px 18px;text-align:center;position:relative;overflow:hidden;border-bottom:3px solid var(--ink)">
-          <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,.015) 3px,rgba(255,255,255,.015) 4px);pointer-events:none"></div>
-          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(239,68,68,.3) 0%,transparent 70%);pointer-events:none"></div>
-          <div style="font-size:clamp(42px,6vw,58px);margin-bottom:8px;position:relative;filter:drop-shadow(0 0 12px rgba(239,68,68,.7))">⚔️</div>
-          <p style="font-family:var(--display);font-size:clamp(14px,2.5vw,20px);font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:white;position:relative">Dish Ninja</p>
-          <p style="font-family:var(--serif);font-size:10px;color:rgba(239,68,68,.65);letter-spacing:.1em;text-transform:uppercase;margin-top:4px;position:relative">3 Misses & You're Out</p>
+      <!-- NINJA -->
+      <div class="cabinet" onclick="startDishNinja()">
+        <div class="cabinet-screen" style="background:linear-gradient(160deg,#180404,#480606,#180404)">
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(239,68,68,.28) 0%,transparent 70%);pointer-events:none"></div>
+          <span class="cabinet-emoji" style="filter:drop-shadow(0 0 14px rgba(239,68,68,.75))">⚔️</span>
+          <p class="cabinet-name">Dish Ninja</p>
+          <p class="cabinet-tagline" style="color:rgba(239,68,68,.6)">3 Misses &amp; You're Out</p>
         </div>
-        <div style="background:linear-gradient(135deg,#1a1208,#2a1f08);padding:14px 16px">
-          <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:10px">
-            <span style="background:#dc2626;color:white;font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:999px;white-space:nowrap;flex-shrink:0;margin-top:1px">HOW TO PLAY</span>
-            <p style="font-family:var(--serif);font-size:12px;line-height:1.55;color:rgba(244,236,216,.8)">Dishes fly in from all sides. Click or tap each one to shatter it. 1 point per dish. Let 3 escape and it's over — and they get faster every hit.</p>
-          </div>
-          <div style="display:flex;gap:6px;flex-wrap:wrap">
-            <span style="font-size:10px;background:rgba(220,38,38,.2);color:#fca5a5;border:1px solid rgba(220,38,38,.35);border-radius:6px;padding:3px 8px;font-family:var(--serif)">👆 Tap / click</span>
-            <span style="font-size:10px;background:rgba(220,38,38,.2);color:#fca5a5;border:1px solid rgba(220,38,38,.35);border-radius:6px;padding:3px 8px;font-family:var(--serif)">❤️❤️❤️ 3 lives</span>
+        <div class="cabinet-body">
+          <p class="cabinet-rules">Dishes fly in from every direction — tap each one to smash it before it escapes. Every smash = 1 point. They speed up each time. 3 misses and it's over.</p>
+          <div class="cabinet-chips">
+            <span class="chip" style="background:rgba(220,38,38,.18);color:#fca5a5;border:1px solid rgba(220,38,38,.3)">👆 Tap to smash</span>
+            <span class="chip" style="background:rgba(220,38,38,.18);color:#fca5a5;border:1px solid rgba(220,38,38,.3)">❤️❤️❤️ 3 lives</span>
           </div>
         </div>
-        <div style="background:var(--ink);padding:10px 16px;text-align:center">
-          <span style="font-family:var(--display);font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:#fca5a5">▶ PLAY NOW</span>
-        </div>
+        <div class="cabinet-play" style="background:linear-gradient(90deg,#1e0404,#3d0808);color:#fca5a5;border-top:2px solid rgba(220,38,38,.35)">▶ PLAY NOW</div>
       </div>
 
     </div>
 
-    <!-- ═══ GAME CANVAS + LEADERBOARD ═══ -->
-    <div id="game-layout" style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,.9fr);gap:18px;align-items:start">
+    <!-- ═══ CANVAS + LEADERBOARD ═══ -->
+    <div id="game-layout" style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(270px,.85fr);gap:18px;align-items:start">
+
       <div id="game-area" style="border:3px solid var(--ink);border-radius:14px;overflow:hidden;box-shadow:4px 4px 0 var(--ink);background:#111;display:none;flex-direction:column;position:relative">
         <div style="background:var(--ink);padding:10px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-shrink:0;flex-wrap:wrap">
           <span id="game-title" style="font-family:var(--display);color:var(--cream);font-size:14px;font-weight:900;text-transform:uppercase;letter-spacing:.08em">Dish Games</span>
-          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:12px">
             <span id="game-score" style="color:#f4ecd8;font-size:13px;font-weight:700">Score: 0</span>
             <button onclick="stopGame(true)" style="font-family:var(--serif);background:transparent;color:var(--cream);border:2px solid rgba(255,255,255,.35);border-radius:999px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer">✕ Close</button>
           </div>
@@ -1678,14 +1672,14 @@ function renderGamesPage(){
         <div id="dish-reveal" style="display:none;background:linear-gradient(135deg,#f7f2e8,#efe3ca);border-top:3px solid var(--ink);padding:14px 16px"></div>
       </div>
 
-      <!-- LEADERBOARD PANEL -->
-      <div style="display:grid;gap:14px">
+      <!-- LEADERBOARD -->
+      <div class="games-lb-panel">
         <div style="border:3px solid var(--ink);border-radius:14px;overflow:hidden;box-shadow:4px 4px 0 var(--ink);background:#0a0a0f">
-          <div style="padding:12px 16px;border-bottom:2px solid rgba(212,168,67,.3);background:linear-gradient(90deg,#1a1208,#2a1f08);display:flex;align-items:center;gap:10px">
-            <span style="font-size:18px">🏆</span>
+          <div style="padding:12px 16px;border-bottom:2px solid rgba(212,168,67,.25);background:linear-gradient(90deg,#1a1208,#2a1f08);display:flex;align-items:center;gap:10px">
+            <span style="font-size:20px">🏆</span>
             <div>
-              <p style="font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:rgba(212,168,67,.6);margin-bottom:2px">Device Leaderboard</p>
-              <h4 style="font-family:var(--display);font-size:17px;font-weight:900;text-transform:uppercase;color:var(--cream);line-height:1">High Scores</h4>
+              <p style="font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(212,168,67,.55);margin-bottom:2px">This Device</p>
+              <h4 style="font-family:var(--display);font-size:16px;font-weight:900;text-transform:uppercase;color:var(--cream);line-height:1">High Scores</h4>
             </div>
           </div>
           <div style="padding:12px 14px;display:grid;gap:12px">
@@ -1694,12 +1688,10 @@ function renderGamesPage(){
             <div id="lb-block-ninja">${renderLeaderboardBlock('ninja','⚔️ Dish Ninja')}</div>
           </div>
         </div>
-
-        <!-- Quick tip card -->
         <div style="border:3px solid var(--ink);border-radius:14px;background:linear-gradient(135deg,#1a1208,#2a1f08);box-shadow:4px 4px 0 var(--ink);padding:16px">
-          <p style="font-family:var(--display);font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:rgba(212,168,67,.8);margin-bottom:10px">📰 From The Editor's Desk</p>
-          <p style="font-family:var(--serif);font-size:12px;line-height:1.7;color:rgba(244,236,216,.75);font-style:italic">"Every game features real dishes from the shop. Hit a high score and you might just earn yourself a discount. Play, compete, and see what's in stock — it's the most fun you'll ever have shopping for plates."</p>
-          <p style="font-size:10px;color:rgba(212,168,67,.5);margin-top:8px;font-family:var(--serif)">— The Daily Dish Editor</p>
+          <p style="font-family:var(--display);font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.14em;color:rgba(212,168,67,.75);margin-bottom:8px">📰 From The Editor</p>
+          <p style="font-family:var(--serif);font-size:12px;line-height:1.7;color:rgba(244,236,216,.72);font-style:italic">"Every game features real dishes from the shop. Play, compete, and see what's in stock — it's the most fun you'll ever have shopping for plates."</p>
+          <p style="font-size:10px;color:rgba(212,168,67,.45);margin-top:8px;font-family:var(--serif)">— The Daily Dish Editor</p>
         </div>
       </div>
     </div>
@@ -1808,8 +1800,11 @@ function promptSaveScore(game, score, restartFn){
     </div>
   `;
 
-  area.style.position="relative";
-  area.appendChild(overlay);
+  // On mobile fullscreen, attach overlay to the fullscreen container
+  const fc=document.getElementById("game-fullscreen-container");
+  const attachTo=(fc&&fc.classList.contains("active"))?fc:area;
+  if(attachTo) attachTo.style.position="relative";
+  if(attachTo) attachTo.appendChild(overlay);
 
   const input=overlay.querySelector("#score-name-input");
   input.focus();
@@ -1998,8 +1993,25 @@ function stopGame(hideArea=false){
   if(_gKH){ window.removeEventListener("keydown",_gKH); _gKH=null; }
   if(_gMH){ window.removeEventListener("mousemove",_gMH); _gMH=null; }
   const canvas=document.getElementById("game-canvas");
-  if(canvas){ canvas.onclick=null; canvas.ontouchmove=null; canvas.ontouchend=null; canvas.ontouchstart=null; }
-  if(hideArea){ const area=document.getElementById("game-area"); if(area) area.style.display="none"; }
+  if(canvas){ canvas.onclick=null; canvas.ontouchmove=null; canvas.ontouchend=null; canvas.ontouchstart=null; canvas.onpointerdown=null; }
+  if(hideArea){
+    const area=document.getElementById("game-area"); if(area) area.style.display="none";
+    // Also exit fullscreen if active
+    const fc=document.getElementById("game-fullscreen-container");
+    if(fc&&fc.classList.contains("active")){
+      fc.classList.remove("active");
+      const wrap=document.getElementById("game-fullscreen-canvas-wrap");
+      if(wrap) wrap.innerHTML="";
+      document.body.classList.remove("game-fullscreen");
+      // Restore placeholder canvas
+      if(area&&!document.getElementById("game-canvas")){
+        const c=document.createElement("canvas");
+        c.id="game-canvas";
+        c.style.cssText="display:block;width:100%;background:#0d1117;touch-action:none;user-select:none;-webkit-tap-highlight-color:transparent";
+        area.insertBefore(c,document.getElementById("dish-reveal"));
+      }
+    }
+  }
 }
 
 function _reveal(di){
@@ -2027,6 +2039,9 @@ function _saveBest(key,val){
 function _setScore(val,gameKey){
   const el=document.getElementById("game-score");
   if(el) el.textContent="Score: "+val;
+  // Also update mobile fullscreen score bar
+  const mfs=document.getElementById("game-fullscreen-score");
+  if(mfs) mfs.textContent="Score: "+val;
   const bestMap={"dd-pong":"pong-best","dd-stack":"stack-best","dd-ninja":"ninja-best"};
   if(_saveBest(gameKey,val)){
     const el2=document.getElementById(bestMap[gameKey]||"");
@@ -2034,31 +2049,91 @@ function _setScore(val,gameKey){
   }
 }
 
+function exitMobileGame(){
+  stopGame(false);
+  const fc=document.getElementById("game-fullscreen-container");
+  if(fc){
+    fc.classList.remove("active");
+    const wrap=document.getElementById("game-fullscreen-canvas-wrap");
+    if(wrap) wrap.innerHTML="";
+  }
+  document.body.classList.remove("game-fullscreen");
+  // Restore normal canvas in game-area
+  const area=document.getElementById("game-area");
+  if(area&&!document.getElementById("game-canvas")){
+    const c=document.createElement("canvas");
+    c.id="game-canvas";
+    c.style.cssText="display:block;width:100%;background:#0d1117;touch-action:none;user-select:none;-webkit-tap-highlight-color:transparent";
+    area.insertBefore(c,document.getElementById("dish-reveal"));
+  }
+  if(area) area.style.display="none";
+}
+
 function _gameSetup(title){
   _dishes();
-  const area=document.getElementById("game-area");
-  const launchMap={pong:"startDishPong",stack:"startStackGame",ninja:"startDishNinja"};
   const titleMap={pong:"🏓 Dish Pong",stack:"🍽️ Stack The Dishes",ninja:"⚔️ Dish Ninja"};
-  if(!area){
+  const isMob=window.innerWidth<=768;
+
+  if(activePage!=="Dish Games"){
     goToPage("Dish Games");
-    const fn=launchMap[title];
-    if(fn && typeof window[fn]==='function') setTimeout(()=>window[fn](),120);
+    setTimeout(()=>{ const fn=window[{pong:"startDishPong",stack:"startStackGame",ninja:"startDishNinja"}[title]]; if(fn) fn(); },150);
     return null;
   }
+
   stopGame();
-  area.style.display="flex";
-  // On mobile, scroll game into view after a brief layout tick
-  if(window.innerWidth<=768){
-    requestAnimationFrame(()=>{ area.scrollIntoView({behavior:"smooth",block:"start"}); });
+
+  if(isMob){
+    // ── MOBILE: fullscreen takeover ──
+    const fc=document.getElementById("game-fullscreen-container");
+    const wrap=document.getElementById("game-fullscreen-canvas-wrap");
+    if(!fc||!wrap) return null;
+
+    // Clear any old canvas
+    wrap.innerHTML="";
+    const canvas=document.createElement("canvas");
+    canvas.id="game-canvas";
+    canvas.style.cssText="display:block;touch-action:none;user-select:none;-webkit-tap-highlight-color:transparent";
+    wrap.appendChild(canvas);
+
+    // Update fullscreen title bar
+    const ft=document.getElementById("game-fullscreen-title");
+    const fs=document.getElementById("game-fullscreen-score");
+    if(ft) ft.textContent=titleMap[title]||"Dish Games";
+    if(fs) fs.textContent="Score: 0";
+
+    fc.classList.add("active");
+    document.body.classList.add("game-fullscreen");
+
+    // Compute true available dimensions
+    const barH=document.getElementById("game-fullscreen-bar").offsetHeight||48;
+    const W=window.innerWidth;
+    const H=window.innerHeight - barH;
+    canvas.width=W;
+    canvas.height=H;
+    canvas.style.width=W+"px";
+    canvas.style.height=H+"px";
+
+    // Wire score display to fullscreen bar
+    const origSetScore=window._setScore;
+    window._mobileScoreEl=fs;
+
+    // Also hide the dish-reveal in fullscreen (not needed)
+    const dr=document.getElementById("dish-reveal");if(dr) dr.style.display="none";
+
+    return {area:wrap,canvas,isMob:true,W,H};
+  } else {
+    // ── DESKTOP: normal game-area ──
+    const area=document.getElementById("game-area");
+    if(!area) return null;
+    area.style.display="flex";
+    const t=document.getElementById("game-title");
+    if(t) t.textContent=titleMap[title]||"Dish Games";
+    const dr=document.getElementById("dish-reveal");if(dr) dr.style.display="none";
+    const canvas=document.getElementById("game-canvas");
+    if(!canvas) return null;
+    const W=area.clientWidth||Math.min(window.innerWidth-32,700);
+    return {area,canvas,isMob:false,W};
   }
-  const t=document.getElementById("game-title");
-  if(t) t.textContent=titleMap[title] || "Dish Games";
-  const dr=document.getElementById("dish-reveal"); if(dr) dr.style.display="none";
-  const canvas=document.getElementById("game-canvas");
-  if(!canvas) return null;
-  const isMob=window.innerWidth<=768;
-  const W=isMob ? Math.min(window.innerWidth-24, 700) : (area.clientWidth||Math.min(window.innerWidth-32,700));
-  return {area,canvas,isMob,W};
 }
 
 
@@ -2069,21 +2144,13 @@ function _gameSetup(title){
 function startDishNinja(){
   const setup=_gameSetup("ninja"); if(!setup) return;
   const {canvas,isMob,W}=setup;
-  // On mobile: use as much vertical space as possible — fill from just below header
-  // to near bottom of viewport, leaving room for the info bar
   const BAR_H=isMob?48:54;
-  const headerH=44; // ticker
-  const navEstH=isMob?90:0; // nav bar approximate height
-  const gameHeaderH=42; // game title bar
-  const availH=isMob
-    ? Math.max(280, window.innerHeight - headerH - navEstH - gameHeaderH - BAR_H - 24)
-    : 520;
-  const BOARD_H=availH;
-  const H=BOARD_H+BAR_H;
-  canvas.width=W; canvas.height=H; canvas.style.height=H+"px";
-  // Resize game-area to match
-  const area=document.getElementById("game-area");
-  if(area) area.style.minHeight=(H+gameHeaderH)+"px";
+  // On mobile fullscreen, setup.H is already the full available height
+  const totalH=isMob?(setup.H||window.innerHeight-48):574;
+  const BOARD_H=totalH-BAR_H;
+  const H=totalH;
+  if(!isMob){ canvas.width=W; canvas.height=H; canvas.style.height=H+"px"; }
+  // (on mobile the canvas is already sized by _gameSetup)
   const ctx=canvas.getContext('2d');
   let score=0, misses=0, spawnTick=0, dishId=0;
   let dishes=[], shards=[], slash=[];
@@ -2386,8 +2453,8 @@ function startDishNinja(){
 function startDishPong(){
   const setup=_gameSetup("pong"); if(!setup) return;
   const {canvas,isMob,W}=setup;
-  const H=isMob?380:480;
-  canvas.width=W; canvas.height=H; canvas.style.height=H+"px";
+  const H=isMob?(setup.H||window.innerHeight-48):480;
+  if(!isMob){ canvas.width=W; canvas.height=H; canvas.style.height=H+"px"; }
   const ctx=canvas.getContext("2d");
 
   // Dish ball setup
@@ -2596,8 +2663,8 @@ function startDishPong(){
 function startStackGame(){
   const setup=_gameSetup("stack"); if(!setup) return;
   const {canvas,isMob,W}=setup;
-  const H=isMob?460:540;
-  canvas.width=W; canvas.height=H; canvas.style.height=H+"px";
+  const H=isMob?(setup.H||window.innerHeight-48):540;
+  if(!isMob){ canvas.width=W; canvas.height=H; canvas.style.height=H+"px"; }
   const ctx=canvas.getContext("2d");
 
   // Plates are CIRCLES — radius sized so they look like real dishes
