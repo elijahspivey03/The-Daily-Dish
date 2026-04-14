@@ -264,6 +264,10 @@ button{cursor:pointer;font-family:var(--serif)}
 
   /* Shipping options */
   .shipping-options{grid-template-columns:1fr}
+
+  /* Game page — full width canvas, leaderboard stacks below */
+  #game-layout{grid-template-columns:1fr!important}
+  #game-area{border-radius:10px}
 }
 /* ── STOP THE PRESSES POPUP ── */
 #stp-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;animation:fadeInOverlay .3s ease}
@@ -1556,7 +1560,7 @@ function renderGamesPage(){
         <p style="font-size:14px;line-height:1.7;max-width:760px">Play the Daily Dish arcade. Dish Ninja throws dishes from all sides — click or tap to shatter them before they escape. Stack The Dishes challenges you to build the tallest tower you can. Dish Pong keeps the rally alive as long as possible.</p>
       </div>
 
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:24px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px">
         <button onclick="startDishPong()" style="font-family:var(--display);background:var(--ink);color:var(--cream);border:3px solid var(--ink);border-radius:14px;padding:20px;font-size:16px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;box-shadow:4px 4px 0 rgba(0,0,0,.3)">
           🏓 Dish Pong
           <p style="font-size:11px;font-weight:400;opacity:.7;margin-top:6px;text-transform:none;letter-spacing:0;line-height:1.4">Bounce the dish back and forth and keep the rally alive.</p>
@@ -1571,8 +1575,8 @@ function renderGamesPage(){
         </button>
       </div>
 
-      <div style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,.9fr);gap:18px;align-items:start">
-        <div id="game-area" style="border:3px solid var(--ink);border-radius:14px;overflow:hidden;box-shadow:4px 4px 0 var(--ink);background:#111;display:none;flex-direction:column;position:relative;min-height:520px">
+      <div id="game-layout" style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,.9fr);gap:18px;align-items:start">
+        <div id="game-area" style="border:3px solid var(--ink);border-radius:14px;overflow:hidden;box-shadow:4px 4px 0 var(--ink);background:#111;display:none;flex-direction:column;position:relative">
           <div style="background:var(--ink);padding:10px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-shrink:0;flex-wrap:wrap">
             <span id="game-title" style="font-family:var(--display);color:var(--cream);font-size:14px;font-weight:900;text-transform:uppercase;letter-spacing:.08em">Dish Games</span>
             <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
@@ -1580,7 +1584,7 @@ function renderGamesPage(){
               <button onclick="stopGame(true)" style="font-family:var(--serif);background:transparent;color:var(--cream);border:2px solid rgba(255,255,255,.35);border-radius:999px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer">Close Game</button>
             </div>
           </div>
-          <canvas id="game-canvas" style="display:block;width:100%;height:460px;background:#0d1117;touch-action:none;user-select:none"></canvas>
+          <canvas id="game-canvas" style="display:block;width:100%;background:#0d1117;touch-action:none;user-select:none;-webkit-tap-highlight-color:transparent"></canvas>
           <div id="dish-reveal" style="display:none;background:linear-gradient(135deg,#f7f2e8,#efe3ca);border-top:3px solid var(--ink);padding:14px 16px"></div>
         </div>
 
@@ -1860,13 +1864,17 @@ function _gameSetup(title){
   }
   stopGame();
   area.style.display="flex";
+  // On mobile, scroll game into view after a brief layout tick
+  if(window.innerWidth<=768){
+    requestAnimationFrame(()=>{ area.scrollIntoView({behavior:"smooth",block:"start"}); });
+  }
   const t=document.getElementById("game-title");
   if(t) t.textContent=titleMap[title] || "Dish Games";
   const dr=document.getElementById("dish-reveal"); if(dr) dr.style.display="none";
   const canvas=document.getElementById("game-canvas");
   if(!canvas) return null;
   const isMob=window.innerWidth<=768;
-  const W=area.clientWidth||Math.min(window.innerWidth-32,700);
+  const W=isMob ? Math.min(window.innerWidth-24, 700) : (area.clientWidth||Math.min(window.innerWidth-32,700));
   return {area,canvas,isMob,W};
 }
 
@@ -1878,24 +1886,35 @@ function _gameSetup(title){
 function startDishNinja(){
   const setup=_gameSetup("ninja"); if(!setup) return;
   const {canvas,isMob,W}=setup;
-  const BOARD_H=isMob?420:520;
-  const BAR_H=54;
+  // On mobile: use as much vertical space as possible — fill from just below header
+  // to near bottom of viewport, leaving room for the info bar
+  const BAR_H=isMob?48:54;
+  const headerH=44; // ticker
+  const navEstH=isMob?90:0; // nav bar approximate height
+  const gameHeaderH=42; // game title bar
+  const availH=isMob
+    ? Math.max(280, window.innerHeight - headerH - navEstH - gameHeaderH - BAR_H - 24)
+    : 520;
+  const BOARD_H=availH;
   const H=BOARD_H+BAR_H;
   canvas.width=W; canvas.height=H; canvas.style.height=H+"px";
+  // Resize game-area to match
+  const area=document.getElementById("game-area");
+  if(area) area.style.minHeight=(H+gameHeaderH)+"px";
   const ctx=canvas.getContext('2d');
   let score=0, misses=0, spawnTick=0, dishId=0;
   let dishes=[], shards=[], slash=[];
-  let lastHitDish=null; // track which dish was last clicked for the info bar
-  let missFlash=0;      // frames to flash miss indicator
+  let lastHitDish=null;
+  let missFlash=0;
   _gRunning=true;
 
-  // Speed scales with every single hit — gets noticeably faster each click
+  // Speed scales with every hit
   const speedBoost=()=>1 + Math.min(2.8, score*0.07);
   // Spawn faster as score grows
   const spawnInterval=()=>Math.max(8, 32 - Math.floor(score*0.7));
 
   function spawnFromEdge(){
-    const r=isMob?44+Math.random()*10:54+Math.random()*14;
+    const r=(isMob?Math.min(40,W*0.1):54)+Math.random()*(isMob?8:14);
     const side=Math.floor(Math.random()*4);
     let x,y,vx,vy;
     const boost=speedBoost();
@@ -1959,11 +1978,11 @@ function startDishNinja(){
 
     // Miss hearts — red filled = used, outline = remaining
     const heartX=12;
-    const heartY=BOARD_H+16;
-    ctx.font=(isMob?16:18)+'px serif';
+    const heartY=BOARD_H+(isMob?10:16);
+    ctx.font=(isMob?13:18)+'px serif';
     for(let i=0;i<3;i++){
       ctx.globalAlpha= i<misses ? 0.25 : 1;
-      ctx.fillText(i<misses?'🖤':'❤️', heartX+i*26, heartY+14);
+      ctx.fillText(i<misses?'🖤':'❤️', heartX+i*(isMob?20:26), heartY+(isMob?12:14));
     }
     ctx.globalAlpha=1;
 
@@ -1972,7 +1991,7 @@ function startDishNinja(){
       ctx.textAlign='center';
       ctx.fillStyle=`rgba(229,62,62,${missFlash/18})`;
       ctx.font=`bold ${isMob?20:24}px Georgia,serif`;
-      ctx.fillText('MISS!', W/2, BOARD_H+34);
+      ctx.fillText('MISS!', W/2, BOARD_H+(isMob?26:34));
       missFlash--;
     }
 
@@ -1982,19 +2001,19 @@ function startDishNinja(){
       ctx.textAlign='right';
       ctx.fillStyle='rgba(255,255,255,.5)';
       ctx.font=`bold 10px Georgia,serif`;
-      ctx.fillText('LAST SMASHED',W-12,BOARD_H+16);
+      ctx.fillText('LAST SMASHED',W-12,BOARD_H+(isMob?12:16));
       ctx.fillStyle='#f4ecd8';
       ctx.font=`bold ${isMob?13:15}px Georgia,serif`;
       const title=dish.title||'';
-      ctx.fillText(title.length>28?title.slice(0,26)+'…':title, W-12, BOARD_H+36);
+      ctx.fillText(title.length>28?title.slice(0,26)+'…':title, W-12, BOARD_H+(isMob?28:36));
       ctx.fillStyle='#d4a843';
       ctx.font=`bold 12px Georgia,serif`;
-      ctx.fillText(dish.priceLine||dish.price||'', W-12, BOARD_H+50);
+      ctx.fillText(dish.priceLine||dish.price||'', W-12, BOARD_H+(isMob?42:50));
     } else {
       ctx.textAlign='center';
       ctx.fillStyle='rgba(255,255,255,.3)';
       ctx.font=`italic ${isMob?12:13}px Georgia,serif`;
-      ctx.fillText('Click a dish to see what it is', W/2, BOARD_H+34);
+      ctx.fillText(isMob?'Tap a dish!':'Click a dish to see what it is', W/2, BOARD_H+(isMob?26:34));
     }
     ctx.textAlign='left';
   }
