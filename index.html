@@ -92,18 +92,26 @@ button{cursor:pointer;font-family:var(--serif)}
 .pill{display:inline-flex;align-items:center;padding:3px 10px;font-size:10px;letter-spacing:.15em;text-transform:uppercase;border:1px solid rgba(0,0,0,.65);border-radius:999px;background:var(--cream);white-space:nowrap}
 
 /* ── Product grid ── */
-.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px}
-.product-card{background:var(--parchment);border:var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;transition:transform .15s}
-.product-card:hover{transform:translateY(-2px)}
-.product-card img{width:100%;height:200px;object-fit:cover;object-position:center;border-bottom:var(--border)}
-.product-card-body{padding:18px;flex:1;display:flex;flex-direction:column}
-.product-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
-.product-title{font-family:var(--display);font-size:17px;font-weight:700;text-transform:uppercase;line-height:1.2}
-.product-subtitle{font-style:italic;font-size:13px;margin-bottom:8px;opacity:.8}
-.product-desc{font-size:13px;line-height:1.65;margin-bottom:14px;flex:1}
-.product-price{font-weight:700;font-size:15px;margin-bottom:12px}
-.product-actions{display:flex;flex-wrap:wrap;gap:8px}
-.product-add-btn{padding:7px 13px;font-size:12px;font-weight:700;border:var(--border);border-radius:8px;white-space:nowrap;transition:opacity .15s;font-family:var(--serif)}
+.product-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+@media(max-width:1100px){.product-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:820px){.product-grid{grid-template-columns:repeat(3,1fr);gap:8px}}
+@media(max-width:480px){.product-grid{grid-template-columns:repeat(3,1fr);gap:6px}}
+.product-card{background:var(--parchment);border:var(--border);border-radius:var(--radius-sm);overflow:hidden;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;transition:transform .15s,box-shadow .15s;cursor:pointer}
+.product-card:hover{transform:translateY(-3px);box-shadow:6px 6px 0 #1f1b16}
+.product-card img{width:100%;height:140px;object-fit:cover;object-position:center;border-bottom:var(--border)}
+@media(max-width:820px){.product-card img{height:110px}}
+@media(max-width:480px){.product-card img{height:90px}}
+.product-card-body{padding:10px;flex:1;display:flex;flex-direction:column}
+.product-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:4px}
+.product-title{font-family:var(--display);font-size:12px;font-weight:900;text-transform:uppercase;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+@media(max-width:480px){.product-title{font-size:10px}}
+.product-subtitle{font-style:italic;font-size:11px;margin-bottom:6px;opacity:.75;display:none}
+.product-desc{font-size:11px;line-height:1.5;margin-bottom:8px;flex:1;display:none}
+.product-price{font-weight:700;font-size:11px;margin-bottom:8px;color:#92400e}
+@media(max-width:480px){.product-price{font-size:10px}}
+.product-actions{display:flex;flex-wrap:wrap;gap:5px}
+.product-add-btn{padding:5px 8px;font-size:10px;font-weight:700;border:var(--border);border-radius:6px;white-space:nowrap;transition:opacity .15s;font-family:var(--serif)}
+@media(max-width:480px){.product-add-btn{padding:4px 6px;font-size:9px}}
 .product-add-btn:hover{opacity:.8}
 .product-add-btn.solid{background:var(--ink);color:var(--cream)}
 .product-add-btn.outline{background:transparent;color:var(--ink)}
@@ -237,9 +245,7 @@ button{cursor:pointer;font-family:var(--serif)}
   /* Archive 4th item — show on mobile */
   .archive-mobile-only{display:block!important}
 
-  /* Product grid — single column */
-  .product-grid{grid-template-columns:1fr}
-  .product-card img{height:220px}
+  /* Product grid — handled by grid CSS breakpoints above */
 
   /* Front page sections */
   .fp-section-header{flex-direction:column;align-items:flex-start;gap:8px}
@@ -514,7 +520,6 @@ const products = [
   {id:"twisted-glasses-bundle-set",collection:"Sets",section:"Dining",title:"Twisted Dinner Glass Set",subtitle:"All 10 heavy twisted glass cups — a complete set at a great price.",description:"All ten heavy solid twisted glass cups bundled together. These feel premium in the hand, look incredible on a table, and at $1.60 a glass you are getting a serious deal on a seriously good set.",image:"https://i.imgur.com/QtkcT7j.jpeg",priceLine:"Full Set of 10 — $16",options:[{id:"full-set",label:"Add All 10",price:16}],story:"From the sets desk — all ten twisted dinner glasses in one bundle. Heavy, beautiful and priced to move."},
   {id:"red-glass-full-set",collection:"Sets",section:"Dining",title:"Red Glass Complete Set",subtitle:"3 dinner plates, 4 appetizer plates and 3 bowls — all in deep red glass.",description:"The complete red glass collection — three dinner plates, four appetizer plates and three bowls all in the same bold deep red glass. Bold, matching and a serious upgrade for any table.",image:"DUAL:https://i.imgur.com/EdI3INH.jpeg|https://i.imgur.com/MEFyLMQ.jpeg",priceLine:"Full Set — $25",options:[{id:"full-set",label:"Add Full Set",price:25}],story:"From the sets desk — the complete red glass collection. Three dinner plates, four appetizer plates and three bowls all in one bundle. Bold color, great price."},
   {id:"white-floral-set",collection:"Sets",section:"Dining",title:"White Floral Rim Plate Set",subtitle:"All 5 white floral rim plates together at a discount.",description:"All five white floral rim plates bundled together — heavy glass, beautiful raised flower and fruit design around the rim, and a clean elegant look that works with any table.",image:"https://i.imgur.com/6ZJb0Jk.jpeg",priceLine:"Full Set of 5 — $18",options:[{id:"full-set",label:"Add All 5",price:18}],story:"From the sets desk — all five white floral rim plates in one bundle. Elegant, heavy glass and a price that makes sense for the whole set."},
-  {id:"earth-tone-full-set",collection:"Sets",section:"Dining",title:"Earth Tone Complete Plate Set",subtitle:"2 dinner plates and 3 appetizer plates in matching earth tones.",description:"Two heavy earth tone dinner plates and three matching appetizer plates all bundled together — same bold geometric border and same great quality. Everything you need for a complete matching earth tone table.",image:"DUAL:https://i.imgur.com/WwVyCxT.jpeg|https://i.imgur.com/1jZWQOw.jpeg",priceLine:"Full Set — $24",options:[{id:"full-set",label:"Add Full Set",price:24}],story:"From the sets desk — the complete earth tone plate collection. Two big plates, three small plates, one great price."},
   {id:"swirl-full-set",collection:"Sets",section:"Dining",title:"Blue & Orange Swirl Plate Set",subtitle:"All 4 swirl plates — 2 ocean blue and 2 sunset orange.",description:"Two ocean blue and two sunset orange swirl plates together in one bundle. Heavy glass, hand-swirled finish, and a color combo that looks seriously intentional on any table.",image:"DUAL:https://i.imgur.com/SRb1eG2.jpeg|https://i.imgur.com/j8d3d1H.jpeg",priceLine:"Full Set of 4 — $16",options:[{id:"full-set",label:"Add All 4",price:16}],story:"From the sets desk — the complete swirl set. Two blue, two orange, one great price."},
   {id:"wine-glasses-set",collection:"New Additions",section:"Morning Edition",title:"Classic Wine Glasses",subtitle:"A set of 9 simple clear wine glasses — just $1 each!",description:"Nine simple clear wine glasses that are clean, lightweight and perfect for everyday use or hosting. Nothing fancy, just good reliable wine glasses at a price that makes sense.",image:"https://i.imgur.com/KJgdRRs.jpeg",priceLine:"Single — $1 | Full Set of 9 — $9 🏷️ ($1/glass!)",options:[{id:"set-9",label:"Add All 9 — $1 Each!",price:9},{id:"single",label:"Add One",price:1,variant:"outline"}],addedAt:"2026-04-08",story:"From the glassware desk — nine simple clear wine glasses just landed in the shop. Clean, classic and ready for whatever you're pouring."},
   {id:"budweiser-beerstein",oneOfOne:true,collection:"New Additions",section:"Morning Edition",title:"Budweiser Beerstein 1999",subtitle:"A vintage 1999 Budweiser collector beerstein — heavy ceramic with detailed artwork.",description:"A genuine 1999 Budweiser collector beerstein in heavy ceramic with detailed vintage artwork. The kind of piece that belongs in a display case or on a shelf where people can actually see it. One of a kind and not something you find every day.",image:"DUAL:https://i.imgur.com/z33bLY8.jpeg|https://i.imgur.com/xLBp5bk.jpeg",priceLine:"Single Stein — $20",options:[{id:"single",label:"Add One",price:20}],addedAt:"2026-04-08",story:"From the collector's desk — a genuine 1999 Budweiser beerstein just made it into the shop. Heavy ceramic, vintage artwork, and only one available. This one won't last long."},
@@ -560,7 +565,7 @@ const products = [
   {id:"black-drinking-glasses-set",collection:"Sets",section:"Dining",title:"Black Drinking Glasses Set",subtitle:"Simple and clean — two everyday black drinking glasses.",description:"Two plain black drinking glasses available as a matched pair. Clean, practical, and priced right at $4 for both.",image:"https://i.imgur.com/y8aW4Fd.jpeg",priceLine:"Pair — $4 | Single — $2.50",options:[{id:"pair",label:"Add Both",price:4},{id:"single",label:"Add One",price:2.50,variant:"outline"}],story:"From the sets desk — a simple matched pair of black drinking glasses. Two available, sold together or individually."},
   {id:"blue-glass-drinking-set",collection:"Sets",section:"Dining",title:"Blue Glass Drinking Set",subtitle:"A pair of quality blue drinking glasses.",description:"Two quality blue glass drinking glasses sold as a pair. Rich color, solid feel, and a great match for any table. Pair only.",image:"https://i.imgur.com/m1mxIlG.jpeg",priceLine:"Pair — $7",options:[{id:"pair",label:"Add the Pair",price:7}],story:"From the sets desk — two blue glass drinking glasses, quality you can feel. Pair only at $7."},
   {id:"fruit-mug-collection",collection:"Sets",section:"Dining",title:"Fruit Mug Collection",subtitle:"Four pretty fruit-themed ceramic mugs.",description:"A complete set of four ceramic mugs with gorgeous fruit designs. Pretty, practical, and the kind of set that makes a great gift. Sold as a full set of four.",image:"https://i.imgur.com/JuChz2X.jpeg",priceLine:"Set of 4 — $12",options:[{id:"set-4",label:"Add the Set",price:12}],story:"From the sets desk — four fruit mugs, one great set. Perfect for morning coffee or afternoon tea."},
-  {id:"orange-teal-plate-set",collection:"Plates",section:"Dining",title:"Orange & Teal Plate Set",subtitle:"Heavy glass plates with a bold color duo — slight scratches, great quality.",description:"A set of four heavy glass dinner plates in a striking orange and teal colorway. These have some light surface scratches but the glass quality is solid and substantial — the kind of plates that last. Available individually or as the full set of four.",image:"https://i.imgur.com/IZsBarz.jpeg",priceLine:"Single Plate — $3 | Full Set of 4 — $10",options:[{id:"set-4",label:"Add the Set",price:10},{id:"single",label:"Add One",price:3,variant:"outline"}],story:"From the plates desk — four heavy orange and teal glass plates with character to spare. Lightly scratched, heavily loved. Four available."},
+  {id:"orange-teal-plate-set",collection:"Plates",section:"Dining",title:"Orange & Teal Plates",subtitle:"Heavy glass plates with a bold color duo — slight scratches, great quality.",description:"A set of four heavy glass dinner plates in a striking orange and teal colorway. These have some light surface scratches but the glass quality is solid and substantial — the kind of plates that last. Available individually or as the full set of four.",image:"https://i.imgur.com/IZsBarz.jpeg",priceLine:"Single Plate — $3 | Full Set of 4 — $10",options:[{id:"set-4",label:"Add the Set",price:10},{id:"single",label:"Add One",price:3,variant:"outline"}],story:"From the plates desk — four heavy orange and teal glass plates with character to spare. Lightly scratched, heavily loved. Four available."},
   {id:"orange-teal-plate-set-bundle",collection:"Sets",section:"Dining",title:"Orange & Teal Plate Set",subtitle:"Heavy glass plates with bold color — slight scratches, great quality.",description:"A set of four heavy glass dinner plates in a striking orange and teal colorway. Lightly scratched but solid heavy glass quality. Available as a full set of four.",image:"https://i.imgur.com/IZsBarz.jpeg",priceLine:"Full Set of 4 — $10 | Single — $3",options:[{id:"set-4",label:"Add the Set",price:10},{id:"single",label:"Add One",price:3,variant:"outline"}],story:"From the sets desk — four heavy orange and teal glass plates with character. Four available."},
   {id:"flower-rim-plates",collection:"Plates",section:"Dining",title:"Flower Rim Plates",subtitle:"Pretty glass plates with a delicate flower rim design.",description:"Two beautiful glass plates with a lovely flower rim detail that elevates any table setting. Nice quality glass and a design that feels both elegant and timeless. Available individually or as a pair.",image:"https://i.imgur.com/MhWLz8S.jpeg",priceLine:"Single Plate — $6 | Pair — $10",options:[{id:"pair",label:"Add the Pair",price:10},{id:"single",label:"Add One",price:6,variant:"outline"}],story:"From the plates desk — two flower rim plates that make every meal feel a little fancier. Grab one or grab both."},
   {id:"smooth-black-ceramic-plates",collection:"Plates",section:"Dining",title:"Smooth Black Ceramic Plates",subtitle:"Heavy ceramic plates with a cool rim design.",description:"Two heavy smooth black ceramic dinner plates with a cool design around the rim. Solid weight and great quality. Available individually or as a pair.",image:"https://i.imgur.com/JTEppD3.jpeg",priceLine:"Single Plate — $6 | Pair — $10",options:[{id:"pair",label:"Add the Pair",price:10},{id:"single",label:"Add One",price:6,variant:"outline"}],story:"From the plates desk — two sleek black ceramic plates with serious presence. Heavy, clean, and ready for any meal."},
@@ -575,7 +580,7 @@ const products = [
 ];
 
 
-const PAGE_ORDER = ["Front Page","Sets","Plates","Bowls","Cups","Full Inventory","Dish Games","Dish Requests"];
+const PAGE_ORDER = ["Front Page","Dish Games","Sets","Plates","Bowls","Cups","Full Inventory","Dish Requests"];
 const PAGE_META = {
   "Front Page":{kicker:"Breaking News",headline:"The Latest From The Daily Dish",subhead:"Featured stories, fresh finds, and curated tableware from today's edition."},
   "Sets":{kicker:"Sets & Bundles",headline:"Better Together — Shop The Sets",subhead:"Plates, bowls and cups bundled together so your table always matches."},
@@ -584,7 +589,7 @@ const PAGE_META = {
   "Cups":{kicker:"Cups",headline:"Drinking Glasses & Cups",subhead:"Everyday drinking glasses — perfect for water, juice, wine, or anything you're pouring."},
   "New Additions":{kicker:"🆕 New Additions",headline:"Fresh From The Field",subhead:"Brand new pieces just added to the shop — be the first to grab them before they're gone."},
   "Full Inventory":{kicker:"Full Inventory",headline:"Everything In Today's Paper",subhead:"Browse every available item in one place, regardless of section."},
-  "Dish Games":{kicker:"🎮 The Game Room",headline:"Play With Your Food",subhead:"Two games built entirely around The Daily Dish — because why not."},
+  "Dish Games":{kicker:"🎮 The Game Room",headline:"Welcome To The Dish Games",subhead:"Three games and counting — more are on the way. Stay tuned, things are just getting started."},
   "Dish Requests":{kicker:"Dish Requests",headline:"Leave Your Mark on The Daily Dish",subhead:"Every letter is read by the editor — your voice shapes the next edition."},
 };
 
@@ -635,7 +640,7 @@ const INVENTORY = {
   "wine-glasses-set__set-9":1,"wine-glasses-set__single":9,
   "murphys-stout-glass__single":1,
   "red-robin-beer-glass__single":1,
-  "terrapin-turtle-glass__single":0,
+  "terrapin-turtle-glass__single":1,
   "don-pedro-whiskey-glass__single":1,
   "southeastern-whiskey-glass__single":1,
   "budweiser-beerstein__single":1,
@@ -656,12 +661,11 @@ const INVENTORY = {
   "deep-red-square-set__full-set":1,
     "red-glass-full-set__full-set":1,
   "white-floral-set__full-set":1,
-  "earth-tone-full-set__full-set":1,
   "swirl-full-set__full-set":1,
   "longhorn-whiskey-small__single":1,
   "longhorn-whiskey-large__single":1,
   "sweetwater-ipa-glass__single":1,
-  "sweetwater-brewing-glass__single":1,
+  "sweetwater-brewing-glass__single":0,
   "sweetwater-420-glass__single":1,
   "ballast-point-glass__single":1,
   "smirnoff-golf-glass__single":1,
@@ -682,14 +686,14 @@ const INVENTORY = {
   "budweiser-racing-glasses__set-4":0,"budweiser-racing-glasses__single":0,
   "blue-glass-cups-sold__set-5":0,
   "sweetwater-420-glass-new__single":1,
-  "samuel-adams-glass__single":1,
+  "samuel-adams-glass__single":0,
   "guinness-beer-glass__single":1,
   "wrought-iron-ipa-glass__single":1,
   "thirsty-frog-glass__single":1,
   "bud-light-apple-glass__single":1,
   "bubba-gump-glass__single":1,
   "butte-creek-glass__single":1,
-  "orange-sweetwater-glass__single":1,
+  "orange-sweetwater-glass__single":0,
   "black-drinking-glasses__pair":1,"black-drinking-glasses__single":2,
   "blue-glass-drinking-pair__pair":1,
   "fruit-mug-set__set-4":1,
@@ -702,7 +706,7 @@ const INVENTORY = {
   "flower-rim-plates__pair":1,"flower-rim-plates__single":2,
   "smooth-black-ceramic-plates__pair":1,"smooth-black-ceramic-plates__single":2,
   "blue-white-swirl-set__full-set":1,
-  "octopus-bowl__single":1,
+  "octopus-bowl__single":0,
   "brown-gold-square-plates__set-4":1,"brown-gold-square-plates__single":4,
   "brown-gold-square-plates-set__set-4":1,"brown-gold-square-plates-set__single":4,
   "large-white-square-plates__set-4":1,"large-white-square-plates__single":4,
@@ -757,7 +761,7 @@ function sortSoldLast(arr){
 }
 function getPageProducts(page){
   if(page==="Front Page") return [];
-  if(page==="Full Inventory") return products.filter(p=>p.collection!=="Sets"&&!p.options.every(o=>isSoldOut(p.id,o.id)));
+  if(page==="Full Inventory"){ const fi=products.filter(p=>p.collection!=="Sets"); const avail=fi.filter(p=>!p.options.every(o=>isSoldOut(p.id,o.id))); const sold=fi.filter(p=>p.options.every(o=>isSoldOut(p.id,o.id))); return [...avail,...sold]; }
   if(page==="Sets") return sortSoldLast(products.filter(p=>p.collection==="Sets"));
   if(page==="Plates") return sortSoldLast(products.filter(p=>{const t=p.title.toLowerCase();return (t.includes("plate")||t.includes("charger"))&&p.collection!=="Sets";}));
   if(page==="Bowls") return sortSoldLast(products.filter(p=>(p.title.toLowerCase().includes("bowl")||p.id==="red-bumpy-bowl")&&p.id!=="centerpiece-bowl"&&p.id!=="popcorn-bowl-set"&&p.id!=="blue-white-swirl-set"&&p.collection!=="Sets"));
@@ -1304,21 +1308,16 @@ function renderSection(){
       ${pageProducts.map(p=>`
         <div class="product-card">
           ${(()=>{const allSoldOut=p.options.every(o=>isSoldOut(p.id,o.id));const imgHtml=p.image.startsWith("DUAL:")?`<div style="display:grid;grid-template-columns:1fr 1fr;height:200px;border-bottom:var(--border)"><img src="${p.image.split("DUAL:")[1].split("|")[0]}" alt="${p.title}" style="width:100%;height:100%;object-fit:cover;object-position:center;border-right:var(--border)" onerror="this.src='${FALLBACK}'"/><img src="${p.image.split("|")[1]}" alt="${p.title}" style="width:100%;height:100%;object-fit:cover;object-position:center" onerror="this.src='${FALLBACK}'"/></div>`:`<img src="${p.image}" alt="${p.title}" onerror="this.src='${FALLBACK}'" style="${allSoldOut?'filter:grayscale(.6)':''}"/>`;return allSoldOut?`<div class="sold-stamp-wrap">${imgHtml}<div class="sold-stamp">✕ Sold Out</div></div>`:imgHtml;})()}
-          <div class="product-card-body">
-            <div class="product-card-top">
-              <h3 class="product-title">${p.title}</h3>
-              <span class="pill">${isSetsPage ? "📦 Bundle" : p.collection}</span>
-            </div>
-            ${p.hotDeal?`<span class="hot-badge" style="margin-bottom:8px;display:inline-flex">🔥 Hot Deal</span>`:""}
-            <p class="product-subtitle">${p.subtitle}</p>
-            <p class="product-desc">${p.description}</p>
+          <div class="product-card-body" onclick="viewProduct('${p.id}')">
+            <h3 class="product-title">${p.title}</h3>
+            ${p.oneOfOne&&!p.options.every(o=>isSoldOut(p.id,o.id))?`<span style="font-size:9px;color:#b45309;font-weight:700;letter-spacing:.05em;display:block;margin-bottom:3px">⚠️ Only 1</span>`:""}
             <p class="product-price">${p.priceLine}</p>
-            <div class="product-actions">
-              ${(isSetsPage ? p.options.filter(o=>o.id==="full-set"||o.id.includes("set")||o.id==="both"||o.id==="pair").slice(0,1) : p.options).map(o=>{
+            <div class="product-actions" onclick="event.stopPropagation()">
+              ${(isSetsPage ? p.options.filter(o=>o.id==="full-set"||o.id.includes("set")||o.id==="both"||o.id==="pair"||o.id==="all-7").slice(0,1) : p.options.slice(0,1)).map(o=>{
                 const soldOut = isSoldOut(p.id, o.id);
-                const stock = INVENTORY[`${p.id}__${o.id}`];
-                const stockLabel = p.oneOfOne ? `<span style="font-size:11px;color:#b45309;font-weight:700;display:block;margin-bottom:6px">⚠️ Only 1 left!</span>` : stock === 0 ? `<span style="font-size:11px;color:#b91c1c;font-weight:700;display:block;margin-bottom:6px">❌ Sold Out</span>` : "";
-                return `${stockLabel}<button class="product-add-btn solid" onclick="addToCart('${p.id}','${o.id}')" ${soldOut?"disabled":""} style="${soldOut?"opacity:.45;cursor:not-allowed;text-decoration:line-through;":""}">${soldOut?"Sold Out":o.label+" ("+money(o.price)+")"}</button>`;
+                return soldOut
+                  ? `<button class="product-add-btn solid" disabled style="opacity:.4;cursor:not-allowed;text-decoration:line-through;width:100%">Sold Out</button>`
+                  : `<button class="product-add-btn solid" onclick="addToCart('${p.id}','${o.id}')" style="width:100%">${money(o.price)}</button>`;
               }).join("")}
             </div>
           </div>
@@ -1358,21 +1357,16 @@ function renderNewAdditionsPage(){
               <img src="${p.image.split("|")[1]}" alt="${p.title}" style="width:100%;height:100%;object-fit:cover;object-position:center" onerror="this.src='${FALLBACK}'"/>
             </div>
           ` : `<img src="${p.image}" alt="${p.title}" onerror="this.src='${FALLBACK}'"/>`}
-          <div class="product-card-body">
-            <div class="product-card-top">
-              <h3 class="product-title">${p.title}</h3>
-              <span class="pill">🆕 New</span>
-            </div>
-            ${p.oneOfOne?`<span style="font-size:11px;color:#b45309;font-weight:700;display:block;margin-bottom:6px">⚠️ Only 1 left!</span>`:""}
-            <p class="product-subtitle">${p.subtitle}</p>
-            <p class="product-desc">${p.description}</p>
+          <div class="product-card-body" onclick="viewProduct('${p.id}')">
+            <h3 class="product-title">${p.title}</h3>
+            ${p.oneOfOne&&!p.options.every(o=>isSoldOut(p.id,o.id))?`<span style="font-size:9px;color:#b45309;font-weight:700;letter-spacing:.05em;display:block;margin-bottom:3px">⚠️ Only 1</span>`:""}
             <p class="product-price">${p.priceLine}</p>
-            <div class="product-actions">
-              ${p.options.map(o=>{
+            <div class="product-actions" onclick="event.stopPropagation()">
+              ${p.options.slice(0,1).map(o=>{
                 const soldOut=isSoldOut(p.id,o.id);
-                const stock=INVENTORY[`${p.id}__${o.id}`];
-                const stockLabel=stock===0?`<span style="font-size:11px;color:#b91c1c;font-weight:700;display:block;margin-bottom:6px">❌ Sold Out</span>`:"";
-                return `${stockLabel}<button class="product-add-btn ${o.variant==="outline"?"outline":"solid"}" onclick="addToCart('${p.id}','${o.id}')" ${soldOut?"disabled":""} style="${soldOut?"opacity:.45;cursor:not-allowed;text-decoration:line-through;":""}">${soldOut?"Sold Out":o.label+" ("+money(o.price)+")"}</button>`;
+                return soldOut
+                  ? `<button class="product-add-btn solid" disabled style="opacity:.4;cursor:not-allowed;text-decoration:line-through;width:100%">Sold Out</button>`
+                  : `<button class="product-add-btn solid" onclick="addToCart('${p.id}','${o.id}')" style="width:100%">${money(o.price)}</button>`;
               }).join("")}
             </div>
           </div>
@@ -1553,107 +1547,296 @@ function startTypewriter(fast=false){
 // ─────────────────────────────────────────────
 function renderGamesPage(){
   return `
-    <div style="max-width:1020px;margin:0 auto">
-      <div style="margin-bottom:18px;padding:18px 20px;border:3px solid var(--ink);border-radius:16px;background:linear-gradient(135deg,#faf7f2,#f2e7cf);box-shadow:4px 4px 0 var(--ink)">
-        <p style="font-size:10px;letter-spacing:.28em;text-transform:uppercase;opacity:.55;margin-bottom:6px">Arcade Edition</p>
-        <h3 style="font-family:var(--display);font-size:clamp(24px,4vw,38px);font-weight:900;text-transform:uppercase;line-height:1.05;margin-bottom:8px">Dish Games</h3>
-        <p style="font-size:14px;line-height:1.7;max-width:760px">Play the Daily Dish arcade. Dish Ninja throws dishes from all sides — click or tap to shatter them before they escape. Stack The Dishes challenges you to build the tallest tower you can. Dish Pong keeps the rally alive as long as possible.</p>
+  <div style="max-width:1060px;margin:0 auto">
+
+    <!-- ═══ ARCADE MARQUEE ═══ -->
+    <div style="margin-bottom:20px;border:4px solid var(--ink);border-radius:18px;overflow:hidden;box-shadow:6px 6px 0 var(--ink);position:relative;background:#0a0a0f">
+      <!-- Scanline overlay -->
+      <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,.018) 3px,rgba(255,255,255,.018) 4px);pointer-events:none;z-index:1"></div>
+      <!-- Glow blobs -->
+      <div style="position:absolute;top:-40px;left:-40px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(229,62,62,.25) 0%,transparent 70%);pointer-events:none"></div>
+      <div style="position:absolute;top:-40px;right:-40px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,.2) 0%,transparent 70%);pointer-events:none"></div>
+      <div style="position:absolute;bottom:-60px;left:50%;transform:translateX(-50%);width:300px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(74,222,128,.12) 0%,transparent 70%);pointer-events:none"></div>
+
+      <!-- Top ticker bar — newspaper meets arcade -->
+      <div style="background:linear-gradient(90deg,#e53e3e,#b91c1c);padding:6px 20px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;border-bottom:2px solid rgba(255,255,255,.15)">
+        <span style="font-family:var(--display);font-size:10px;font-weight:900;letter-spacing:.25em;text-transform:uppercase;color:white">🕹️ The Daily Dish</span>
+        <span style="font-family:var(--serif);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.75)">The Dish Games · Insert Coin</span>
+        <span style="font-family:var(--display);font-size:10px;font-weight:900;letter-spacing:.25em;text-transform:uppercase;color:white">Game Room 🕹️</span>
       </div>
 
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px">
-        <button onclick="startDishPong()" style="font-family:var(--display);background:var(--ink);color:var(--cream);border:3px solid var(--ink);border-radius:14px;padding:20px;font-size:16px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;box-shadow:4px 4px 0 rgba(0,0,0,.3)">
-          🏓 Dish Pong
-          <p style="font-size:11px;font-weight:400;opacity:.7;margin-top:6px;text-transform:none;letter-spacing:0;line-height:1.4">Bounce the dish back and forth and keep the rally alive.</p>
-        </button>
-        <button onclick="startStackGame()" style="font-family:var(--display);background:linear-gradient(135deg,#1a2d5a,#0c1a3a);color:var(--cream);border:3px solid var(--ink);border-radius:14px;padding:20px;font-size:16px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;box-shadow:4px 4px 0 rgba(0,0,0,.3)">
-          🍽️ Stack The Dishes
-          <p style="font-size:11px;font-weight:400;opacity:.7;margin-top:6px;text-transform:none;letter-spacing:0;line-height:1.4">Drop dishes and build the tallest stack you can.</p>
-        </button>
-        <button onclick="startDishNinja()" style="font-family:var(--display);background:linear-gradient(135deg,#7f1d1d,#2b0b0b);color:var(--cream);border:3px solid var(--ink);border-radius:14px;padding:20px;font-size:16px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;box-shadow:4px 4px 0 rgba(0,0,0,.3)">
-          ⚔️ Dish Ninja
-          <p style="font-size:11px;font-weight:400;opacity:.78;margin-top:6px;text-transform:none;letter-spacing:0;line-height:1.4">Click or tap every flying dish to shatter it. Each shattered dish is 1 point. Any dish that escapes the screen is a miss.</p>
-        </button>
-      </div>
-
-      <div id="game-layout" style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,.9fr);gap:18px;align-items:start">
-        <div id="game-area" style="border:3px solid var(--ink);border-radius:14px;overflow:hidden;box-shadow:4px 4px 0 var(--ink);background:#111;display:none;flex-direction:column;position:relative">
-          <div style="background:var(--ink);padding:10px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-shrink:0;flex-wrap:wrap">
-            <span id="game-title" style="font-family:var(--display);color:var(--cream);font-size:14px;font-weight:900;text-transform:uppercase;letter-spacing:.08em">Dish Games</span>
-            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-              <span id="game-score" style="color:#f4ecd8;font-size:13px;font-weight:700">Score: 0</span>
-              <button onclick="stopGame(true)" style="font-family:var(--serif);background:transparent;color:var(--cream);border:2px solid rgba(255,255,255,.35);border-radius:999px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer">Close Game</button>
-            </div>
-          </div>
-          <canvas id="game-canvas" style="display:block;width:100%;background:#0d1117;touch-action:none;user-select:none;-webkit-tap-highlight-color:transparent"></canvas>
-          <div id="dish-reveal" style="display:none;background:linear-gradient(135deg,#f7f2e8,#efe3ca);border-top:3px solid var(--ink);padding:14px 16px"></div>
+      <!-- Marquee title area -->
+      <div style="padding:28px 24px 24px;text-align:center;position:relative;z-index:2">
+        <!-- Decorative rule like a newspaper -->
+        <div style="display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:14px">
+          <div style="flex:1;max-width:80px;height:2px;background:linear-gradient(90deg,transparent,rgba(212,168,67,.6))"></div>
+          <span style="font-family:var(--serif);font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:rgba(212,168,67,.7)">★ Extra! Extra! ★</span>
+          <div style="flex:1;max-width:80px;height:2px;background:linear-gradient(90deg,rgba(212,168,67,.6),transparent)"></div>
         </div>
 
-        <div style="display:grid;gap:16px">
-          <div style="border:3px solid var(--ink);border-radius:14px;background:#faf7f2;box-shadow:4px 4px 0 var(--ink);overflow:hidden">
-            <div style="padding:12px 16px;border-bottom:2px solid var(--ink);background:var(--parchment)">
-              <p style="font-size:10px;letter-spacing:.25em;text-transform:uppercase;opacity:.55">Best Scores</p>
-              <h4 style="font-family:var(--display);font-size:20px;font-weight:900;text-transform:uppercase;line-height:1.1;margin-top:4px">Local Leaderboards</h4>
-            </div>
-            <div style="padding:14px 16px;display:grid;gap:14px">
-              <div>${renderLeaderboardBlock('pong','🏓 Dish Pong')}</div>
-              <div>${renderLeaderboardBlock('stack','🍽️ Stack The Dishes')}</div>
+        <!-- Big arcade title -->
+        <h2 style="font-family:var(--display);font-size:clamp(36px,8vw,72px);font-weight:900;text-transform:uppercase;letter-spacing:.06em;line-height:.95;background:linear-gradient(180deg,#fff 0%,#f4ecd8 40%,#d4a843 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-shadow:none;margin-bottom:6px">The Dish<br>Games</h2>
 
-              <div>${renderLeaderboardBlock('ninja','⚔️ Dish Ninja')}</div>
+        <!-- Subtitle newspaper-style -->
+        <p style="font-family:var(--serif);font-size:13px;font-style:italic;color:rgba(212,168,67,.7);letter-spacing:.08em;margin-bottom:18px">Where you can smash some dishes and actually get away with it</p>
+
+        <!-- Blinking insert coin -->
+        <div id="insert-coin" style="display:inline-block;border:2px solid rgba(255,255,0,.5);border-radius:999px;padding:5px 18px;font-family:var(--display);font-size:11px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,0,.8);animation:coinBlink 1.2s step-end infinite">▶ Select a Game Below ◀</div>
+      </div>
+    </div>
+
+    <!-- ═══ GAME SELECT CABINETS ═══ -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px">
+
+      <!-- PONG CABINET -->
+      <div onclick="startDishPong()" style="cursor:pointer;border:3px solid var(--ink);border-radius:16px;overflow:hidden;box-shadow:5px 5px 0 var(--ink);background:#0d0d1a;transition:transform .15s,box-shadow .15s" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='7px 9px 0 var(--ink)'" onmouseout="this.style.transform='';this.style.boxShadow='5px 5px 0 var(--ink)'">
+        <!-- Cabinet screen -->
+        <div style="background:linear-gradient(160deg,#0a0a1e,#12124a,#0a0a1e);padding:22px 16px 18px;text-align:center;position:relative;overflow:hidden;border-bottom:3px solid var(--ink)">
+          <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,.015) 3px,rgba(255,255,255,.015) 4px);pointer-events:none"></div>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.3) 0%,transparent 70%);pointer-events:none"></div>
+          <div style="font-size:clamp(42px,6vw,58px);margin-bottom:8px;position:relative;filter:drop-shadow(0 0 12px rgba(147,197,253,.6))">🏓</div>
+          <p style="font-family:var(--display);font-size:clamp(14px,2.5vw,20px);font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:white;position:relative">Dish Pong</p>
+          <p style="font-family:var(--serif);font-size:10px;color:rgba(147,197,253,.65);letter-spacing:.1em;text-transform:uppercase;margin-top:4px;position:relative">2-Player VS AI</p>
+        </div>
+        <!-- Cabinet body -->
+        <div style="background:linear-gradient(135deg,#1a1208,#2a1f08);padding:14px 16px">
+          <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:10px">
+            <span style="background:#6366f1;color:white;font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:999px;white-space:nowrap;flex-shrink:0;margin-top:1px">HOW TO PLAY</span>
+            <p style="font-family:var(--serif);font-size:12px;line-height:1.55;color:rgba(244,236,216,.8)">Move your paddle to bounce the dish. Each rally = 1 point. Ball gets faster every hit. Miss the ball and it's game over.</p>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <span style="font-size:10px;background:rgba(99,102,241,.2);color:#a5b4fc;border:1px solid rgba(99,102,241,.35);border-radius:6px;padding:3px 8px;font-family:var(--serif)">🖱️ Mouse / drag</span>
+            <span style="font-size:10px;background:rgba(99,102,241,.2);color:#a5b4fc;border:1px solid rgba(99,102,241,.35);border-radius:6px;padding:3px 8px;font-family:var(--serif)">⌨️ Arrow keys</span>
+          </div>
+        </div>
+        <div style="background:var(--ink);padding:10px 16px;text-align:center">
+          <span style="font-family:var(--display);font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:#a5b4fc">▶ PLAY NOW</span>
+        </div>
+      </div>
+
+      <!-- STACK CABINET -->
+      <div onclick="startStackGame()" style="cursor:pointer;border:3px solid var(--ink);border-radius:16px;overflow:hidden;box-shadow:5px 5px 0 var(--ink);background:#0d0d1a;transition:transform .15s,box-shadow .15s" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='7px 9px 0 var(--ink)'" onmouseout="this.style.transform='';this.style.boxShadow='5px 5px 0 var(--ink)'">
+        <div style="background:linear-gradient(160deg,#0a0f1e,#0c2060,#0a0f1e);padding:22px 16px 18px;text-align:center;position:relative;overflow:hidden;border-bottom:3px solid var(--ink)">
+          <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,.015) 3px,rgba(255,255,255,.015) 4px);pointer-events:none"></div>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,.3) 0%,transparent 70%);pointer-events:none"></div>
+          <div style="font-size:clamp(42px,6vw,58px);margin-bottom:8px;position:relative;filter:drop-shadow(0 0 12px rgba(212,168,67,.7))">🍽️</div>
+          <p style="font-family:var(--display);font-size:clamp(14px,2.5vw,20px);font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:white;position:relative">Stack The Dishes</p>
+          <p style="font-family:var(--serif);font-size:10px;color:rgba(212,168,67,.65);letter-spacing:.1em;text-transform:uppercase;margin-top:4px;position:relative">How High Can You Go?</p>
+        </div>
+        <div style="background:linear-gradient(135deg,#1a1208,#2a1f08);padding:14px 16px">
+          <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:10px">
+            <span style="background:#d97706;color:white;font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:999px;white-space:nowrap;flex-shrink:0;margin-top:1px">HOW TO PLAY</span>
+            <p style="font-family:var(--serif);font-size:12px;line-height:1.55;color:rgba(244,236,216,.8)">A plate swings side to side. Tap to drop it onto the stack. Stack them as high as you can. Miss the stack and it's over.</p>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <span style="font-size:10px;background:rgba(217,119,6,.2);color:#fcd34d;border:1px solid rgba(217,119,6,.35);border-radius:6px;padding:3px 8px;font-family:var(--serif)">👆 Tap / click</span>
+            <span style="font-size:10px;background:rgba(217,119,6,.2);color:#fcd34d;border:1px solid rgba(217,119,6,.35);border-radius:6px;padding:3px 8px;font-family:var(--serif)">⌨️ Spacebar</span>
+          </div>
+        </div>
+        <div style="background:var(--ink);padding:10px 16px;text-align:center">
+          <span style="font-family:var(--display);font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:#fcd34d">▶ PLAY NOW</span>
+        </div>
+      </div>
+
+      <!-- NINJA CABINET -->
+      <div onclick="startDishNinja()" style="cursor:pointer;border:3px solid var(--ink);border-radius:16px;overflow:hidden;box-shadow:5px 5px 0 var(--ink);background:#0d0d1a;transition:transform .15s,box-shadow .15s" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='7px 9px 0 var(--ink)'" onmouseout="this.style.transform='';this.style.boxShadow='5px 5px 0 var(--ink)'">
+        <div style="background:linear-gradient(160deg,#1a0505,#4a0808,#1a0505);padding:22px 16px 18px;text-align:center;position:relative;overflow:hidden;border-bottom:3px solid var(--ink)">
+          <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,.015) 3px,rgba(255,255,255,.015) 4px);pointer-events:none"></div>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(239,68,68,.3) 0%,transparent 70%);pointer-events:none"></div>
+          <div style="font-size:clamp(42px,6vw,58px);margin-bottom:8px;position:relative;filter:drop-shadow(0 0 12px rgba(239,68,68,.7))">⚔️</div>
+          <p style="font-family:var(--display);font-size:clamp(14px,2.5vw,20px);font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:white;position:relative">Dish Ninja</p>
+          <p style="font-family:var(--serif);font-size:10px;color:rgba(239,68,68,.65);letter-spacing:.1em;text-transform:uppercase;margin-top:4px;position:relative">3 Misses & You're Out</p>
+        </div>
+        <div style="background:linear-gradient(135deg,#1a1208,#2a1f08);padding:14px 16px">
+          <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:10px">
+            <span style="background:#dc2626;color:white;font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:999px;white-space:nowrap;flex-shrink:0;margin-top:1px">HOW TO PLAY</span>
+            <p style="font-family:var(--serif);font-size:12px;line-height:1.55;color:rgba(244,236,216,.8)">Dishes fly in from all sides. Click or tap each one to shatter it. 1 point per dish. Let 3 escape and it's over — and they get faster every hit.</p>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <span style="font-size:10px;background:rgba(220,38,38,.2);color:#fca5a5;border:1px solid rgba(220,38,38,.35);border-radius:6px;padding:3px 8px;font-family:var(--serif)">👆 Tap / click</span>
+            <span style="font-size:10px;background:rgba(220,38,38,.2);color:#fca5a5;border:1px solid rgba(220,38,38,.35);border-radius:6px;padding:3px 8px;font-family:var(--serif)">❤️❤️❤️ 3 lives</span>
+          </div>
+        </div>
+        <div style="background:var(--ink);padding:10px 16px;text-align:center">
+          <span style="font-family:var(--display);font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:#fca5a5">▶ PLAY NOW</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══ GAME CANVAS + LEADERBOARD ═══ -->
+    <div id="game-layout" style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,.9fr);gap:18px;align-items:start">
+      <div id="game-area" style="border:3px solid var(--ink);border-radius:14px;overflow:hidden;box-shadow:4px 4px 0 var(--ink);background:#111;display:none;flex-direction:column;position:relative">
+        <div style="background:var(--ink);padding:10px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-shrink:0;flex-wrap:wrap">
+          <span id="game-title" style="font-family:var(--display);color:var(--cream);font-size:14px;font-weight:900;text-transform:uppercase;letter-spacing:.08em">Dish Games</span>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+            <span id="game-score" style="color:#f4ecd8;font-size:13px;font-weight:700">Score: 0</span>
+            <button onclick="stopGame(true)" style="font-family:var(--serif);background:transparent;color:var(--cream);border:2px solid rgba(255,255,255,.35);border-radius:999px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer">✕ Close</button>
+          </div>
+        </div>
+        <canvas id="game-canvas" style="display:block;width:100%;background:#0d1117;touch-action:none;user-select:none;-webkit-tap-highlight-color:transparent"></canvas>
+        <div id="dish-reveal" style="display:none;background:linear-gradient(135deg,#f7f2e8,#efe3ca);border-top:3px solid var(--ink);padding:14px 16px"></div>
+      </div>
+
+      <!-- LEADERBOARD PANEL -->
+      <div style="display:grid;gap:14px">
+        <div style="border:3px solid var(--ink);border-radius:14px;overflow:hidden;box-shadow:4px 4px 0 var(--ink);background:#0a0a0f">
+          <div style="padding:12px 16px;border-bottom:2px solid rgba(212,168,67,.3);background:linear-gradient(90deg,#1a1208,#2a1f08);display:flex;align-items:center;gap:10px">
+            <span style="font-size:18px">🏆</span>
+            <div>
+              <p style="font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:rgba(212,168,67,.6);margin-bottom:2px">Device Leaderboard</p>
+              <h4 style="font-family:var(--display);font-size:17px;font-weight:900;text-transform:uppercase;color:var(--cream);line-height:1">High Scores</h4>
             </div>
           </div>
-          <div style="border:3px solid var(--ink);border-radius:14px;background:linear-gradient(135deg,#f8f1e3,#ead8ad);box-shadow:4px 4px 0 var(--ink);padding:16px">
-            <p style="font-size:10px;letter-spacing:.25em;text-transform:uppercase;opacity:.55;margin-bottom:6px">How scores work</p>
-            <p style="font-size:13px;line-height:1.7"><strong>Dish Ninja rules:</strong> every dish you click and shatter is worth 1 point. Only dishes that escape off the screen count as misses. You get 3 misses, and the dishes launch faster as your score goes up. Scores save in this browser using local storage, so shoppers can type their name and get on the board right from the Dish Games page.</p>
+          <div style="padding:12px 14px;display:grid;gap:12px">
+            <div id="lb-block-pong">${renderLeaderboardBlock('pong','🏓 Dish Pong')}</div>
+            <div id="lb-block-stack">${renderLeaderboardBlock('stack','🍽️ Stack The Dishes')}</div>
+            <div id="lb-block-ninja">${renderLeaderboardBlock('ninja','⚔️ Dish Ninja')}</div>
           </div>
+        </div>
+
+        <!-- Quick tip card -->
+        <div style="border:3px solid var(--ink);border-radius:14px;background:linear-gradient(135deg,#1a1208,#2a1f08);box-shadow:4px 4px 0 var(--ink);padding:16px">
+          <p style="font-family:var(--display);font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:rgba(212,168,67,.8);margin-bottom:10px">📰 From The Editor's Desk</p>
+          <p style="font-family:var(--serif);font-size:12px;line-height:1.7;color:rgba(244,236,216,.75);font-style:italic">"Every game features real dishes from the shop. Hit a high score and you might just earn yourself a discount. Play, compete, and see what's in stock — it's the most fun you'll ever have shopping for plates."</p>
+          <p style="font-size:10px;color:rgba(212,168,67,.5);margin-top:8px;font-family:var(--serif)">— The Daily Dish Editor</p>
         </div>
       </div>
     </div>
+
+  </div>
   `;
 }
 
-function renderLeaderboardBlock(game,label){
-  const scores=getLeaderboard(game);
-  return `
-    <div style="border:2px solid var(--ink);border-radius:12px;overflow:hidden;background:white">
-      <div style="padding:8px 12px;background:#f5ecd6;border-bottom:2px solid var(--ink);font-family:var(--display);font-size:13px;font-weight:900;text-transform:uppercase">${label}</div>
-      <div style="padding:10px 12px">
-        ${scores.length ? scores.map((row,i)=>`
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:${i===scores.length-1?'0':'0 0 8px'};margin:${i===scores.length-1?'0':'0 0 8px'};border-bottom:${i===scores.length-1?'none':'1px dashed rgba(0,0,0,.18)'}">
-            <span style="font-size:12px;line-height:1.3"><strong>#${i+1}</strong> ${row.name}</span>
-            <span style="font-family:var(--display);font-size:16px;font-weight:900">${row.score}</span>
-          </div>
-        `).join('') : `<p style="font-size:12px;opacity:.65;line-height:1.5">No scores saved yet.</p>`}
-      </div>
-    </div>
-  `;
-}
+// ─────────────────────────────────────────────
+// LEADERBOARD SYSTEM
+// ─────────────────────────────────────────────
+const GAME_LABELS = {pong:"🏓 Dish Pong", stack:"🍽️ Stack The Dishes", ninja:"⚔️ Dish Ninja"};
+const RANK_MEDALS = ["🥇","🥈","🥉","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟"];
 
 function getLeaderboard(game){
   try{
     const raw=localStorage.getItem(`dd-leaderboard-${game}`);
     const parsed=raw?JSON.parse(raw):[];
     return Array.isArray(parsed)?parsed:[];
-  }catch(e){
-    return [];
-  }
+  }catch(e){ return []; }
 }
 
 function saveLeaderboard(game,name,score){
-  if(!score||score<1) return;
-  const clean=(name||'Guest').trim().slice(0,18) || 'Guest';
+  if(!score||score<1) return false;
+  const clean=(name||'Player').trim().replace(/[<>&"]/g,'').slice(0,18)||'Player';
   const rows=getLeaderboard(game);
-  rows.push({name:clean,score:Number(score)});
+  rows.push({name:clean,score:Number(score),date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'})});
   rows.sort((a,b)=>b.score-a.score);
-  const trimmed=rows.slice(0,5);
-  try{ localStorage.setItem(`dd-leaderboard-${game}`, JSON.stringify(trimmed)); }catch(e){}
+  const trimmed=rows.slice(0,10);
+  try{ localStorage.setItem(`dd-leaderboard-${game}`, JSON.stringify(trimmed)); return true; }catch(e){ return false; }
 }
 
-function promptSaveScore(game,score){
-  if(!score||score<1) return;
-  const name=window.prompt(`Save your ${score} point score for ${game.toUpperCase()} leaderboard:`,`Dish Fan`);
-  if(name===null) return;
-  saveLeaderboard(game,name,score);
-  if(activePage==='Dish Games') goToPage('Dish Games');
+function refreshLeaderboards(){
+  ['pong','stack','ninja'].forEach(game=>{
+    const el=document.getElementById(`lb-block-${game}`);
+    if(el) el.innerHTML=renderLeaderboardBlock(game,GAME_LABELS[game]);
+  });
+}
+
+function renderLeaderboardBlock(game,label){
+  const scores=getLeaderboard(game);
+  const rows=scores.length ? scores.map((row,i)=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:7px 0;${i<scores.length-1?'border-bottom:1px dashed rgba(0,0,0,.12)':''}">
+      <span style="font-size:${i<3?'18':'13'}px;width:22px;text-align:center;flex-shrink:0">${RANK_MEDALS[i]||String(i+1)}</span>
+      <span style="flex:1;font-size:12px;font-weight:${i===0?'700':'400'};color:${i===0?'#92400e':'#1f1b16'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${row.name}</span>
+      <span style="font-family:var(--display);font-size:${i===0?'18':'15'}px;font-weight:900;color:${i===0?'#b45309':'#1f1b16'}">${row.score}</span>
+      ${row.date?`<span style="font-size:9px;opacity:.4;flex-shrink:0">${row.date}</span>`:''}
+    </div>
+  `).join('') : `<p style="font-size:12px;opacity:.55;line-height:1.5;padding:6px 0">No scores yet — be first!</p>`;
+
+  return `
+    <div id="lb-block-${game}" style="border:2px solid var(--ink);border-radius:12px;overflow:hidden;background:var(--cream)">
+      <div style="padding:8px 14px;background:linear-gradient(90deg,#1f1b16,#3d3020);display:flex;align-items:center;justify-content:space-between">
+        <span style="font-family:var(--display);font-size:13px;font-weight:900;text-transform:uppercase;color:var(--cream)">${label}</span>
+        <button onclick="clearLeaderboard('${game}')" style="font-family:var(--serif);background:transparent;border:1px solid rgba(255,255,255,.2);border-radius:999px;color:rgba(255,255,255,.4);font-size:9px;padding:2px 8px;cursor:pointer;letter-spacing:.05em" title="Clear scores">Reset</button>
+      </div>
+      <div style="padding:8px 14px">${rows}</div>
+    </div>
+  `;
+}
+
+function clearLeaderboard(game){
+  if(!confirm(`Clear all ${GAME_LABELS[game]||game} scores?`)) return;
+  try{ localStorage.removeItem(`dd-leaderboard-${game}`); }catch(e){}
+  refreshLeaderboards();
+}
+
+// In-canvas save score overlay — no ugly browser prompt
+function promptSaveScore(game, score, restartFn){
+  if(!score||score<1){
+    // Zero score — just allow restart, no save overlay
+    return;
+  }
+  // Build overlay div over the canvas
+  const canvas=document.getElementById("game-canvas");
+  const area=document.getElementById("game-area");
+  if(!canvas||!area) return;
+
+  const existing=document.getElementById("score-save-overlay");
+  if(existing) existing.remove();
+
+  const isHighScore=(()=>{
+    const rows=getLeaderboard(game);
+    if(rows.length<10) return true;
+    return score>rows[rows.length-1].score;
+  })();
+
+  const overlay=document.createElement("div");
+  overlay.id="score-save-overlay";
+  overlay.style.cssText=`position:absolute;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.82);backdrop-filter:blur(2px)`;
+
+  const gameLabel=GAME_LABELS[game]||game;
+  overlay.innerHTML=`
+    <div style="background:var(--cream);border:3px solid var(--ink);border-radius:16px;padding:24px;max-width:320px;width:90%;box-shadow:6px 6px 0 var(--ink);text-align:center">
+      <div style="font-size:44px;margin-bottom:8px">${game==='ninja'?'⚔️':game==='stack'?'🍽️':'🏓'}</div>
+      <p style="font-family:var(--display);font-size:22px;font-weight:900;text-transform:uppercase;line-height:1.1;margin-bottom:4px">Game Over</p>
+      ${isHighScore?`<p style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#b45309;font-weight:700;margin-bottom:6px">🏆 Leaderboard Score!</p>`:''}
+      <p style="font-size:28px;font-family:var(--display);font-weight:900;color:#92400e;margin-bottom:16px">${score} pts</p>
+      <input id="score-name-input" type="text" maxlength="18" placeholder="Enter your name" value="Dish Fan"
+        style="width:100%;box-sizing:border-box;padding:10px 14px;font-size:15px;font-family:var(--serif);border:2px solid var(--ink);border-radius:10px;background:white;color:var(--ink);outline:none;margin-bottom:12px;text-align:center"/>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <button id="score-save-btn" style="font-family:var(--serif);padding:11px;font-size:14px;font-weight:700;border:2px solid var(--ink);border-radius:10px;background:var(--ink);color:var(--cream);cursor:pointer">💾 Save Score</button>
+        <button id="score-skip-btn" style="font-family:var(--serif);padding:11px;font-size:14px;font-weight:700;border:2px solid var(--ink);border-radius:10px;background:transparent;color:var(--ink);cursor:pointer">Skip →</button>
+      </div>
+      <p style="font-size:10px;opacity:.45;letter-spacing:.05em">Saves to this device · Top 10 shown</p>
+    </div>
+  `;
+
+  area.style.position="relative";
+  area.appendChild(overlay);
+
+  const input=overlay.querySelector("#score-name-input");
+  input.focus();
+  input.select();
+
+  // Restart helper — called after overlay dismissed
+  function doRestart(){
+    overlay.remove();
+    refreshLeaderboards();
+    if(typeof restartFn==='function'){
+      setTimeout(restartFn, 80); // brief pause feels natural
+    } else {
+      // fallback
+      const fn=window[`start${game==='pong'?'DishPong':game==='stack'?'StackGame':'DishNinja'}`];
+      if(fn) setTimeout(fn, 80);
+    }
+  }
+
+  function doSave(){
+    const name=input.value.trim()||'Dish Fan';
+    saveLeaderboard(game,name,score);
+    doRestart();
+  }
+
+  overlay.querySelector("#score-save-btn").onclick=doSave;
+  overlay.querySelector("#score-skip-btn").onclick=doRestart;
+  input.onkeydown=e=>{ if(e.key==='Enter') doSave(); };
 }
 
 
@@ -2029,7 +2212,7 @@ function startDishNinja(){
     ctx.fillText(`Score: ${score}`,W/2,H/2+18);
     ctx.fillStyle='rgba(255,255,255,.55)'; ctx.font=`${isMob?13:15}px Georgia,serif`;
     ctx.fillText('Tap to play again',W/2,H/2+52);
-    promptSaveScore('ninja',score);
+    promptSaveScore('ninja', score, startDishNinja);
     canvas.onpointerdown=()=>{ canvas.onpointerdown=null; startDishNinja(); };
   }
 
@@ -2216,7 +2399,7 @@ function startDishPong(){
 
   // State
   let score=0;
-  let spd=isMob?4.8:5.5;
+  let spd=isMob?6.2:7.2;
   let bx=W/2, by=H/2;
   let bdx=spd*(Math.random()>.5?1:-1);
   let bdy=spd*(Math.random()*1.4-0.7);
@@ -2240,15 +2423,16 @@ function startDishPong(){
 
   function over(){
     _gRunning=false;
-    ctx.fillStyle="rgba(0,0,0,.8)"; ctx.fillRect(0,0,W,H);
+    // Draw game over on canvas (visible behind the save overlay)
+    ctx.fillStyle="rgba(0,0,0,.82)"; ctx.fillRect(0,0,W,H);
     ctx.textAlign="center";
     ctx.fillStyle="#d4a843"; ctx.font="bold "+(isMob?30:38)+"px Georgia,serif";
     ctx.fillText("GAME OVER",W/2,H/2-38);
     ctx.fillStyle="white"; ctx.font=(isMob?17:21)+"px Georgia,serif";
     ctx.fillText("Score: "+score,W/2,H/2+6);
-    ctx.fillStyle="rgba(255,255,255,.45)"; ctx.font=(isMob?13:15)+"px Georgia,serif";
-    ctx.fillText("Tap to play again",W/2,H/2+44);
-    canvas.onclick=()=>{ canvas.onclick=null; startDishPong(); };
+    _setScore(score,"dd-pong");
+    // Show save overlay — on dismiss, restart immediately (no extra tap needed)
+    promptSaveScore('pong', score, startDishPong);
   }
 
   function frame(){
@@ -2275,7 +2459,7 @@ function startDishPong(){
     // Player hit (left paddle)
     if(bdx<0&&bx-BR<=PAD+PW&&bx-BR>PAD-2&&by>py&&by<py+PH){
       const rel=(by-(py+PH/2))/(PH/2);
-      spd=Math.min(isMob?14:16, spd+0.35);
+      spd=Math.min(isMob?18:20, spd+0.45);
       bdx=spd;
       bdy=rel*spd*0.85;
       bx=PAD+PW+BR+1;
@@ -2287,7 +2471,7 @@ function startDishPong(){
     // AI hit (right paddle)
     if(bdx>0&&bx+BR>=W-PAD-PW&&bx+BR<W-PAD+2&&by>py2&&by<py2+PH){
       const rel=(by-(py2+PH/2))/(PH/2);
-      spd=Math.min(isMob?14:16, spd+0.35);
+      spd=Math.min(isMob?18:20, spd+0.45);
       bdx=-spd;
       bdy=rel*spd*0.85;
       bx=W-PAD-PW-BR-1;
@@ -2433,8 +2617,8 @@ function startStackGame(){
   let fdi=1%_dishes().length;
   let fx=W/2;      // center x
   let fwy=R*3+60;  // world y center (above stack)
-  let fdx=(Math.random()>.5?1:-1)*8;
-  let score=0, spd=8;
+  let fdx=(Math.random()>.5?1:-1)*11;
+  let score=0, spd=11;
   let dropped=false;
   let landAnim=null; // {wx,wy,alpha,di} for landing flash
   _gRunning=true;
@@ -2540,7 +2724,7 @@ function startStackGame(){
     _reveal(fdi);
     score++;
     _setScore(score,"dd-stack");
-    spd=Math.min(isMob?18:22, 8+score*0.6);
+    spd=Math.min(isMob?22:26, 11+score*0.9);
 
     // Landing flash
     landAnim={wx:newWX, wy:newWY, r:R, alpha:1, precision};
@@ -2557,15 +2741,13 @@ function startStackGame(){
   function showGameOver(){
     ctx.fillStyle="rgba(0,0,0,.85)"; ctx.fillRect(0,0,W,H);
     ctx.textAlign="center";
-    // Cracked plate emoji
     ctx.font=(isMob?52:64)+"px serif"; ctx.fillText("🍽️",W/2,H/2-60);
     ctx.fillStyle="#e53e3e"; ctx.font="bold "+(isMob?28:36)+"px Georgia,serif";
     ctx.fillText("PLATE DROPPED!",W/2,H/2-10);
     ctx.fillStyle="white"; ctx.font=(isMob?17:20)+"px Georgia,serif";
     ctx.fillText("Score: "+score,W/2,H/2+28);
-    ctx.fillStyle="rgba(255,255,255,.45)"; ctx.font=(isMob?13:15)+"px Georgia,serif";
-    ctx.fillText("Tap to play again",W/2,H/2+62);
-    canvas.onpointerdown=()=>{ canvas.onpointerdown=null; startStackGame(); };
+    _setScore(score,"dd-stack");
+    promptSaveScore('stack', score, startStackGame);
   }
 
   function drawStack(){
