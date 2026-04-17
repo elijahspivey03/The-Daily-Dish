@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
 <title>The Daily Dish — Where Every Meal Makes Headlines</title>
 <meta name="description" content="Curated secondhand tableware — plates, bowls, mugs, glassware & more. Shop The Daily Dish."/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -25,9 +25,22 @@
   --display:'Playfair Display',Georgia,serif;
 }
 html{scroll-behavior:smooth}
-body{background:var(--cream);background-image:radial-gradient(rgba(0,0,0,0.045) 1px,transparent 1px);background-size:18px 18px;font-family:var(--serif);color:var(--ink);min-height:100vh;padding-top:44px}
+body{background:var(--cream);background-image:radial-gradient(rgba(0,0,0,0.045) 1px,transparent 1px);background-size:18px 18px;font-family:var(--serif);color:var(--ink);min-height:100vh;padding-top:44px;overflow-x:hidden;touch-action:manipulation;}
 img{display:block;max-width:100%}
-button{cursor:pointer;font-family:var(--serif)}
+button{cursor:pointer;font-family:var(--serif);touch-action:manipulation;}
+/* ── iOS Safe Area (notch + home bar) ── */
+:root{
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+  --safe-left:env(safe-area-inset-left,0px);
+  --safe-right:env(safe-area-inset-right,0px);
+}
+/* ── Prevent iOS input zoom (must be 16px+) ── */
+input,textarea,select{font-size:16px !important;font-family:var(--serif);}
+/* ── Cart scroll lock ── */
+body.cart-open{overflow:hidden;position:fixed;width:100%;}
+/* ── 2-column product grid on small phones ── */
+@media(max-width:480px){.product-grid{grid-template-columns:repeat(2,1fr);gap:8px;}}
 
 /* ── Layout ── */
 .wrap{max-width:1200px;margin:0 auto;padding:20px 16px 100px}
@@ -44,10 +57,10 @@ button{cursor:pointer;font-family:var(--serif)}
 /* ── Nav bar ── */
 .navbar{padding:10px 20px;border-bottom:var(--border-heavy);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
 .nav-links{display:flex;flex-wrap:wrap;gap:7px}
-.nav-btn{padding:4px 10px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;border:2px solid rgba(0,0,0,0.35);border-radius:999px;background:transparent;color:var(--ink);transition:all .15s;font-family:var(--serif);font-weight:400}
+.nav-btn{padding:4px 10px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;border:2px solid rgba(0,0,0,0.35);border-radius:999px;background:transparent;color:var(--ink);transition:all .15s;font-family:var(--serif);font-weight:400;min-height:40px;display:inline-flex;align-items:center;}
 .nav-btn:hover{border-color:var(--ink)}
 .nav-btn.active{border-color:var(--ink);background:var(--cream);font-weight:700}
-.cart-btn{padding:8px 18px;font-size:13px;font-weight:700;border:2px solid var(--ink);border-radius:var(--radius-sm);background:var(--ink);color:var(--cream);transition:opacity .15s}
+.cart-btn{padding:8px 18px;font-size:13px;font-weight:700;border:2px solid var(--ink);border-radius:var(--radius-sm);background:var(--ink);color:var(--cream);transition:opacity .15s;min-height:44px;display:inline-flex;align-items:center;}
 .cart-btn:hover{opacity:.85}
 
 /* ── Ticker ── */
@@ -78,7 +91,7 @@ button{cursor:pointer;font-family:var(--serif)}
 .page-num{font-size:11px;letter-spacing:.2em;text-transform:uppercase;opacity:.65;white-space:nowrap}
 .page-body{padding:24px}
 .page-footer{padding:14px 24px;border-top:var(--border-heavy);background:var(--cream);display:flex;align-items:center;justify-content:space-between}
-.page-nav-btn{padding:8px 18px;font-size:13px;font-weight:700;border:var(--border);border-radius:var(--radius-sm);background:transparent;color:var(--ink);transition:background .15s}
+.page-nav-btn{padding:8px 18px;font-size:13px;font-weight:700;border:var(--border);border-radius:var(--radius-sm);background:transparent;color:var(--ink);transition:background .15s;min-height:44px;display:inline-flex;align-items:center;}
 .page-nav-btn:hover{background:rgba(0,0,0,.06)}
 
 /* ── Buttons ── */
@@ -110,8 +123,8 @@ button{cursor:pointer;font-family:var(--serif)}
 .product-price{font-weight:700;font-size:11px;margin-bottom:8px;color:#92400e}
 @media(max-width:480px){.product-price{font-size:10px}}
 .product-actions{display:flex;flex-wrap:wrap;gap:5px}
-.product-add-btn{padding:5px 8px;font-size:10px;font-weight:700;border:var(--border);border-radius:6px;white-space:nowrap;transition:opacity .15s;font-family:var(--serif)}
-@media(max-width:480px){.product-add-btn{padding:4px 6px;font-size:9px}}
+.product-add-btn{padding:8px 10px;font-size:10px;font-weight:700;border:var(--border);border-radius:6px;white-space:nowrap;transition:opacity .15s;font-family:var(--serif);min-height:40px;display:inline-flex;align-items:center;justify-content:center;}
+@media(max-width:480px){.product-add-btn{padding:7px 8px;font-size:10px;}}
 .product-add-btn:hover{opacity:.8}
 .product-add-btn.solid{background:var(--ink);color:var(--cream)}
 .product-add-btn.outline{background:transparent;color:var(--ink)}
@@ -164,10 +177,10 @@ button{cursor:pointer;font-family:var(--serif)}
 .cart-item-remove{font-size:12px;text-decoration:underline;background:none;border:none;color:var(--ink);align-self:flex-start;white-space:nowrap}
 .cart-item-bottom{display:flex;align-items:center;justify-content:space-between}
 .qty-controls{display:flex;align-items:center;gap:8px}
-.qty-btn{width:32px;height:32px;border:var(--border);border-radius:8px;background:transparent;font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center;font-family:var(--serif)}
+.qty-btn{width:44px;height:44px;border:var(--border);border-radius:8px;background:transparent;font-weight:700;font-size:20px;display:flex;align-items:center;justify-content:center;font-family:var(--serif)}
 .qty-num{min-width:28px;text-align:center;font-weight:700;font-size:15px}
 .cart-item-total{font-weight:700;font-size:15px}
-.cart-footer{padding:22px 24px;border-top:var(--border-heavy);background:var(--cream)}
+.cart-footer{padding:22px 24px;padding-bottom:max(22px,calc(16px + var(--safe-bottom)));border-top:var(--border-heavy);background:var(--cream)}
 .cart-subtotal{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
 .cart-subtotal-label{font-weight:700;text-transform:uppercase;font-size:14px}
 .cart-subtotal-val{font-weight:700;font-size:18px}
@@ -190,8 +203,8 @@ button{cursor:pointer;font-family:var(--serif)}
 .checkout-err{font-size:12px;color:#b91c1c;margin-bottom:10px;padding:8px 12px;background:#fef2f2;border:1px solid #fca5a5;border-radius:8px}
 
 /* ── Toast ── */
-.toast-wrap{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:8px;pointer-events:none;align-items:center}
-.toast{background:var(--ink);color:var(--cream);padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;font-family:var(--serif);animation:toastIn .25s ease;box-shadow:0 4px 16px rgba(0,0,0,.25);white-space:nowrap}
+.toast-wrap{position:fixed;bottom:max(80px,calc(72px + var(--safe-bottom)));left:50%;transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:8px;pointer-events:none;align-items:center;width:90vw;}
+.toast{background:var(--ink);color:var(--cream);padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;font-family:var(--serif);animation:toastIn .25s ease;box-shadow:0 4px 16px rgba(0,0,0,.25);white-space:nowrap;max-width:88vw;overflow:hidden;text-overflow:ellipsis;}
 @keyframes toastIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── Hot deal badge ── */
@@ -200,81 +213,111 @@ button{cursor:pointer;font-family:var(--serif)}
 .archive-mobile-only{display:none}
 
 /* ── Mobile FAB ── */
-.fab{position:fixed;bottom:20px;right:20px;z-index:40;padding:12px 22px;font-size:14px;font-weight:700;border:2px solid var(--ink);border-radius:12px;background:var(--ink);color:var(--cream);box-shadow:4px 4px 0 rgba(0,0,0,.25);display:none}
+.fab{position:fixed;bottom:max(20px,calc(12px + var(--safe-bottom)));right:20px;z-index:40;padding:12px 22px;font-size:14px;font-weight:700;border:2px solid var(--ink);border-radius:12px;background:var(--ink);color:var(--cream);box-shadow:4px 4px 0 rgba(0,0,0,.25);display:none;min-height:52px;}
 @media(max-width:640px){.fab{display:flex;align-items:center;gap:6px}}
 
 /* ── Responsive ── */
 @media(max-width:480px){
-  .wrap{padding:12px 10px 90px}
-  .page-body{padding:16px}
-  .fp-body{padding:14px}
-  .navbar{padding:10px 14px}
+  .wrap{padding:10px 8px 80px}
+  .fp-body{padding:12px}
 }
 
 @media(max-width:768px){
-  /* Masthead */
-  .masthead-rule h1{font-size:clamp(26px,8vw,42px)}
-  .masthead-tagline{font-size:11px}
+  /* ── Masthead ── */
+  .masthead{margin-bottom:14px;border-radius:10px}
+  .masthead-title{padding:14px 16px}
+  .masthead-rule h1{font-size:clamp(24px,7.5vw,40px)}
+  .masthead-rule hr{max-width:40px}
+  .masthead-tagline{font-size:11px;margin-top:5px}
+  .masthead-sub-rule{margin-top:8px}
 
-  /* Nav — clean horizontal scroll, bigger tap targets */
-  .navbar{flex-direction:column;gap:6px;padding:8px 12px}
-  .nav-links{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:8px;padding:4px 0 8px;-webkit-overflow-scrolling:touch;scrollbar-width:none;width:100%}
+  /* ── Nav ── */
+  .navbar{flex-direction:column;gap:0;padding:0}
+  .nav-links{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding:8px 12px;-webkit-overflow-scrolling:touch;scrollbar-width:none;width:100%;box-sizing:border-box}
   .nav-links::-webkit-scrollbar{display:none}
-  .nav-btn{font-size:12px;padding:8px 16px;white-space:nowrap;flex-shrink:0;border-radius:8px;border:2px solid rgba(0,0,0,0.25)}
+  .nav-btn{font-size:11px;padding:7px 14px;white-space:nowrap;flex-shrink:0;border-radius:999px;border:1.5px solid rgba(0,0,0,.2)}
   .nav-btn.active{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+  .navbar > div:last-child{display:flex;align-items:center;justify-content:space-between;width:100%;padding:8px 12px;border-top:1px solid rgba(0,0,0,.08);box-sizing:border-box}
 
-  /* Cart row */
-  .navbar > div:last-child{display:flex;align-items:center;justify-content:space-between;width:100%}
+  /* ── Page header ── */
+  .page-header{padding:12px 14px;gap:6px}
+  .page-title{font-size:clamp(16px,5vw,24px);margin-top:4px}
+  .page-subhead{font-size:12px;margin-top:4px;line-height:1.4}
+  .page-kicker{font-size:10px;letter-spacing:.18em}
+  .page-num{font-size:9px}
 
-  /* Page header */
-  .page-title{font-size:clamp(18px,5vw,28px)}
-  .page-header{padding:14px 16px}
-  .page-num{font-size:10px}
+  /* ── Page body ── */
+  .page-body{padding:14px 12px}
 
-  /* Hero section — stack vertically */
-  .hero-grid{display:flex!important;flex-direction:column!important}
-  .hero-img{width:100%;height:240px;object-fit:contain;object-position:center;border-right:none;border-bottom:2px solid var(--ink);background:linear-gradient(135deg,#f9f3e8,#f0e6d0);padding:16px}
+  /* ── Page footer ── */
+  .page-footer{padding:10px 12px}
+  .page-nav-btn{padding:9px 14px;font-size:12px}
 
-  /* Two col — single column on mobile */
+  /* ── Page card ── */
+  .page-card{border-radius:10px}
+
+  /* ── Front page hero — stack image on top ── */
+  .fp-hero{grid-template-columns:1fr!important;display:grid!important}
+  .fp-hero > div:first-child{min-height:220px!important;border-right:none!important;border-bottom:1px solid rgba(59,130,246,.15)}
+
+  /* ── Front page sections ── */
+  .fp-section-box{border-radius:10px;box-shadow:3px 3px 0 var(--ink)}
+  .fp-section-header{flex-direction:column;align-items:flex-start;gap:8px}
+  .fp-title{font-size:17px}
+
+  /* ── New Additions mobile ── */
+  .fp-new-add-grid{grid-template-columns:1fr!important}
+  .fp-new-add-cta{border-top:2px solid rgba(194,120,30,.25);border-right:none!important;flex-direction:row!important;justify-content:space-between!important;padding:12px 14px!important;gap:10px!important;min-width:0!important;text-align:left!important}
+  .fp-new-add-cta button{width:auto!important;white-space:nowrap}
+
+  /* ── Top stories ── */
+  .fp-stories{grid-template-columns:repeat(2,1fr)!important}
+
+  /* ── Deals grid ── */
+  .fp-deals{grid-template-columns:repeat(2,1fr)!important;gap:8px!important}
+
+  /* ── Why buy grid ── */
+  .fp-why{grid-template-columns:repeat(2,1fr)!important}
+  .why-buy-grid{grid-template-columns:1fr 1fr}
+
+  /* ── Two/three col layouts ── */
   .two-col{grid-template-columns:1fr}
   .three-col{grid-template-columns:1fr 1fr}
 
-  /* Desktop only — hide on mobile */
+  /* ── Desktop only ── */
   .desktop-only{display:none!important}
-
-  /* Archive 4th item — show on mobile */
   .archive-mobile-only{display:block!important}
 
-  /* Product grid — handled by grid CSS breakpoints above */
-
-  /* Front page sections */
-  .fp-section-header{flex-direction:column;align-items:flex-start;gap:8px}
-  .fp-title{font-size:18px}
-
-  /* About section */
+  /* ── About ── */
   .about-body{font-size:13px}
 
-  /* Why buy grid — 2 columns on mobile */
-  .why-buy-grid{grid-template-columns:1fr 1fr}
-
-  /* Page footer nav */
-  .page-footer{padding:12px 14px}
-  .page-nav-btn{padding:10px 16px;font-size:13px}
-
-  /* Cart drawer — full screen on mobile */
+  /* ── Cart ── */
   .cart-drawer{width:100%!important;max-width:100%!important}
 
-  /* Ticker */
-  .ticker-inner{font-size:10px;letter-spacing:.1em}
+  /* ── Ticker ── */
+  .ticker-inner{font-size:10px;letter-spacing:.08em}
   .ticker-label{font-size:10px;padding:0 10px}
 
-  /* Shipping options */
+  /* ── Shipping ── */
   .shipping-options{grid-template-columns:1fr}
 
-  /* Game page — full width canvas, leaderboard stacks below */
+  /* ── Games ── */
   #game-layout{grid-template-columns:1fr!important}
   #game-area{border-radius:10px}
   .games-lb-panel{margin-top:4px}
+  .game-cabinets{gap:10px}
+  .cabinet-body{padding:11px 13px}
+}
+
+/* Extra small phones */
+@media(max-width:420px){
+  .fp-stories{grid-template-columns:1fr!important}
+}
+@media(max-width:400px){
+  .page-body{padding:10px}
+  .masthead-rule h1{font-size:clamp(20px,7vw,30px)}
+  .fp-section-box{border-radius:8px}
+  .fp-story-img{height:90px!important}
 }
 
 /* ── MOBILE FULLSCREEN GAME MODE ── */
@@ -304,6 +347,7 @@ body.game-fullscreen .wrap > *:not(#game-fullscreen-container){display:none!impo
 .stp-item-title{font-family:var(--display);font-size:12px;font-weight:900;text-transform:uppercase;line-height:1.2;margin-bottom:4px}
 .stp-item-price{font-family:var(--serif);font-size:12px;font-weight:700;color:#b45309}
 .stp-pulse{position:absolute;top:6px;right:6px;width:10px;height:10px;border-radius:50%;background:#e53e3e;animation:dotPulse 1.2s ease-in-out infinite}
+@keyframes coinBlink{0%,100%{opacity:1}50%{opacity:0}}
 @keyframes dotPulse{0%,100%{box-shadow:0 0 0 0 rgba(229,62,62,.6);transform:scale(1)}50%{box-shadow:0 0 0 6px rgba(229,62,62,0);transform:scale(1.1)}}
 .stp-hot-ring{position:absolute;inset:0;border-radius:6px;box-shadow:0 0 0 2px rgba(229,62,62,.4);animation:ringPulse 1.5s ease-in-out infinite}
 @keyframes ringPulse{0%,100%{box-shadow:0 0 0 2px rgba(229,62,62,.5)}50%{box-shadow:0 0 0 6px rgba(229,62,62,0)}}
@@ -329,6 +373,28 @@ body.game-fullscreen .wrap > *:not(#game-fullscreen-container){display:none!impo
 .sold-stamp-wrap{position:relative}
 .sold-stamp{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-20deg);background:rgba(0,0,0,.65);color:#fff;font-family:var(--display);font-size:clamp(13px,2.5vw,18px);font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border:2px solid #e53e3e;border-radius:4px;white-space:nowrap;pointer-events:none;z-index:3;animation:stampSlam .35s cubic-bezier(.175,.885,.32,1.275) forwards}
 @keyframes stampSlam{from{transform:translate(-50%,-50%) rotate(-20deg) scale(2.5);opacity:0}to{transform:translate(-50%,-50%) rotate(-20deg) scale(1);opacity:1}}
+
+/* ── DISH GAMES ARCADE POPUP ── */
+#games-popup-overlay{position:fixed;inset:0;background:radial-gradient(circle at center,rgba(44,20,80,.55),rgba(0,0,0,.82));z-index:9998;display:none;align-items:center;justify-content:center;padding:16px}
+#games-popup-overlay.show{display:flex;animation:fadeInOverlay .28s ease}
+#games-popup{background:linear-gradient(160deg,#10061f,#1f0d3f 55%,#12071f);border:4px solid #f4ecd8;border-radius:18px;max-width:720px;width:100%;box-shadow:10px 10px 0 #1f1b16;overflow:hidden;position:relative}
+#games-popup::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 20% 20%,rgba(244,204,88,.24),transparent 26%),radial-gradient(circle at 80% 28%,rgba(99,102,241,.22),transparent 24%),radial-gradient(circle at 50% 100%,rgba(229,62,62,.18),transparent 28%);pointer-events:none}
+.games-popup-top{padding:12px 20px;background:linear-gradient(90deg,#e53e3e,#f59e0b,#10b981,#3b82f6,#a855f7);background-size:200% 100%;animation:popupPulse 4s linear infinite;border-bottom:3px solid rgba(255,255,255,.2)}
+.games-popup-top p{font-family:var(--display);font-size:12px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;color:white;text-align:center}
+.games-popup-body{padding:26px 24px 22px;position:relative;z-index:1;text-align:center}
+.games-popup-title{font-family:var(--display);font-size:clamp(30px,7vw,54px);font-weight:900;line-height:.95;text-transform:uppercase;color:#fff6d7;text-shadow:0 0 18px rgba(244,204,88,.18);margin-bottom:10px}
+.games-popup-sub{font-family:var(--serif);font-size:15px;line-height:1.7;color:rgba(244,236,216,.88);max-width:560px;margin:0 auto 18px}
+.games-popup-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 auto 18px;max-width:560px}
+.games-popup-chip{padding:12px 10px;border-radius:14px;border:2px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);font-family:var(--serif);font-size:12px;color:#f4ecd8}
+.games-popup-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.games-popup-btn{font-family:var(--serif);padding:12px 24px;font-size:13px;font-weight:700;border:2px solid #f4ecd8;border-radius:999px;background:#f4ecd8;color:#1f1b16;cursor:pointer}
+.games-popup-btn.alt{background:transparent;color:#f4ecd8}
+@keyframes popupPulse{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+@media(max-width:640px){
+  .games-popup-row{grid-template-columns:1fr}
+  .games-popup-body{padding:22px 16px 18px}
+}
+
 </style>
 </head>
 <body>
@@ -352,6 +418,25 @@ body.game-fullscreen .wrap > *:not(#game-fullscreen-container){display:none!impo
   </div>
 </div>
 
+<div id="games-popup-overlay" onclick="handleGamesPopupClick(event)">
+  <div id="games-popup">
+    <div class="games-popup-top"><p>Arcade Bulletin • Just Added</p></div>
+    <div class="games-popup-body">
+      <h3 class="games-popup-title">Dish Games<br>Arcade</h3>
+      <p class="games-popup-sub">Jump into the Daily Dish arcade and try the newest games first. Smash, dodge, stack, and score your way through the most fun corner of the shop.</p>
+      <div class="games-popup-row">
+        <div class="games-popup-chip">🏃 Dish Dash<br><span style="opacity:.7">Fast-paced runner</span></div>
+        <div class="games-popup-chip">⚔️ Dish Ninja<br><span style="opacity:.7">Tap to smash dishes</span></div>
+        <div class="games-popup-chip">🃏 Dish 21<br><span style="opacity:.7">Fair play card table</span></div>
+      </div>
+      <div class="games-popup-actions">
+        <button class="games-popup-btn" onclick="openGamesPopupPage()">Play The Arcade →</button>
+        <button class="games-popup-btn alt" onclick="closeGamesPopup()">Maybe Later</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- MOBILE FULLSCREEN GAME CONTAINER -->
 <div id="game-fullscreen-container">
   <div id="game-fullscreen-bar">
@@ -371,7 +456,7 @@ body.game-fullscreen .wrap > *:not(#game-fullscreen-container){display:none!impo
   <div class="ticker-label">🔴 Breaking</div>
   <div style="overflow:hidden;flex:1">
     <div class="ticker-inner">
-      Budweiser Beerstein 1999 — only one in stock, don't sleep on it &nbsp;·&nbsp; Wine glasses just $1 each — grab the full set of 9 for $9 &nbsp;·&nbsp; Ballast Point skeleton glass — the coolest glass in the shop &nbsp;·&nbsp; Twisted dinner glasses — heavy solid glass, full set of 10 for $16 &nbsp;·&nbsp; Red ceramic dinner plates — five heavy pieces, set of 5 for $15 &nbsp;·&nbsp; Longhorn whiskey glasses — small and large now available &nbsp;·&nbsp; New drops landing regularly — hit the New Additions button &nbsp;·&nbsp; Lighthouse collection: coastal charm for your dinner table &nbsp;·&nbsp; Smirnoff golf ball glass — the heaviest glass in the shop &nbsp;·&nbsp; Sweetwater IPA glass — nearly new condition, just $4 &nbsp;·&nbsp; Sets for every budget — from $9 wine glasses to full 24pc dinnerware &nbsp;·&nbsp; SweetWater 420 glass — worn in and full of character &nbsp;·&nbsp; Cobalt blue pitcher — museum worthy, priced like it belongs in your home &nbsp;·&nbsp; The Daily Dish: curated thrifted tableware, one headline at a time &nbsp;·&nbsp; Budweiser Beerstein 1999 — only one in stock, don't sleep on it &nbsp;·&nbsp; Wine glasses just $1 each — grab the full set of 9 for $9 &nbsp;·&nbsp; Ballast Point skeleton glass — the coolest glass in the shop &nbsp;·&nbsp; Twisted dinner glasses — heavy solid glass, full set of 10 for $16 &nbsp;·&nbsp; Red ceramic dinner plates — five heavy pieces, set of 5 for $15 &nbsp;·&nbsp; Longhorn whiskey glasses — small and large now available &nbsp;·&nbsp; New drops landing regularly — hit the New Additions button &nbsp;·&nbsp; Lighthouse collection: coastal charm for your dinner table &nbsp;·&nbsp; Smirnoff golf ball glass — the heaviest glass in the shop &nbsp;·&nbsp; Sweetwater IPA glass — nearly new condition, just $4 &nbsp;·&nbsp; Sets for every budget — from $9 wine glasses to full 24pc dinnerware &nbsp;·&nbsp; SweetWater 420 glass — worn in and full of character &nbsp;·&nbsp; Cobalt blue pitcher — museum worthy, priced like it belongs in your home &nbsp;·&nbsp; The Daily Dish: curated thrifted tableware, one headline at a time &nbsp;·&nbsp;
+      Budweiser Beerstein 1999 — only one in stock, don't sleep on it &nbsp;·&nbsp; Ballast Point skeleton glass — the coolest glass in the shop &nbsp;·&nbsp; Twisted dinner glasses — heavy solid glass, full set of 10 for $16 &nbsp;·&nbsp; Red ceramic dinner plates — five heavy pieces, set of 5 for $15 &nbsp;·&nbsp; Longhorn whiskey glasses — small and large now available &nbsp;·&nbsp; New drops landing regularly — hit the New Additions button &nbsp;·&nbsp; Lighthouse collection: coastal charm for your dinner table &nbsp;·&nbsp; Smirnoff golf ball glass — the heaviest glass in the shop &nbsp;·&nbsp; Sweetwater IPA glass — nearly new condition, just $4 &nbsp;·&nbsp; SweetWater 420 glass — worn in and full of character &nbsp;·&nbsp; Blue &amp; White Swirl set — 4 plates and 3 bowls for just $22 &nbsp;·&nbsp; Heavy glass beer mugs — solid handle, built to last, just $5 each &nbsp;·&nbsp; Cobalt blue pitcher — museum worthy, priced like it belongs in your home &nbsp;·&nbsp; The Daily Dish: curated thrifted tableware, one headline at a time &nbsp;·&nbsp; Budweiser Beerstein 1999 — only one in stock, don't sleep on it &nbsp;·&nbsp; Ballast Point skeleton glass — the coolest glass in the shop &nbsp;·&nbsp; Twisted dinner glasses — heavy solid glass, full set of 10 for $16 &nbsp;·&nbsp; Red ceramic dinner plates — five heavy pieces, set of 5 for $15 &nbsp;·&nbsp; Longhorn whiskey glasses — small and large now available &nbsp;·&nbsp; New drops landing regularly — hit the New Additions button &nbsp;·&nbsp; Lighthouse collection: coastal charm for your dinner table &nbsp;·&nbsp; Smirnoff golf ball glass — the heaviest glass in the shop &nbsp;·&nbsp; Sweetwater IPA glass — nearly new condition, just $4 &nbsp;·&nbsp; SweetWater 420 glass — worn in and full of character &nbsp;·&nbsp; Blue &amp; White Swirl set — 4 plates and 3 bowls for just $22 &nbsp;·&nbsp; Heavy glass beer mugs — solid handle, built to last, just $5 each &nbsp;·&nbsp; Cobalt blue pitcher — museum worthy, priced like it belongs in your home &nbsp;·&nbsp; The Daily Dish: curated thrifted tableware, one headline at a time &nbsp;·&nbsp;
     </div>
   </div>
 </div>
@@ -536,18 +621,18 @@ const products = [
   {id:"cat-dog-bowl",oneOfOne:true,collection:"Bowls",section:"Kitchen",title:"Cat & Dog Novelty Bowl",subtitle:"A small shallow bowl with a cat and dog figurine on the rim — one of a kind.",description:"A small shallow bowl in red, purple and white with a cat and dog figurine sticking up from the rim. Honestly we're not totally sure what it is either, but it's fun, it's one of a kind, and someone out there is going to love it.",image:"https://i.imgur.com/dhJP8Gz.jpeg",priceLine:"Single — $5",options:[{id:"single",label:"Add One",price:5}],addedAt:"2026-04-07",story:"From the bowls desk — a cat and dog novelty bowl just made it into the shop. We can't fully explain it but we're glad it's here. One available."},
   // ── SETS & BUNDLES ──
   {id:"colorful-plates-set",collection:"Sets",section:"Dining",title:"Colorful Glass Dinner Plate Set",subtitle:"All 8 colorful glass dinner plates in yellow, green and blue.",description:"All eight matching colorful glass dinner plates bundled together — yellow, green and blue tones that all go together really well. Great quality glass and a perfect full set for the price.",image:"https://i.imgur.com/xhxXdzm.jpeg",priceLine:"Full Set of 8 — $25",options:[{id:"full-set",label:"Add All 8",price:25}],story:"From the sets desk — the complete colorful glass plate set. Eight plates, three colors, one great price."},
-  {id:"brown-mugs-set",collection:"Sets",section:"Dining",title:"Three-Tone Coffee Mug Set",subtitle:"All 3 matching brown tone ceramic mugs together.",description:"All three warm brown ceramic mugs bundled together — three slightly different shades that look really sharp together on any shelf or counter. A great set for a morning coffee lover.",image:"https://i.imgur.com/CoTjjh6.jpeg",priceLine:"Full Set of 3 — $12",options:[{id:"full-set",label:"Add All 4",price:12}],story:"From the sets desk — all three brown tone coffee mugs in one bundle. Three shades, one great morning."},
+  {id:"brown-mugs-set",collection:"Sets",section:"Dining",title:"Three-Tone Coffee Mug Set",subtitle:"All 3 matching brown tone ceramic mugs together.",description:"All three warm brown ceramic mugs bundled together — three slightly different shades that look really sharp together on any shelf or counter. A great set for a morning coffee lover.",image:"https://i.imgur.com/CoTjjh6.jpeg",priceLine:"Full Set of 3 — $12",options:[{id:"full-set",label:"Add All 3",price:12}],story:"From the sets desk — all three brown tone coffee mugs in one bundle. Three shades, one great morning."},
   {id:"blue-cups-set",collection:"Sets",section:"Dining",title:"Blue Glass Drinking Cup Set",subtitle:"All 5 blue glass drinking cups together.",description:"All five blue glass drinking cups bundled together at a discount. Great for everyday use, hosting, or just having a full matching set of glasses on the table.",image:"https://i.imgur.com/ju7LV0y.jpeg",priceLine:"SOLD OUT",options:[{id:"full-set",label:"Sold Out",price:12}],story:"From the sets desk — all five blue glass cups in one bundle. Great color, great price."},
   {id:"popcorn-bowl-set",collection:"Sets",section:"Dining",title:"Big Centerpiece Popcorn Bowl Set",subtitle:"Both big centerpiece popcorn bowls together for one great price.",description:"Both big colorful centerpiece bowls bundled together — perfect for popcorn movie nights, fruit on the counter, or just making your kitchen look really good. Two bowls, one great price.",image:"https://i.imgur.com/ZPXaQFI.jpeg",priceLine:"Both Bowls — $12",options:[{id:"full-set",label:"Add Both",price:12}],story:"From the sets desk — both big centerpiece popcorn bowls in one bundle. Bold, fun and perfect for the middle of any table."},
-  {id:"blue-white-plates-set",collection:"Sets",section:"Dining",title:"Light Blue & White Plate Set",subtitle:"All 3 light blue and white glass plates together.",description:"All three light blue and white glass plates bundled together at a discount. Clean flowing design, great quality glass, and a color that works with pretty much everything.",image:"https://i.imgur.com/NAYrNYp.jpeg",priceLine:"Full Set of 3 — $12",options:[{id:"full-set",label:"Add All 4",price:12}],story:"From the sets desk — all three light blue and white glass plates in one bundle. Clean, elegant and a great deal."},
-  {id:"smooth-earth-plates-set",collection:"Sets",section:"Dining",title:"Smooth Earth Tone Plate Set",subtitle:"All 3 smooth earth tone dinner plates together.",description:"All three smooth earth tone dinner plates bundled together — soft gradient finish, warm brown rim, and the kind of plates that go with everything. A clean simple set at a great price.",image:"https://i.imgur.com/SLXy3Fd.jpeg",priceLine:"Full Set of 3 — $16",options:[{id:"full-set",label:"Add All 4",price:16}],story:"From the sets desk — all three smooth earth tone dinner plates in one bundle. Simple, clean and versatile."},
-  {id:"deep-red-square-set",collection:"Sets",section:"Dining",title:"Deep Red Square Plate Set",subtitle:"All 3 deep red square glass plates together.",description:"All three deep red square glass plates bundled together — bold color, modern square shape, and seriously heavy glass. A striking set that makes any table look intentional.",image:"https://i.imgur.com/Dsw1Z6c.jpeg",priceLine:"Full Set of 3 — $12",options:[{id:"full-set",label:"Add All 4",price:12}],story:"From the sets desk — all three deep red square plates in one bundle. Bold, heavy and a great deal for the full set."},
-  {id:"wine-glasses-bundle-set",collection:"Sets",section:"Dining",title:"Classic Wine Glass Set",subtitle:"All 9 simple clear wine glasses — just $1 a piece when you buy the set.",description:"Nine clean classic wine glasses bundled together at an unbeatable price. At $1 a glass this is one of the best deals in the shop — perfect for hosting, stocking up, or gifting.",image:"https://i.imgur.com/KJgdRRs.jpeg",priceLine:"Full Set of 9 — $9 ($1 per glass!)",options:[{id:"full-set",label:"Add All 9 — Just $1 Each!",price:9}],story:"From the sets desk — nine classic wine glasses bundled together. A dollar a glass. You can't beat it."},
+  {id:"blue-white-plates-set",collection:"Sets",section:"Dining",title:"Light Blue & White Plate Set",subtitle:"All 3 light blue and white glass plates together.",description:"All three light blue and white glass plates bundled together at a discount. Clean flowing design, great quality glass, and a color that works with pretty much everything.",image:"https://i.imgur.com/NAYrNYp.jpeg",priceLine:"Full Set of 3 — $12",options:[{id:"full-set",label:"Add All 3",price:12}],story:"From the sets desk — all three light blue and white glass plates in one bundle. Clean, elegant and a great deal."},
+  {id:"smooth-earth-plates-set",collection:"Sets",section:"Dining",title:"Smooth Earth Tone Plate Set",subtitle:"All 3 smooth earth tone dinner plates together.",description:"All three smooth earth tone dinner plates bundled together — soft gradient finish, warm brown rim, and the kind of plates that go with everything. A clean simple set at a great price.",image:"https://i.imgur.com/SLXy3Fd.jpeg",priceLine:"Full Set of 3 — $16",options:[{id:"full-set",label:"Add All 3",price:16}],story:"From the sets desk — all three smooth earth tone dinner plates in one bundle. Simple, clean and versatile."},
+  {id:"deep-red-square-set",collection:"Sets",section:"Dining",title:"Deep Red Square Plate Set",subtitle:"All 3 deep red square glass plates together.",description:"All three deep red square glass plates bundled together — bold color, modern square shape, and seriously heavy glass. A striking set that makes any table look intentional.",image:"https://i.imgur.com/Dsw1Z6c.jpeg",priceLine:"Full Set of 3 — $12",options:[{id:"full-set",label:"Add All 3",price:12}],story:"From the sets desk — all three deep red square plates in one bundle. Bold, heavy and a great deal for the full set."},
+  {id:"wine-glasses-bundle-set",collection:"Sets",section:"Dining",title:"Classic Wine Glass Set",subtitle:"All 9 simple clear wine glasses — just $1 a piece when you buy the set.",description:"Nine clean classic wine glasses bundled together at an unbeatable price. At $1 a glass this is one of the best deals in the shop — perfect for hosting, stocking up, or gifting.",image:"https://i.imgur.com/KJgdRRs.jpeg",priceLine:"SOLD OUT",options:[{id:"full-set",label:"Sold Out",price:9}],story:"From the sets desk — nine classic wine glasses bundled together. A dollar a glass. You can't beat it."},
   {id:"twisted-glasses-bundle-set",collection:"Sets",section:"Dining",title:"Twisted Dinner Glass Set",subtitle:"All 10 heavy twisted glass cups — a complete set at a great price.",description:"All ten heavy solid twisted glass cups bundled together. These feel premium in the hand, look incredible on a table, and at $1.60 a glass you are getting a serious deal on a seriously good set.",image:"https://i.imgur.com/QtkcT7j.jpeg",priceLine:"Full Set of 10 — $16",options:[{id:"full-set",label:"Add All 10",price:16}],story:"From the sets desk — all ten twisted dinner glasses in one bundle. Heavy, beautiful and priced to move."},
   {id:"red-glass-full-set",collection:"Sets",section:"Dining",title:"Red Dinner/App Plate & Bowl Set",subtitle:"3 dinner plates, 4 appetizer plates and 3 bowls — all in deep red glass.",description:"The complete red glass collection — three dinner plates, four appetizer plates and three bowls all in the same bold deep red glass. Bold, matching and a serious upgrade for any table.",image:"https://i.imgur.com/EdI3INH.jpeg",priceLine:"Full Set (10 pieces) — $25",options:[{id:"full-set",label:"Add the Full Set",price:25}],story:"From the sets desk — the complete red glass collection. Three dinner plates, four appetizer plates and three bowls all in one bundle. Bold color, great price."},
   {id:"white-floral-set",collection:"Sets",section:"Dining",title:"White Floral Rim Plate Set",subtitle:"All 5 white floral rim plates together at a discount.",description:"All five white floral rim plates bundled together — heavy glass, beautiful raised flower and fruit design around the rim, and a clean elegant look that works with any table.",image:"https://i.imgur.com/6ZJb0Jk.jpeg",priceLine:"Full Set of 5 — $18",options:[{id:"full-set",label:"Add All 5",price:18}],story:"From the sets desk — all five white floral rim plates in one bundle. Elegant, heavy glass and a price that makes sense for the whole set."},
   {id:"swirl-full-set",collection:"Sets",section:"Dining",title:"Blue & Orange Swirl Plate Set",subtitle:"All 4 swirl plates — 2 ocean blue and 2 sunset orange.",description:"Two ocean blue and two sunset orange swirl plates together in one bundle. Heavy glass, hand-swirled finish, and a color combo that looks seriously intentional on any table.",image:"DUAL:https://i.imgur.com/SRb1eG2.jpeg|https://i.imgur.com/j8d3d1H.jpeg",priceLine:"Full Set of 4 — $16",options:[{id:"full-set",label:"Add All 4",price:16}],story:"From the sets desk — the complete swirl set. Two blue, two orange, one great price."},
-  {id:"wine-glasses-set",collection:"New Additions",section:"Morning Edition",title:"Classic Wine Glasses",subtitle:"A set of 9 simple clear wine glasses — just $1 each!",description:"Nine simple clear wine glasses that are clean, lightweight and perfect for everyday use or hosting. Nothing fancy, just good reliable wine glasses at a price that makes sense.",image:"https://i.imgur.com/KJgdRRs.jpeg",priceLine:"Single — $1 | Full Set of 9 — $9 🏷️ ($1/glass!)",options:[{id:"set-9",label:"Add All 9 — $1 Each!",price:9},{id:"single",label:"Add One",price:1,variant:"outline"}],addedAt:"2026-04-08",story:"From the glassware desk — nine simple clear wine glasses just landed in the shop. Clean, classic and ready for whatever you're pouring."},
+  {id:"wine-glasses-set",collection:"New Additions",section:"Morning Edition",title:"Classic Wine Glasses",subtitle:"A set of 9 clean, simple wine glasses at $1 each.",description:"Nine clean classic wine glasses at just $1 each — simple, elegant and perfect for everyday use or hosting. Grab one or take the full set of nine for $9.",image:"https://i.imgur.com/KJgdRRs.jpeg",priceLine:"SOLD OUT",options:[{id:"full-set",label:"Sold Out",price:9},{id:"single",label:"Sold Out",price:1}],addedAt:"2026-04-08",story:"From the glassware desk — nine simple clear wine glasses just landed in the shop. Clean, classic and ready for whatever you're pouring."},
   {id:"budweiser-beerstein",oneOfOne:true,collection:"New Additions",section:"Morning Edition",title:"Budweiser Beerstein 1999",subtitle:"A vintage 1999 Budweiser collector beerstein — heavy ceramic with detailed artwork.",description:"A genuine 1999 Budweiser collector beerstein in heavy ceramic with detailed vintage artwork. The kind of piece that belongs in a display case or on a shelf where people can actually see it. One of a kind and not something you find every day.",image:"DUAL:https://i.imgur.com/z33bLY8.jpeg|https://i.imgur.com/xLBp5bk.jpeg",priceLine:"Single Stein — $20",options:[{id:"single",label:"Add One",price:20}],addedAt:"2026-04-08",story:"From the collector's desk — a genuine 1999 Budweiser beerstein just made it into the shop. Heavy ceramic, vintage artwork, and only one available. This one won't last long."},
   {id:"red-robin-beer-glass",oneOfOne:true,collection:"New Additions",section:"Morning Edition",title:"Red Robin Beer Glass",subtitle:"A cool red tinted beer glass from Red Robin.",description:"A tall beer glass in a rich red tint with the Red Robin logo on it. The kind of glass you pick up at a restaurant and wish you could take home — well now you can.",image:"https://i.imgur.com/BE2eBxi.jpeg",priceLine:"Single Glass — $4",options:[{id:"single",label:"Add One",price:4}],addedAt:"2026-04-08",story:"From the glassware desk — a Red Robin beer glass just landed in the shop. Cool red color, great shape, and only one available."},
   {id:"murphys-stout-glass",oneOfOne:true,collection:"New Additions",section:"Morning Edition",title:"Murphy's Irish Stout Glass",subtitle:"A classic Murphy's Irish Stout pint glass — one of a kind.",description:"A genuine Murphy's Irish Stout pint glass in the classic tulip shape. Clean, heavy and the kind of glass that makes a cold beer taste exactly right.",image:"https://i.imgur.com/QYsmhEC.jpeg",priceLine:"Single Glass — $4",options:[{id:"single",label:"Add One",price:4}],addedAt:"2026-04-08",story:"From the glassware desk — a Murphy's Irish Stout glass just landed in the shop. Classic shape, great glass, and only one available."},
@@ -601,8 +686,8 @@ const products = [
   {id:"brown-gold-square-plates-set",collection:"Sets",section:"Dining",title:"Brown & Gold Square Plate Set",subtitle:"Set of four heavy glass square dinner plates.",description:"Four heavy glass square dinner plates in a rich brown and gold finish. Great quality and a modern square shape that looks sharp on any table.",image:"https://i.imgur.com/D6VVjIR.jpeg",priceLine:"Set of 4 — $15 | Single — $5",options:[{id:"set-4",label:"Add the Set",price:15},{id:"single",label:"Add One",price:5,variant:"outline"}],story:"From the sets desk — four brown and gold square plates, heavy glass and great quality. A complete set ready for the table."},
   {id:"large-white-square-plates",collection:"Plates",section:"Dining",title:"Large White Square Dinner Plates",subtitle:"Clean and classic large white square dinner plates.",description:"Four large white square dinner plates — clean, simple, and endlessly versatile. Available individually or as the full set of four.",image:"https://i.imgur.com/SLdDguJ.jpeg",priceLine:"Single Plate — $4 | Set of 4 — $14",options:[{id:"set-4",label:"Add the Set",price:14},{id:"single",label:"Add One",price:4,variant:"outline"}],story:"From the plates desk — four large white square plates. Simple, clean, and ready for anything you put on them."},
   {id:"large-white-square-plates-set",collection:"Sets",section:"Dining",title:"Large White Square Plate Set",subtitle:"Set of four large white square dinner plates.",description:"Four large white square dinner plates — versatile, clean, and a great foundation for any table. Sold as a set of four for $14 or grab singles at $4 each.",image:"https://i.imgur.com/SLdDguJ.jpeg",priceLine:"Set of 4 — $14 | Single — $4",options:[{id:"set-4",label:"Add the Set",price:14},{id:"single",label:"Add One",price:4,variant:"outline"}],story:"From the sets desk — four large white square plates. Clean and classic, ready to set the table right."},
-  {id:"heavy-glass-beer-mugs",collection:"Cups",section:"Morning Edition",title:"Heavy Glass Beer Mugs",subtitle:"The heaviest glasses in the shop — solid handle, built to last.",description:"Seven of the same heavy glass beer mug, each with a solid sturdy handle that feels serious in your hand. These are the heaviest glasses in the entire shop — thick glass, great grip, and built to outlast anything in your cabinet. Available individually or grab all seven.",image:"https://i.imgur.com/4NE9vQB.jpeg",priceLine:"Single Mug — $5 | All 7 — $30",options:[{id:"all-7",label:"Add All 7",price:30},{id:"single",label:"Add One",price:5,variant:"outline"}],story:"From the cups desk — seven matching heavy glass beer mugs with handles that mean business. The weightiest glasses we have ever carried. Stock up."},
-  {id:"heavy-glass-beer-mugs-set",collection:"Sets",section:"Dining",title:"Heavy Glass Beer Mug Set",subtitle:"All seven matching heavy glass beer mugs — the heaviest in the shop.",description:"The full set of seven matching heavy glass beer mugs. Solid handles, serious weight, and built for years of use. Grab all seven for $30 or singles at $5 each.",image:"https://i.imgur.com/4NE9vQB.jpeg",priceLine:"All 7 — $30 | Single — $5",options:[{id:"all-7",label:"Add All 7",price:30},{id:"single",label:"Add One",price:5,variant:"outline"}],story:"From the sets desk — seven matching heavy glass beer mugs. The most substantial set in the shop. All seven for $30."},
+  {id:"heavy-glass-beer-mugs",collection:"Cups",section:"Morning Edition",title:"Heavy Glass Beer Mugs",subtitle:"The heaviest glasses in the shop — solid handle, built to last.",description:"Seven of the same heavy glass beer mug, each with a solid sturdy handle that feels serious in your hand. These are the heaviest glasses in the entire shop — thick glass, great grip, and built to outlast anything in your cabinet. Available individually or grab all seven.",image:"https://i.imgur.com/4NE9vQB.jpeg",priceLine:"Single Mug — $5",options:[{id:"single",label:"Add One",price:5}],story:"From the cups desk — seven matching heavy glass beer mugs with handles that mean business. The weightiest glasses we have ever carried. Stock up."},
+  {id:"heavy-glass-beer-mugs-set",collection:"Sets",section:"Dining",title:"Heavy Glass Beer Mug Set",subtitle:"All seven matching heavy glass beer mugs — the heaviest in the shop.",description:"The full set of seven matching heavy glass beer mugs. Solid handles, serious weight, and built for years of use. Grab all seven for $30 or singles at $5 each.",image:"https://i.imgur.com/4NE9vQB.jpeg",priceLine:"Single Mug — $5",options:[{id:"single",label:"Add One",price:5}],story:"From the sets desk — seven matching heavy glass beer mugs. The most substantial set in the shop. All seven for $30."},
 ];
 
 
@@ -615,6 +700,7 @@ const PAGE_META = {
   "Cups":{kicker:"Cups",headline:"Drinking Glasses & Cups",subhead:"Everyday drinking glasses — perfect for water, juice, wine, or anything you're pouring."},
   "New Additions":{kicker:"🆕 New Additions",headline:"Fresh From The Field",subhead:"Brand new pieces just added to the shop — be the first to grab them before they're gone."},
   "Full Inventory":{kicker:"Full Inventory",headline:"Everything In Today's Paper",subhead:"Browse every available item in one place, regardless of section."},
+  "Dish Dash":{kicker:"🏃 Dish Dash",headline:"Run For Your Dishes",subhead:"Pick a dish from the shop and dash — dodge obstacles and set a high score."},
   "Dish Games":{kicker:"🎮 The Game Room",headline:"Welcome To The Dish Games",subhead:"Three games and counting — more are on the way. Stay tuned, things are just getting started."},
   "Dish Requests":{kicker:"Dish Requests",headline:"Leave Your Mark on The Daily Dish",subhead:"Every letter is read by the editor — your voice shapes the next edition."},
 };
@@ -663,7 +749,7 @@ const INVENTORY = {
   "magnolia-floral-bowl__single":1,
   "cat-dog-bowl__single":1,
   // ── CUPS & GLASSES ──
-  "wine-glasses-set__set-9":1,"wine-glasses-set__single":9,
+  "wine-glasses-set__set-9":0,"wine-glasses-set__single":0,
   "murphys-stout-glass__single":1,
   "red-robin-beer-glass__single":1,
   "terrapin-turtle-glass__single":1,
@@ -701,7 +787,7 @@ const INVENTORY = {
   "cocacola-glasses__both":1,"cocacola-glasses__single":2,
   "red-bumpy-bowl__both":1,"red-bumpy-bowl__single":2,
   "red-ceramic-plates__set-5":1,"red-ceramic-plates__single":5,
-  "wine-glasses-bundle-set__full-set":1,
+  "wine-glasses-bundle-set__full-set":0,
   "twisted-glasses-bundle-set__full-set":1,
   "mosaic-mandala-plate__single":0,
   "vintage-romance-plate__single":0,
@@ -736,8 +822,8 @@ const INVENTORY = {
   "brown-gold-square-plates-set__set-4":1,"brown-gold-square-plates-set__single":4,
   "large-white-square-plates__set-4":1,"large-white-square-plates__single":4,
   "large-white-square-plates-set__set-4":1,"large-white-square-plates-set__single":4,
-  "heavy-glass-beer-mugs__all-7":1,"heavy-glass-beer-mugs__single":7,
-  "heavy-glass-beer-mugs-set__all-7":1,"heavy-glass-beer-mugs-set__single":7,
+  "heavy-glass-beer-mugs__all-7":0,"heavy-glass-beer-mugs__single":4,
+  "heavy-glass-beer-mugs-set__all-7":0,"heavy-glass-beer-mugs-set__single":4,
 };
 function isSoldOut(productId,optionId){ const k=`${productId}__${optionId}`; return INVENTORY[k]!==undefined&&INVENTORY[k]<=0; }
 
@@ -791,9 +877,9 @@ function getPageProducts(page){
   if(page==="Plates") return sortSoldLast(products.filter(p=>{const t=p.title.toLowerCase();return (t.includes("plate")||t.includes("charger"))&&p.collection!=="Sets";}));
   if(page==="Bowls") return sortSoldLast(products.filter(p=>(p.title.toLowerCase().includes("bowl")||p.id==="red-bumpy-bowl")&&p.id!=="centerpiece-bowl"&&p.id!=="popcorn-bowl-set"&&p.id!=="blue-white-swirl-set"&&p.collection!=="Sets"));
   if(page==="Cups"){
-    const cheapGlasses = ["wine-glasses-set","twisted-dinner-glasses","cocacola-glasses","unique-wine-glass","terrapin-turtle-glass","red-robin-beer-glass","murphys-stout-glass","southeastern-whiskey-glass","sweetwater-420-glass","sweetwater-brewing-glass","sweetwater-ipa-glass","don-pedro-whiskey-glass","longhorn-whiskey-small","longhorn-whiskey-large","ballast-point-glass","smirnoff-golf-glass","budweiser-beerstein"];
+    const cheapGlasses = ["twisted-dinner-glasses","cocacola-glasses","unique-wine-glass","terrapin-turtle-glass","red-robin-beer-glass","murphys-stout-glass","southeastern-whiskey-glass","sweetwater-420-glass","sweetwater-brewing-glass","sweetwater-ipa-glass","don-pedro-whiskey-glass","longhorn-whiskey-small","longhorn-whiskey-large","ballast-point-glass","smirnoff-golf-glass","budweiser-beerstein"];
     const mugs = ["tall-botanical-mug","autumn-leaf-cup","green-amber-mug","terracotta-mug","champagne-flutes"];
-    const soldOut = ["budweiser-racing-glasses","sweetwater-brewing-glass","samuel-adams-glass","orange-sweetwater-glass","blue-glass-cups-sold","tallboy-beer-glasses"];
+    const soldOut = ["budweiser-racing-glasses","sweetwater-brewing-glass","samuel-adams-glass","orange-sweetwater-glass","blue-glass-cups-sold","tallboy-beer-glasses","wine-glasses-set","wine-glasses-bundle-set"];
     const setDupes = ["fruit-mug-collection","blue-glass-drinking-set","black-drinking-glasses-set","heavy-glass-beer-mugs-set"];
     const drinkware = products.filter(p=>p.collection==="Drinkware"&&![...cheapGlasses,...mugs,...soldOut,...setDupes].includes(p.id));
     const cupsExtra = products.filter(p=>p.collection==="Cups"&&![...cheapGlasses,...mugs,...soldOut,...setDupes].includes(p.id));
@@ -959,8 +1045,11 @@ function updateCartUI(){
   btn.disabled = items.length===0 || checkingOut;
 }
 
-function openCart(){ document.getElementById("cart-overlay").style.display="block"; document.getElementById("cart-drawer").style.display="flex"; updateCartUI(); }
-function closeCart(){ document.getElementById("cart-overlay").style.display="none"; document.getElementById("cart-drawer").style.display="none"; }
+let _scrollY=0;
+function lockBodyScroll(){_scrollY=window.scrollY;document.body.style.top=`-${_scrollY}px`;document.body.classList.add('cart-open');}
+function unlockBodyScroll(){document.body.classList.remove('cart-open');document.body.style.top='';window.scrollTo(0,_scrollY);}
+function openCart(){ document.getElementById("cart-overlay").style.display="block"; document.getElementById("cart-drawer").style.display="flex"; lockBodyScroll(); updateCartUI(); }
+function closeCart(){ document.getElementById("cart-overlay").style.display="none"; document.getElementById("cart-drawer").style.display="none"; unlockBodyScroll(); }
 
 function selectShipping(method){
   shippingMethod=method;
@@ -1053,6 +1142,7 @@ function renderPage(){
   document.getElementById("page-num").textContent=`Page ${idx+1} of ${PAGE_ORDER.length}`;
 
   const body=document.getElementById("page-body");
+  if(activePage==="Dish Dash"){ body.innerHTML=renderDishDash(); setTimeout(initDishDash,60); return; }
   if(activePage==="Front Page"){ body.innerHTML=renderFrontPage(); }
   else if(activePage==="Dish Games"){ body.innerHTML=renderGamesPage(); }
   else if(activePage==="Dish Requests"){ body.innerHTML=renderLettersPage(); }
@@ -1078,8 +1168,8 @@ function renderFrontPage(){
    .filter(({p})=>p&&!p.options.every(o=>isSoldOut(p.id,o.id)));
 
   const deals = [
-    "wine-glasses-set","twisted-dinner-glasses","red-ceramic-plates",
-    "champagne-flutes","autumn-leaves-plate","american-eagle-plate"
+    "twisted-dinner-glasses","red-ceramic-plates",
+    "champagne-flutes","autumn-leaves-plate","american-eagle-plate","budweiser-beerstein"
   ].map(id=>products.find(p=>p.id===id)).filter(p=>p&&!p.options.every(o=>isSoldOut(p.id,o.id)));
 
   return `
@@ -1090,7 +1180,7 @@ function renderFrontPage(){
     .fp-deals{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
     @media(max-width:600px){.fp-deals{grid-template-columns:repeat(2,1fr);gap:8px}}
     .fp-new-add-grid{display:grid;grid-template-columns:1fr auto}
-    @media(max-width:520px){.fp-new-add-grid{grid-template-columns:1fr;} .fp-new-add-cta{border-top:2px solid rgba(194,120,30,.25);border-right:none!important;flex-direction:row!important;justify-content:space-between!important;padding:14px 16px!important;gap:10px!important;min-width:0!important;text-align:left!important} .fp-new-add-cta button{width:auto!important}}
+
     .fp-why{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
     .fp-section-box{border:3px solid var(--ink);border-radius:14px;overflow:hidden;box-shadow:4px 4px 0 var(--ink);margin-bottom:22px}
     .fp-section-hd{padding:12px 18px;border-bottom:2px solid var(--ink);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
@@ -1116,73 +1206,110 @@ function renderFrontPage(){
   </style>
 
   <!-- ═══ HERO — Front Page Pick ═══ -->
-  <div class="fp-section-box" style="background:#0c1a3a;border-color:#0c1a3a">
-    <div style="padding:14px 20px;border-bottom:2px solid rgba(59,130,246,.25);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;background:rgba(59,130,246,.1)">
-      <div>
-        <p style="font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:rgba(147,197,253,.75);margin-bottom:3px">🗞️ Today's Feature</p>
-        <h3 style="font-family:var(--display);font-size:clamp(17px,3.5vw,24px);font-weight:900;text-transform:uppercase;color:#f4ecd8;line-height:1.1">Today's Front Page Pick</h3>
+  <div class="fp-section-box" style="background:#09111e;border-color:#0f2040;overflow:hidden">
+
+    <!-- Masthead banner — newspaper edition bar -->
+    <div style="background:linear-gradient(90deg,#0f2040,#1a3a6a,#0f2040);padding:7px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(147,197,253,.12)">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:3px;height:16px;background:#3b82f6;border-radius:2px"></div>
+        <p style="font-family:var(--serif);font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:rgba(147,197,253,.5)">Front Page Feature</p>
       </div>
-      <span style="background:linear-gradient(135deg,#1e3a8a,#3b82f6);color:#fff;font-family:var(--serif);font-weight:700;font-size:11px;padding:5px 13px;border-radius:999px">🍽️ Complete Set</span>
+      <div style="display:flex;align-items:center;gap:7px">
+        <div style="width:6px;height:6px;border-radius:50%;background:#3b82f6;opacity:.8"></div>
+        <p style="font-family:var(--serif);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(147,197,253,.4)">Front Page Pick · Complete Set</p>
+      </div>
     </div>
+
     <div class="fp-hero">
-      <!-- Image side — newspaper photo treatment -->
-      <div style="position:relative;display:flex;align-items:center;justify-content:center;min-height:300px;overflow:hidden;border-right:1px solid rgba(59,130,246,.2);background:linear-gradient(160deg,#0a1628,#0d1f45,#142560)">
-        <!-- Subtle halftone dot texture -->
-        <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(147,197,253,.06) 1px,transparent 1px);background-size:14px 14px;pointer-events:none"></div>
-        <!-- Radial glow behind image -->
-        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,.18) 0%,transparent 70%);pointer-events:none"></div>
-        <!-- Newspaper corner registration marks -->
-        <svg style="position:absolute;inset:10px;z-index:3;pointer-events:none" xmlns="http://www.w3.org/2000/svg">
-          <line x1="0" y1="0" x2="18" y2="0" stroke="rgba(147,197,253,.3)" stroke-width="1.5"/>
-          <line x1="0" y1="0" x2="0" y2="18" stroke="rgba(147,197,253,.3)" stroke-width="1.5"/>
-          <line x1="100%" y1="0" x2="calc(100% - 18px)" y2="0" stroke="rgba(147,197,253,.3)" stroke-width="1.5"/>
-          <line x1="100%" y1="0" x2="100%" y2="18" stroke="rgba(147,197,253,.3)" stroke-width="1.5"/>
-          <line x1="0" y1="100%" x2="18" y2="100%" stroke="rgba(147,197,253,.3)" stroke-width="1.5"/>
-          <line x1="0" y1="100%" x2="0" y2="calc(100% - 18px)" stroke="rgba(147,197,253,.3)" stroke-width="1.5"/>
-          <line x1="100%" y1="100%" x2="calc(100% - 18px)" y2="100%" stroke="rgba(147,197,253,.3)" stroke-width="1.5"/>
-          <line x1="100%" y1="100%" x2="100%" y2="calc(100% - 18px)" stroke="rgba(147,197,253,.3)" stroke-width="1.5"/>
-        </svg>
-        <!-- Photo caption bar at top — newspaper style -->
-        <div style="position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:4;white-space:nowrap">
-          <div style="display:flex;align-items:center;gap:8px">
-            <div style="width:28px;height:1px;background:rgba(147,197,253,.3)"></div>
-            <p style="font-family:var(--serif);font-size:8px;letter-spacing:.22em;text-transform:uppercase;color:rgba(147,197,253,.45)">Photo · Daily Dish</p>
-            <div style="width:28px;height:1px;background:rgba(147,197,253,.3)"></div>
+
+      <!-- ── IMAGE SIDE ── -->
+      <div style="position:relative;display:flex;flex-direction:column;background:linear-gradient(150deg,#060e1c,#0c1e3e,#0a1830)">
+
+        <!-- Halftone texture -->
+        <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(147,197,253,.04) 1px,transparent 1px);background-size:12px 12px;pointer-events:none;z-index:0"></div>
+
+        <!-- Deep glow -->
+        <div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 70% at 50% 55%,rgba(30,70,160,.22) 0%,transparent 70%);pointer-events:none;z-index:0"></div>
+
+        <!-- Corner marks + swirling decorative SVG -->
+        <div style="position:absolute;top:12px;left:12px;width:20px;height:20px;border-top:1.5px solid rgba(147,197,253,.35);border-left:1.5px solid rgba(147,197,253,.35);z-index:3"></div>
+        <div style="position:absolute;top:12px;right:12px;width:20px;height:20px;border-top:1.5px solid rgba(147,197,253,.35);border-right:1.5px solid rgba(147,197,253,.35);z-index:3"></div>
+        <div style="position:absolute;bottom:32px;left:12px;width:20px;height:20px;border-bottom:1.5px solid rgba(147,197,253,.35);border-left:1.5px solid rgba(147,197,253,.35);z-index:3"></div>
+        <div style="position:absolute;bottom:32px;right:12px;width:20px;height:20px;border-bottom:1.5px solid rgba(147,197,253,.35);border-right:1.5px solid rgba(147,197,253,.35);z-index:3"></div>
+
+        <!-- Refined editorial glow + framing -->
+        <div style="position:absolute;inset:0;z-index:1;pointer-events:none;background:
+          radial-gradient(circle at 50% 42%, rgba(96,165,250,.18), transparent 28%),
+          linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));"></div>
+        <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(76%,320px);height:min(76%,320px);border-radius:28px;border:1px solid rgba(147,197,253,.16);box-shadow:0 0 0 10px rgba(255,255,255,.02),0 24px 60px rgba(2,8,24,.34);z-index:1;pointer-events:none"></div>
+
+        <!-- Image wrapper — cleaner luxury presentation -->
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:clamp(20px,5vw,34px) 24px 28px;position:relative;z-index:2;min-height:clamp(240px,34vw,340px)">
+          <div style="position:absolute;inset:0;background:radial-gradient(ellipse 64% 70% at 50% 52%,transparent 30%,rgba(6,14,28,.36) 68%,rgba(6,14,28,.74) 100%);z-index:0;pointer-events:none"></div>
+          <div style="position:relative;width:min(92%,360px);padding:18px;border-radius:28px;background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.05));border:1px solid rgba(147,197,253,.16);box-shadow:0 20px 44px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.08)">
+            <div style="position:absolute;inset:10px;border-radius:22px;border:1px solid rgba(244,236,216,.08);pointer-events:none"></div>
+            <img src="https://i.imgur.com/QFdd2ad.jpeg"
+              style="width:100%;max-height:290px;object-fit:contain;object-position:center;display:block;opacity:.99;filter:brightness(1.1) contrast(1.04) saturate(1.06) drop-shadow(0 18px 32px rgba(15,23,42,.28));transition:transform .45s cubic-bezier(.25,.46,.45,.94),filter .35s ease"
+              onmouseover="this.style.transform='scale(1.03)';this.style.filter='brightness(1.14) contrast(1.06) saturate(1.08) drop-shadow(0 22px 38px rgba(15,23,42,.32))'"
+              onmouseout="this.style.transform='scale(1)';this.style.filter='brightness(1.1) contrast(1.04) saturate(1.06) drop-shadow(0 18px 32px rgba(15,23,42,.28))'"
+              onerror="this.src='${FALLBACK}'"/>
           </div>
         </div>
-        <!-- Double-border frame around image -->
-        <div style="position:relative;z-index:2;padding:10px">
-          <div style="border:1px solid rgba(147,197,253,.25);padding:6px;border-radius:4px">
-            <div style="border:2px solid rgba(147,197,253,.15);border-radius:2px;overflow:hidden">
-              <img src="https://i.imgur.com/QFdd2ad.jpeg" style="width:100%;max-width:290px;height:auto;object-fit:contain;display:block;filter:drop-shadow(0 4px 16px rgba(0,0,0,.5))" onerror="this.src='${FALLBACK}'"/>
+
+        <!-- Caption bar pinned to bottom -->
+        <div style="background:rgba(6,12,28,.88);padding:6px 16px;border-top:1px solid rgba(147,197,253,.1);position:relative;z-index:2">
+          <p style="font-family:var(--serif);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(147,197,253,.4);text-align:center">4 Dinner Plates · 3 Matching Bowls · Complete Set</p>
+        </div>
+      </div>
+
+      <!-- ── TEXT SIDE ── -->
+      <div style="padding:clamp(16px,4vw,28px);display:flex;flex-direction:column;justify-content:center;gap:0;border-top:1px solid rgba(59,130,246,.12);background:linear-gradient(160deg,rgba(14,28,60,.65),rgba(9,18,42,.85))">
+
+        <!-- Kicker -->
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+          <div style="height:1px;width:20px;background:rgba(147,197,253,.35)"></div>
+          <p style="font-family:var(--serif);font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:rgba(147,197,253,.5)">🗞️ Editor's Choice</p>
+          <div style="height:1px;flex:1;background:rgba(147,197,253,.1)"></div>
+        </div>
+
+        <!-- Headline — big and authoritative -->
+        <h2 style="font-family:var(--display);font-size:clamp(20px,4vw,30px);font-weight:900;text-transform:uppercase;color:#f4ecd8;line-height:1.05;margin-bottom:10px;letter-spacing:.02em">${dealOfDay.title}</h2>
+
+        <!-- Column rule + story -->
+        <div style="border-left:2px solid rgba(147,197,253,.18);padding-left:14px;margin-bottom:16px">
+          <p style="font-style:italic;font-size:13px;color:rgba(212,168,67,.75);line-height:1.5;margin-bottom:8px">${dealOfDay.subtitle}</p>
+          <p style="font-size:13px;line-height:1.8;color:rgba(244,236,216,.75)">${dealOfDay.story}</p>
+        </div>
+
+        <!-- Price block — newspaper pricing style -->
+        <div style="border:1px solid rgba(147,197,253,.15);border-radius:8px;padding:14px 18px;background:rgba(30,58,138,.15);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+          <div>
+            <p style="font-family:var(--serif);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(147,197,253,.45);margin-bottom:4px">Today's Price</p>
+            <div style="display:flex;align-items:baseline;gap:7px">
+              <span style="font-family:var(--display);font-size:clamp(32px,6vw,42px);font-weight:900;color:#93c5fd;line-height:1">$22</span>
+              <span style="font-family:var(--serif);font-size:12px;color:rgba(147,197,253,.55);font-style:italic">complete set</span>
             </div>
           </div>
+          <div style="text-align:right">
+            <p style="font-size:10px;color:rgba(74,222,128,.7);font-weight:700;letter-spacing:.06em;margin-bottom:3px">✓ 7 Pieces Total</p>
+            <p style="font-size:10px;color:rgba(74,222,128,.55);letter-spacing:.06em">✓ Ready to ship</p>
+          </div>
         </div>
-        <!-- Caption strip at bottom -->
-        <div style="position:absolute;bottom:0;left:0;right:0;z-index:4;background:rgba(9,15,36,.75);padding:5px 14px;border-top:1px solid rgba(147,197,253,.12);text-align:center">
-          <p style="font-family:var(--serif);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(147,197,253,.45)">4 Dinner Plates · 3 Matching Bowls · Complete Set</p>
+
+        <!-- Action buttons -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button style="font-family:var(--display);padding:11px 20px;font-size:12px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;border:none;border-radius:8px;background:linear-gradient(135deg,#1d4ed8,#3b82f6);color:#fff;cursor:pointer;flex:1;min-width:130px;box-shadow:0 4px 16px rgba(59,130,246,.3);transition:opacity .15s" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'" onclick="addToCart('${dealOfDay.id}','${dealOfDay.options[0].id}')">Add to Cart — $22</button>
+          <button style="font-family:var(--serif);padding:11px 16px;font-size:13px;font-weight:700;border:1px solid rgba(147,197,253,.25);border-radius:8px;background:transparent;color:rgba(147,197,253,.8);cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(147,197,253,.5)'" onmouseout="this.style.borderColor='rgba(147,197,253,.25)'" onclick="viewProduct('${dealOfDay.id}')">View Details →</button>
         </div>
-      </div>
-      <!-- Text side -->
-      <div style="padding:clamp(18px,4vw,28px);display:flex;flex-direction:column;justify-content:center;background:rgba(59,130,246,.03)">
-        <div style="width:36px;height:2px;background:linear-gradient(90deg,#3b82f6,transparent);margin-bottom:12px"></div>
-        <h3 style="font-family:var(--display);font-size:clamp(16px,3vw,20px);font-weight:900;text-transform:uppercase;color:#f4ecd8;margin-bottom:7px;line-height:1.2">${dealOfDay.title}</h3>
-        <p style="font-style:italic;font-size:13px;margin-bottom:10px;color:rgba(212,168,67,.7);line-height:1.5">${dealOfDay.subtitle}</p>
-        <p style="font-size:13px;line-height:1.75;color:rgba(244,236,216,.8);margin-bottom:14px">${dealOfDay.story}</p>
-        <div style="margin-bottom:16px;display:inline-flex;align-items:baseline;gap:8px;flex-wrap:wrap">
-          <span style="font-family:var(--display);font-size:clamp(28px,5vw,38px);font-weight:900;color:#93c5fd;line-height:1">$22</span>
-          <span style="font-family:var(--serif);font-size:13px;color:rgba(147,197,253,.6);font-style:italic">for the complete set of 7 pieces</span>
-        </div>
-        <p style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(74,222,128,.7);margin-bottom:14px">✓ Plates · Bowls · Ready to ship</p>
-        <div style="display:flex;flex-wrap:wrap;gap:8px">
-          <button style="font-family:var(--serif);padding:10px 18px;font-size:13px;font-weight:700;border:none;border-radius:8px;background:linear-gradient(135deg,#1e3a8a,#3b82f6);color:#fff;cursor:pointer;flex:1;min-width:120px" onclick="addToCart('${dealOfDay.id}','${dealOfDay.options[0].id}')">${dealOfDay.options[0].label} (${money(dealOfDay.options[0].price)})</button>
-          <button style="font-family:var(--serif);padding:10px 14px;font-size:13px;font-weight:700;border:2px solid rgba(147,197,253,.3);border-radius:8px;background:transparent;color:rgba(147,197,253,.85);cursor:pointer" onclick="viewProduct('${dealOfDay.id}')">Details →</button>
-        </div>
+
       </div>
     </div>
-    <div style="padding:8px 18px;background:rgba(59,130,246,.06);border-top:1px solid rgba(59,130,246,.15)">
-      <p style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(147,197,253,.35);text-align:center">🗞️ 4 Dinner Plates + 3 Bowls · Complete Matching Set · Just $22</p>
+
+    <!-- Footer rule -->
+    <div style="padding:6px 20px;background:rgba(15,32,64,.5);border-top:1px solid rgba(147,197,253,.08)">
+      <p style="font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(147,197,253,.25);text-align:center">🗞️ Handpicked by The Daily Dish · 4 Dinner Plates + 3 Bowls · Just $22 for the Complete Set</p>
     </div>
+
   </div>
 
   <!-- ═══ NEW ADDITIONS TEASER ═══ -->
@@ -1282,7 +1409,7 @@ function renderFrontPage(){
         ${deals.map(item=>`
           <div style="border:2px solid rgba(74,222,128,.2);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.03);cursor:pointer" onclick="viewProduct('${item.id}')">
             <div style="position:relative;overflow:hidden;height:clamp(80px,18vw,120px)">
-              <img src="${item.image.startsWith('DUAL:')?item.image.split('DUAL:')[1].split('|')[0]:item.image}" alt="${item.title}" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s" onmouseover="this.style.transform='scale(1.07)'" onmouseout="this.style.transform='scale(1)'" onerror="this.src='${FALLBACK}'"/>
+              <img src="${item.image.startsWith('DUAL:')?item.image.split('DUAL:')[1].split('|')[0]:item.image}" alt="${item.title}" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s cubic-bezier(.25,.46,.45,.94),object-fit 0s;background:rgba(15,30,10,.6)" onmouseover="this.style.transform='scale(1.1)';this.style.objectFit='contain'" onmouseout="this.style.transform='scale(1)';this.style.objectFit='cover'" onerror="this.src='${FALLBACK}'"/>
               <div style="position:absolute;top:5px;left:5px;background:linear-gradient(135deg,#14532d,#16a34a);color:#dcfce7;font-family:var(--display);font-size:8px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:999px">Deal</div>
             </div>
             <div style="padding:8px 10px">
@@ -1482,7 +1609,7 @@ async function submitLetter(){
   const name=document.getElementById("letter-name").value.trim();
   const email=document.getElementById("letter-email").value.trim();
   const message=document.getElementById("letter-message").value.trim();
-buildPopup(); // show on all devices
+  const status=document.getElementById("letter-status");
   if(!name||!message){
     status.style.display="block";
     status.style.background="#fef2f2";
@@ -1492,7 +1619,12 @@ buildPopup(); // show on all devices
     return;
   }
   const mailto=`mailto:thedailydishshop@gmail.com?subject=Letter to The Daily Dish from ${encodeURIComponent(name)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`)}`;
-  window.location.href=mailto;
+  const _a=document.createElement('a');
+  _a.href=mailto;
+  _a.style.display='none';
+  document.body.appendChild(_a);
+  _a.click();
+  setTimeout(()=>document.body.removeChild(_a),300);
   status.style.display="block";
   status.style.background="#f0fdf4";
   status.style.border="1px solid #86efac";
@@ -1519,12 +1651,12 @@ updateCartUI();
 // STOP THE PRESSES POPUP
 // ─────────────────────────────────────────────
 const HOT_ITEMS = [
-  {id:"wine-glasses-set",img:"https://i.imgur.com/KJgdRRs.jpeg",label:"Wine Glasses — $1 Each!",price:"Full Set of 9 — $9"},
   {id:"fruit-mug-set",img:"https://i.imgur.com/JuChz2X.jpeg",label:"Fruit Mug Set",price:"Set of 4 — $12"},
   {id:"blue-glass-drinking-pair",img:"https://i.imgur.com/m1mxIlG.jpeg",label:"Blue Glass Drinking Pair",price:"Pair — $7"},
   {id:"bud-light-apple-glass",img:"https://i.imgur.com/WY0icaH.jpeg",label:"Bud Light Apple Glass",price:"$5 — Only 1 Left"},
   {id:"wrought-iron-ipa-glass",img:"https://i.imgur.com/1N7wRro.jpeg",label:"Wrought Iron IPA Glass",price:"$4 — Only 1 Left"},
   {id:"smooth-black-ceramic-plates",img:"https://i.imgur.com/JTEppD3.jpeg",label:"Smooth Black Ceramic Plates",price:"Pair — $10 | Single — $6"},
+  {id:"murphys-stout-glass",img:"https://i.imgur.com/QYsmhEC.jpeg",label:"Murphy's Irish Stout Glass",price:"Single — $4 · Only 1 Left"},
 ];
 
 function buildPopup(){
@@ -1543,9 +1675,23 @@ function buildPopup(){
   `).join("");
 }
 
+let gamesPopupShown = false;
+
 function closePopup(){
   const overlay = document.getElementById("stp-overlay");
-  if(overlay){ overlay.style.animation="fadeOutOverlay .25s ease forwards"; setTimeout(()=>overlay.remove(),250); }
+  if(overlay){
+    overlay.style.animation="fadeOutOverlay .25s ease forwards";
+    setTimeout(()=>{
+      overlay.remove();
+      if(!gamesPopupShown){
+        showGamesPopup();
+        gamesPopupShown = true;
+      }
+    },250);
+  } else if(!gamesPopupShown){
+    showGamesPopup();
+    gamesPopupShown = true;
+  }
   startTypewriter();
 }
 
@@ -1554,11 +1700,34 @@ function closePopupAndGo(productId){
   setTimeout(()=>{
     const p = products.find(x=>x.id===productId);
     if(p) goToPage(getPageForProduct(p));
-  }, 300);
+  }, 320);
 }
 
 function handleOverlayClick(e){
   if(e.target.id==="stp-overlay") closePopup();
+}
+
+function showGamesPopup(){
+  const overlay = document.getElementById("games-popup-overlay");
+  if(overlay) overlay.classList.add("show");
+}
+
+function closeGamesPopup(){
+  const overlay = document.getElementById("games-popup-overlay");
+  if(overlay) overlay.classList.remove("show");
+}
+
+function handleGamesPopupClick(e){
+  if(e.target.id==="games-popup-overlay") closeGamesPopup();
+}
+
+function openGamesPopupPage(){
+  closeGamesPopup();
+  goToPage("Dish Games");
+  setTimeout(()=>{
+    const el = document.getElementById("game-area");
+    if(el) el.scrollIntoView({behavior:"smooth", block:"center"});
+  }, 260);
 }
 
 // Add fadeOut keyframe dynamically
@@ -1594,7 +1763,8 @@ function renderGamesPage(){
   return `
   <style>
     /* ── Games page specific ── */
-    .game-cabinets{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
+    .game-cabinets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:22px}
+    @media(max-width:980px){.game-cabinets{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
     @media(max-width:700px){.game-cabinets{grid-template-columns:1fr;gap:12px}}
     .cabinet{cursor:pointer;border:3px solid var(--ink);border-radius:16px;overflow:hidden;box-shadow:5px 5px 0 var(--ink);background:#0d0d1a;transition:transform .18s,box-shadow .18s;-webkit-tap-highlight-color:transparent}
     .cabinet:active{transform:scale(.97)}
@@ -1651,6 +1821,60 @@ function renderGamesPage(){
     <!-- ═══ GAME CABINETS ═══ -->
     <div class="game-cabinets">
 
+<!-- DISH DASH CABINET -->
+      <div class="cabinet" onclick="launchDishDash()">
+        <div class="cabinet-screen" style="background:linear-gradient(160deg,#0a1a08,#1a4a0a,#0a1a08)">
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(74,222,128,.28) 0%,transparent 70%);pointer-events:none"></div>
+          <span class="cabinet-emoji" style="filter:drop-shadow(0 0 14px rgba(74,222,128,.75))">🏃</span>
+          <p class="cabinet-name">Dish Dash</p>
+          <p class="cabinet-tagline" style="color:rgba(74,222,128,.6)">How Far Can You Run?</p>
+        </div>
+        <div class="cabinet-body">
+          <p class="cabinet-rules">Pick any dish from the shop and run. Jump over obstacles before they smash your dish. The longer you survive, the faster it gets.</p>
+          <div class="cabinet-chips">
+            <span class="chip" style="background:rgba(74,222,128,.18);color:#86efac;border:1px solid rgba(74,222,128,.3)">👆 Tap to jump</span>
+            <span class="chip" style="background:rgba(74,222,128,.18);color:#86efac;border:1px solid rgba(74,222,128,.3)">⌨️ Spacebar</span>
+          </div>
+        </div>
+        <div class="cabinet-play" style="background:linear-gradient(90deg,#052e16,#14532d);color:#86efac;border-top:2px solid rgba(74,222,128,.35)">▶ PLAY NOW</div>
+      </div>
+
+<!-- NINJA -->
+      <div class="cabinet" onclick="startDishNinja()">
+        <div class="cabinet-screen" style="background:linear-gradient(160deg,#180404,#480606,#180404)">
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(239,68,68,.28) 0%,transparent 70%);pointer-events:none"></div>
+          <span class="cabinet-emoji" style="filter:drop-shadow(0 0 14px rgba(239,68,68,.75))">⚔️</span>
+          <p class="cabinet-name">Dish Ninja</p>
+          <p class="cabinet-tagline" style="color:rgba(239,68,68,.6)">3 Misses &amp; You're Out</p>
+        </div>
+        <div class="cabinet-body">
+          <p class="cabinet-rules">Dishes fly in from every direction — tap each one to smash it before it escapes. Every smash = 1 point. They speed up each time. 3 misses and it's over.</p>
+          <div class="cabinet-chips">
+            <span class="chip" style="background:rgba(220,38,38,.18);color:#fca5a5;border:1px solid rgba(220,38,38,.3)">👆 Tap to smash</span>
+            <span class="chip" style="background:rgba(220,38,38,.18);color:#fca5a5;border:1px solid rgba(220,38,38,.3)">❤️❤️❤️ 3 lives</span>
+          </div>
+        </div>
+        <div class="cabinet-play" style="background:linear-gradient(90deg,#1e0404,#3d0808);color:#fca5a5;border-top:2px solid rgba(220,38,38,.35)">▶ PLAY NOW</div>
+      </div>
+
+      <!-- DISH 21 -->
+      <div class="cabinet" onclick="startDish21()">
+        <div class="cabinet-screen" style="background:linear-gradient(160deg,#12080a,#4a2312,#12080a)">
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(244,204,88,.28) 0%,transparent 70%);pointer-events:none"></div>
+          <span class="cabinet-emoji" style="filter:drop-shadow(0 0 14px rgba(244,204,88,.75))">🃏</span>
+          <p class="cabinet-name">Dish 21</p>
+          <p class="cabinet-tagline" style="color:rgba(244,204,88,.72)">Fair Play Table</p>
+        </div>
+        <div class="cabinet-body">
+          <p class="cabinet-rules">Classic 21 with Daily Dish styling. Split and Double Down are included, the deck reshuffles every 4 rounds, and every card features real shop inventory in the center.</p>
+          <div class="cabinet-chips">
+            <span class="chip" style="background:rgba(244,204,88,.15);color:#fde68a;border:1px solid rgba(244,204,88,.3)">🃏 Split enabled</span>
+            <span class="chip" style="background:rgba(244,204,88,.15);color:#fde68a;border:1px solid rgba(244,204,88,.3)">🏆 Session leaderboard</span>
+          </div>
+        </div>
+        <div class="cabinet-play" style="background:linear-gradient(90deg,#3b2306,#7c4a0d);color:#fde68a;border-top:2px solid rgba(244,204,88,.35)">▶ PLAY NOW</div>
+      </div>
+
       <!-- PONG -->
       <div class="cabinet" onclick="startDishPong()">
         <div class="cabinet-screen" style="background:linear-gradient(160deg,#080820,#10104a,#080820)">
@@ -1687,30 +1911,12 @@ function renderGamesPage(){
         <div class="cabinet-play" style="background:linear-gradient(90deg,#1c1a06,#3a3005);color:#fcd34d;border-top:2px solid rgba(212,168,67,.35)">▶ PLAY NOW</div>
       </div>
 
-      <!-- NINJA -->
-      <div class="cabinet" onclick="startDishNinja()">
-        <div class="cabinet-screen" style="background:linear-gradient(160deg,#180404,#480606,#180404)">
-          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(239,68,68,.28) 0%,transparent 70%);pointer-events:none"></div>
-          <span class="cabinet-emoji" style="filter:drop-shadow(0 0 14px rgba(239,68,68,.75))">⚔️</span>
-          <p class="cabinet-name">Dish Ninja</p>
-          <p class="cabinet-tagline" style="color:rgba(239,68,68,.6)">3 Misses &amp; You're Out</p>
-        </div>
-        <div class="cabinet-body">
-          <p class="cabinet-rules">Dishes fly in from every direction — tap each one to smash it before it escapes. Every smash = 1 point. They speed up each time. 3 misses and it's over.</p>
-          <div class="cabinet-chips">
-            <span class="chip" style="background:rgba(220,38,38,.18);color:#fca5a5;border:1px solid rgba(220,38,38,.3)">👆 Tap to smash</span>
-            <span class="chip" style="background:rgba(220,38,38,.18);color:#fca5a5;border:1px solid rgba(220,38,38,.3)">❤️❤️❤️ 3 lives</span>
           </div>
-        </div>
-        <div class="cabinet-play" style="background:linear-gradient(90deg,#1e0404,#3d0808);color:#fca5a5;border-top:2px solid rgba(220,38,38,.35)">▶ PLAY NOW</div>
-      </div>
-
-    </div>
 
     <!-- ═══ CANVAS + LEADERBOARD ═══ -->
-    <div id="game-layout" style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(270px,.85fr);gap:18px;align-items:start">
+    <div id="game-layout" style="display:grid;grid-template-columns:1fr;gap:18px;align-items:start">
 
-      <div id="game-area" style="border:3px solid var(--ink);border-radius:14px;overflow:hidden;box-shadow:4px 4px 0 var(--ink);background:#111;display:none;flex-direction:column;position:relative">
+      <div id="game-area" style="border:3px solid var(--ink);border-radius:14px;overflow:hidden;box-shadow:4px 4px 0 var(--ink);background:#111;display:none;flex-direction:column;position:relative;max-width:1160px;width:100%;margin:0 auto">
         <div style="background:var(--ink);padding:10px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-shrink:0;flex-wrap:wrap">
           <span id="game-title" style="font-family:var(--display);color:var(--cream);font-size:14px;font-weight:900;text-transform:uppercase;letter-spacing:.08em">Dish Games</span>
           <div style="display:flex;align-items:center;gap:12px">
@@ -1723,7 +1929,7 @@ function renderGamesPage(){
       </div>
 
       <!-- LEADERBOARD -->
-      <div class="games-lb-panel">
+      <div class="games-lb-panel" style="max-width:1160px;width:100%;margin:0 auto">
         <div style="border:3px solid var(--ink);border-radius:14px;overflow:hidden;box-shadow:4px 4px 0 var(--ink);background:#0a0a0f">
           <div style="padding:12px 16px;border-bottom:2px solid rgba(212,168,67,.25);background:linear-gradient(90deg,#1a1208,#2a1f08);display:flex;align-items:center;gap:10px">
             <span style="font-size:20px">🏆</span>
@@ -1733,6 +1939,7 @@ function renderGamesPage(){
             </div>
           </div>
           <div style="padding:12px 14px;display:grid;gap:12px">
+            <div id="lb-block-dish21">${renderDish21SummaryBlock()}</div>
             <div id="lb-block-pong">${renderLeaderboardBlock('pong','🏓 Dish Pong')}</div>
             <div id="lb-block-stack">${renderLeaderboardBlock('stack','🍽️ Stack The Dishes')}</div>
             <div id="lb-block-ninja">${renderLeaderboardBlock('ninja','⚔️ Dish Ninja')}</div>
@@ -1751,9 +1958,886 @@ function renderGamesPage(){
 }
 
 // ─────────────────────────────────────────────
+// DISH DASH GAME
+// ─────────────────────────────────────────────
+function launchDishDash(){
+  try{
+    startDishDashInline();
+  }catch(err){
+    console.error('Dish Dash launch failed:', err);
+  }
+}
+
+function startDishDashInline(){
+  const area=document.getElementById('game-area');
+  if(!area) return;
+  stopGame(false);
+  if(!_gameAreaBaseMarkup) _gameAreaBaseMarkup=area.innerHTML;
+  area.style.display='block';
+  area.dataset.mode='dishdash';
+  area.innerHTML=renderDishDash();
+  window.__currentInlineGame='dishdash';
+  requestAnimationFrame(()=>{
+    try{ area.scrollIntoView({behavior:'smooth', block:'center'}); }catch(e){}
+    try{
+      initDishDash();
+      if(typeof window.dispatchEvent==='function') window.dispatchEvent(new Event('resize'));
+    }catch(e){
+      console.error('Dish Dash init failed:', e);
+    }
+  });
+}
+
+function renderDishDash(){
+  return `
+  <div style="max-width:1060px;margin:0 auto">
+    <div style="background:#fffdf9;border:3px solid var(--ink);border-radius:18px;overflow:hidden;box-shadow:5px 5px 0 var(--ink)">
+
+      <!-- Toolbar -->
+      <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:2px solid var(--ink);background:#faf7f1">
+        <div style="display:flex;flex-wrap:wrap;gap:7px;align-items:center;min-width:0">
+          <span style="font-family:var(--display);font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap">🏃 Your Dish</span>
+          <select id="dd-dish-select" style="height:36px;border-radius:8px;border:2px solid var(--ink);padding:0 8px;background:white;font-size:12px;font-family:var(--serif);cursor:pointer;max-width:180px;flex:1;min-width:0"></select>
+          <button id="dd-random-btn" style="height:36px;padding:0 12px;border-radius:8px;border:none;background:var(--ink);color:var(--cream);font-size:12px;font-weight:700;font-family:var(--serif);cursor:pointer;white-space:nowrap">🎲 Random</button>
+        </div>
+        <div style="display:flex;gap:7px;align-items:center">
+          <div style="display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;background:#f1eee8;border:1px solid rgba(0,0,0,.1);min-width:0">
+            <img id="dd-dish-thumb" style="width:22px;height:22px;border-radius:50%;object-fit:cover;border:1px solid #ccc;flex-shrink:0" alt=""/>
+            <span id="dd-dish-name" style="font-size:11px;font-weight:700;font-family:var(--serif);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px">Loading...</span>
+          </div>
+          <button id="dd-restart-btn" style="height:36px;padding:0 12px;border-radius:8px;border:2px solid var(--ink);background:transparent;font-size:12px;font-weight:700;font-family:var(--serif);cursor:pointer;white-space:nowrap">↺ Restart</button>
+          <button onclick="stopGame(true)" style="height:36px;padding:0 12px;border-radius:8px;border:2px solid var(--ink);background:transparent;font-size:12px;font-weight:700;font-family:var(--serif);cursor:pointer;white-space:nowrap">✕ Close</button>
+        </div>
+      </div>
+
+      <!-- Game stage — taller on mobile -->
+      <div id="dd-stage" style="position:relative;width:100%;height:clamp(260px,45vw,340px);overflow:hidden;touch-action:none;user-select:none">
+        <canvas id="dd-canvas" style="display:block;width:100%;height:100%;touch-action:none"></canvas>
+
+        <!-- Mobile controls overlay — jump left, slide right -->
+        <div id="dd-mobile-btns" style="position:absolute;bottom:8px;left:0;right:0;display:none;justify-content:space-between;padding:0 12px;pointer-events:none;z-index:5">
+          <button id="dd-jump-btn" style="pointer-events:auto;width:70px;height:48px;border-radius:12px;background:rgba(255,255,255,.22);border:2px solid rgba(255,255,255,.5);color:white;font-size:22px;font-weight:900;backdrop-filter:blur(4px);cursor:pointer;-webkit-tap-highlight-color:transparent">↑</button>
+          <button id="dd-slide-btn" style="pointer-events:auto;width:70px;height:48px;border-radius:12px;background:rgba(255,255,255,.22);border:2px solid rgba(255,255,255,.5);color:white;font-size:22px;font-weight:900;backdrop-filter:blur(4px);cursor:pointer;-webkit-tap-highlight-color:transparent">↓</button>
+        </div>
+
+        <!-- Start overlay -->
+        <div id="dd-overlay" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px;background:rgba(6,13,46,.82);backdrop-filter:blur(2px)">
+          <div style="max-width:360px;padding:22px;border-radius:16px;background:rgba(255,253,249,.96);border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink)">
+            <div style="font-size:32px;margin-bottom:6px">🏃</div>
+            <h2 id="dd-overlay-title" style="font-family:var(--display);font-size:clamp(20px,5vw,26px);font-weight:900;text-transform:uppercase;margin-bottom:6px">Dish Dash</h2>
+            <p id="dd-overlay-msg" style="font-size:12px;line-height:1.65;margin-bottom:14px;font-family:var(--serif);color:#444">
+              <strong>Jump</strong> over ground obstacles · <strong>Slide</strong> under flying ones<br/>
+              Speed increases every jump · Sun sets as you score
+            </p>
+            <button id="dd-start-btn" style="height:42px;padding:0 24px;border:none;border-radius:10px;background:var(--ink);color:var(--cream);font-weight:700;font-size:14px;font-family:var(--serif);cursor:pointer">▶ Start</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer controls hint -->
+      <div style="padding:8px 14px;background:white;border-top:1px solid #eee;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+        <span style="font-size:11px;color:#666;font-family:var(--serif)"><strong>Space / ↑</strong> jump &nbsp;·&nbsp; <strong>↓ / S</strong> slide &nbsp;·&nbsp; Mobile: tap buttons</span>
+        <span id="dd-speed-badge" style="font-size:11px;color:#888;font-family:var(--serif)">Speed: —</span>
+      </div>
+    </div>
+  </div>
+  `;
+}
+
+function initDishDash(){
+  const DISH_DASH_INVENTORY = [
+  {id:"cobalt-blue-pitcher",name:"Cobalt Blue Floral Pitcher",image:"https://i.imgur.com/7l8yH8M.jpeg"},
+  {id:"american-eagle-plate",name:"American Eagle Collector Plate",image:"https://i.imgur.com/0ie0rvR.jpeg"},
+  {id:"grapevine-plate",name:"Grapevine Dinner Plate",image:"https://i.imgur.com/hdDJXtD.jpeg"},
+  {id:"magnolia-floral-bowl",name:"Magnolia Soup Bowl",image:"https://i.imgur.com/pU437LJ.jpeg"},
+  {id:"red-dinner-plates",name:"Red Glass Dinner Plates",image:"https://i.imgur.com/EdI3INH.jpeg"},
+  {id:"white-embossed-floral-plate",name:"White Floral Rim Plates",image:"https://i.imgur.com/6ZJb0Jk.jpeg"},
+  {id:"centerpiece-bowl",name:"Big Centerpiece Popcorn Bowl",image:"https://i.imgur.com/ZPXaQFI.jpeg"},
+  {id:"earth-tone-dinner-plates",name:"Earth Tone Dinner Plates",image:"https://i.imgur.com/WwVyCxT.jpeg"},
+  {id:"tribal-diamond-bowl",name:"Diamond Pattern Ceramic Bowl",image:"https://i.imgur.com/LMlPbiJ.jpeg"},
+  {id:"lighthouse-bowls",name:"Lighthouse Soup Bowls",image:"https://i.imgur.com/YIDDz9V.jpeg"},
+  {id:"solid-black-bowl",name:"Solid Black Ceramic Bowls",image:"https://i.imgur.com/5ct0WgG.jpeg"},
+  {id:"red-appetizer-plates",name:"Red Glass Appetizer Plates",image:"https://i.imgur.com/2nIIUwa.jpeg"},
+  {id:"red-bowls",name:"Red Glass Bowls",image:"https://i.imgur.com/MEFyLMQ.jpeg"},
+  {id:"sleek-soup-bowls",name:"Clear Glass Soup Bowls",image:"https://i.imgur.com/uQbpbBb.jpeg"},
+  {id:"blue-cream-bowl",name:"Blue & Cream Ceramic Bowl",image:"https://i.imgur.com/RQbW9iN.jpeg"},
+  {id:"pumpkin-patch-bowl",name:"Pumpkin Patch Bowl",image:"https://i.imgur.com/uZcXT2e.jpeg"},
+  {id:"color-pattern-bowl",name:"Colorful Geometric Bowl",image:"https://i.imgur.com/y5KsKKz.jpeg"},
+  {id:"coconut-style-glass-bowl",name:"Tropical Glass Bowl",image:"https://i.imgur.com/pU4fkqU.jpeg"},
+  {id:"red-bumpy-bowl",name:"Red Bumpy Bowl",image:"https://i.imgur.com/wdgMrf2.jpeg"},
+  {id:"cat-dog-bowl",name:"Cat & Dog Novelty Bowl",image:"https://i.imgur.com/dhJP8Gz.jpeg"},
+  {id:"tall-botanical-mug",name:"Botanical Leaf Mug",image:"https://i.imgur.com/u4Hr885.jpeg"},
+  {id:"autumn-leaf-cup",name:"Autumn Leaf Ceramic Cup",image:"https://i.imgur.com/TiSQ5rV.jpeg"},
+  {id:"green-amber-mug",name:"Green & Amber Two-Tone Mug",image:"https://i.imgur.com/PpzpQFD.jpeg"},
+  {id:"terracotta-mug",name:"Terracotta Coffee Mug",image:"https://i.imgur.com/G43vDEo.jpeg"},
+  {id:"champagne-flutes",name:"Clear Champagne Flutes",image:"https://i.imgur.com/vc7YhUx.jpeg"},
+  {id:"red-ceramic-plates",name:"Red Ceramic Dinner Plates",image:"https://i.imgur.com/zHhkrqz.jpeg"},
+  {id:"twisted-dinner-glasses",name:"Twisted Dinner Glasses",image:"https://i.imgur.com/QtkcT7j.jpeg"},
+  {id:"autumn-leaves-plate",name:"Autumn Leaves Glass Plates",image:"https://i.imgur.com/5XUNj3U.jpeg"},
+  {id:"cocacola-glasses",name:"Coca-Cola OG Glasses",image:"https://i.imgur.com/AtMKqHL.jpeg"},
+  {id:"longhorn-whiskey-small",name:"Longhorn Whiskey Glass — Small",image:"https://i.imgur.com/BDU1DVC.jpeg"},
+  {id:"longhorn-whiskey-large",name:"Longhorn Whiskey Glass — Large",image:"https://i.imgur.com/W1BRZK2.jpeg"},
+  {id:"sweetwater-ipa-glass",name:"SweetWater IPA Glass",image:"https://i.imgur.com/LWZgaYb.jpeg"},
+  {id:"sweetwater-420-glass",name:"SweetWater 420 Glass",image:"https://i.imgur.com/bF8rr7B.jpeg"},
+  {id:"ballast-point-glass",name:"Ballast Point Skeleton Glass",image:"https://i.imgur.com/CTLheaO.jpeg"},
+  {id:"smirnoff-golf-glass",name:"Smirnoff Golf Ball Glass",image:"https://i.imgur.com/TkULwys.jpeg"},
+  {id:"red-robin-beer-glass",name:"Red Robin Beer Glass",image:"https://i.imgur.com/BE2eBxi.jpeg"},
+  {id:"murphys-stout-glass",name:"Murphy's Irish Stout Glass",image:"https://i.imgur.com/QYsmhEC.jpeg"},
+  {id:"terrapin-turtle-glass",name:"Terrapin Turtle Beer Glass",image:"https://i.imgur.com/DFcQOId.jpeg"},
+  {id:"don-pedro-whiskey-glass",name:"Don Pedro Whiskey Glass",image:"https://i.imgur.com/4EtrN7u.jpeg"},
+  {id:"southeastern-whiskey-glass",name:"Southeastern Whiskey Glass",image:"https://i.imgur.com/swYNnqq.jpeg"},
+  {id:"guinness-beer-glass",name:"Guinness Beer Glass",image:"https://i.imgur.com/LbESLO3.jpeg"},
+  {id:"wrought-iron-ipa-glass",name:"Wrought Iron IPA Glass",image:"https://i.imgur.com/1N7wRro.jpeg"},
+  {id:"thirsty-frog-glass",name:"Thirsty Frog Glass",image:"https://i.imgur.com/TtAA54V.jpeg"},
+  {id:"bud-light-apple-glass",name:"Bud Light Apple Glass",image:"https://i.imgur.com/WY0icaH.jpeg"},
+  {id:"bubba-gump-glass",name:"Bubba Gump Shrimp Co. Glass",image:"https://i.imgur.com/32WGxsW.jpeg"},
+  {id:"butte-creek-glass",name:"Butte Creek Glass",image:"https://i.imgur.com/KD6lqxI.jpeg"},
+  {id:"black-drinking-glasses",name:"Black Drinking Glasses",image:"https://i.imgur.com/y8aW4Fd.jpeg"},
+  {id:"blue-glass-drinking-pair",name:"Blue Glass Drinking Glasses",image:"https://i.imgur.com/m1mxIlG.jpeg"},
+  {id:"fruit-mug-set",name:"Fruit Mug Set",image:"https://i.imgur.com/JuChz2X.jpeg"},
+  {id:"glass-jar-mugs",name:"Glass Jar Mugs",image:"https://i.imgur.com/PrGf3vz.jpeg"},
+  {id:"orange-teal-plate-set",name:"Orange & Teal Plates",image:"https://i.imgur.com/IZsBarz.jpeg"},
+  {id:"flower-rim-plates",name:"Flower Rim Plates",image:"https://i.imgur.com/MhWLz8S.jpeg"},
+  {id:"smooth-black-ceramic-plates",name:"Smooth Black Ceramic Plates",image:"https://i.imgur.com/JTEppD3.jpeg"},
+  {id:"blue-white-swirl-set",name:"Blue & White Swirl Set",image:"https://i.imgur.com/QFdd2ad.jpeg"},
+  {id:"brown-gold-square-plates",name:"Brown & Gold Square Plates",image:"https://i.imgur.com/D6VVjIR.jpeg"},
+  {id:"large-white-square-plates",name:"Large White Square Plates",image:"https://i.imgur.com/SLdDguJ.jpeg"},
+  {id:"heavy-glass-beer-mugs",name:"Heavy Glass Beer Mugs",image:"https://i.imgur.com/4NE9vQB.jpeg"},
+  {id:"sweetwater-420-glass-new",name:"Sweetwater 420 Glass",image:"https://i.imgur.com/SR8sHAA.jpeg"},
+  ];
+
+  const inv=DISH_DASH_INVENTORY;
+  const canvas=document.getElementById("dd-canvas"); if(!canvas)return;
+  const ctx=canvas.getContext("2d");
+  const stage=document.getElementById("dd-stage");
+  const overlay=document.getElementById("dd-overlay");
+  const startBtn=document.getElementById("dd-start-btn");
+  const restartBtn=document.getElementById("dd-restart-btn");
+  const randomBtn=document.getElementById("dd-random-btn");
+  const select=document.getElementById("dd-dish-select");
+  const thumb=document.getElementById("dd-dish-thumb");
+  const nameEl=document.getElementById("dd-dish-name");
+  const speedBadge=document.getElementById("dd-speed-badge");
+  const mobileBtns=document.getElementById("dd-mobile-btns");
+  const jumpBtn=document.getElementById("dd-jump-btn");
+  const slideBtn=document.getElementById("dd-slide-btn");
+
+  // Populate select
+  inv.forEach((item,i)=>{ const o=document.createElement("option"); o.value=i; o.textContent=item.name; select.appendChild(o); });
+
+  const isMobile=()=>window.innerWidth<=768;
+
+  // Show mobile buttons on touch devices
+  if('ontouchstart' in window){ mobileBtns.style.display="flex"; }
+
+  let selectedImg=null, selectedDish=inv[0];
+  let running=false, gameStarted=false, gameOver=false;
+  let score=0, bestScore=0, speed=300, spawnTimer=0, actionCount=0;
+  let obstacles=[], particles=[], stars=[], clouds=[], raf=0, lastTime=0;
+  let groundY=220, cloudOffset=0;
+  // sunProgress: 0=day, 1=full night
+  let sunProgress=0;
+
+  // Player with slide state
+  const PLAYER_NORMAL_H=52, PLAYER_SLIDE_H=24;
+  const player={x:80,y:0,w:52,h:PLAYER_NORMAL_H,vy:0,grounded:true,rot:0,sliding:false,slideTimer:0};
+
+  function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+  function rnd(a,b){return Math.random()*(b-a)+a;}
+
+  function resize(){
+    const dpr=Math.max(1,devicePixelRatio||1);
+    const r=stage.getBoundingClientRect();
+    canvas.width=Math.floor(r.width*dpr);
+    canvas.height=Math.floor(r.height*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    groundY=r.height-58;
+    resetPlayer();
+  }
+
+  function resetPlayer(){
+    player.y=groundY-PLAYER_NORMAL_H;
+    player.vy=0; player.grounded=true; player.rot=0;
+    player.sliding=false; player.slideTimer=0;
+    player.h=PLAYER_NORMAL_H;
+  }
+
+  async function loadDish(item){
+    selectedDish=item;
+    const lbl=item.name.length>22?item.name.slice(0,20)+'…':item.name;
+    if(nameEl) nameEl.textContent=lbl;
+    if(thumb){ thumb.src=item.image; thumb.alt=item.name; }
+    return new Promise(res=>{
+      const img=new Image(); img.crossOrigin="anonymous";
+      img.onload=()=>{selectedImg=img;res();}; img.onerror=()=>{selectedImg=null;res();};
+      img.src=item.image;
+    });
+  }
+
+  function setDish(i){ if(inv[i]) loadDish(inv[i]); }
+
+  function showOverlay(title,msg,btn){
+    document.getElementById("dd-overlay-title").textContent=title;
+    document.getElementById("dd-overlay-msg").innerHTML=msg;
+    document.getElementById("dd-start-btn").textContent=btn;
+    overlay.style.display="flex"; overlay.style.opacity="1"; overlay.style.pointerEvents="auto";
+  }
+
+  function hideOverlay(){
+    overlay.style.opacity="0"; overlay.style.pointerEvents="none";
+    setTimeout(()=>{if(overlay.style.opacity==="0")overlay.style.display="none";},220);
+  }
+
+  // ── STARS ──
+  function initStars(W,H){
+    stars=[];
+    for(let i=0;i<120;i++) stars.push({x:rnd(0,W),y:rnd(0,groundY*.85),r:rnd(.6,2.2),twinkle:rnd(0,Math.PI*2)});
+  }
+
+  // ── CLOUDS ──
+  function initClouds(W){
+    clouds=[];
+    for(let i=0;i<6;i++) clouds.push({x:rnd(0,W),y:rnd(16,groundY*.55),r:rnd(22,44),speed:rnd(16,28)});
+  }
+
+  // ── OBSTACLES ──
+  // Types: 0=tall pine (jump), 1=oak (jump), 2=birch (jump), 3=bushes (jump),
+  //        4=low branch/log (slide under), 5=double hurdle (jump),
+  //        6=hanging vine (slide)
+  function spawnObstacle(){
+    const W=stage.getBoundingClientRect().width;
+    const kind=Math.floor(rnd(0,7));
+    let obs;
+
+    if(kind<=3){
+      // Ground trees — bigger and more varied
+      const h=rnd(72,118), w=rnd(40,64);
+      obs={x:W+40, y:groundY-h, w, h, kind,
+           hitOffX:0.26, hitOffW:0.48, hitOffY:0.32, hitOffH:0.68,
+           action:'jump'};
+    } else if(kind===4){
+      // Log on ground — wider, chunkier
+      const h=rnd(32,48), w=rnd(58,86);
+      obs={x:W+40, y:groundY-h, w, h, kind,
+           hitOffX:0.02, hitOffW:0.96, hitOffY:0, hitOffH:1,
+           action:'jump'};
+    } else if(kind===5){
+      // UFO variant A — medium saucer that requires a slide
+      const w=rnd(84,106), h=rnd(42,56);
+      const floatY = groundY - PLAYER_NORMAL_H*0.32 - h;
+      obs={x:W+40, y:floatY, w, h, kind, variant:Math.floor(rnd(0,2)),
+           hitOffX:0.08, hitOffW:0.84, hitOffY:0.10, hitOffH:0.68,
+           action:'slide'};
+    } else {
+      // UFO variant B/C — slightly larger ships with different silhouettes
+      const w=rnd(88,118), h=rnd(46,62);
+      const floatY = groundY - PLAYER_NORMAL_H*0.36 - h;
+      obs={x:W+40, y:floatY, w, h, kind, variant:2+Math.floor(rnd(0,2)),
+           hitOffX:0.06, hitOffW:0.88, hitOffY:0.08, hitOffH:0.72,
+           action:'slide'};
+    }
+    obstacles.push(obs);
+  }
+
+  // ── DRAW OBSTACLE TYPES ──
+  function drawObstacle(o){
+    const {x,y,w,h,kind}=o;
+    const cx=x+w/2;
+
+    if(kind===0){ // ── PINE TREE ──
+      // Ground shadow
+      ctx.fillStyle="rgba(0,0,0,.18)";
+      ctx.beginPath(); ctx.ellipse(cx,groundY,w*.55,6,0,0,Math.PI*2); ctx.fill();
+      // Trunk — gradient bark with shadow side
+      const tk=ctx.createLinearGradient(cx-w*.2,0,cx+w*.2,0);
+      tk.addColorStop(0,"#3a1e08"); tk.addColorStop(.35,"#8c5c2a"); tk.addColorStop(.6,"#7a5230"); tk.addColorStop(1,"#3a1e08");
+      ctx.fillStyle=tk; ctx.beginPath();
+      ctx.roundRect(cx-w*.19,y+h*.65,w*.38,h*.37,3); ctx.fill();
+      // Root flare
+      ctx.fillStyle="#4a2c14";
+      ctx.beginPath(); ctx.moveTo(cx-w*.22,groundY); ctx.lineTo(cx-w*.19,y+h*.85); ctx.lineTo(cx+w*.19,y+h*.85); ctx.lineTo(cx+w*.22,groundY); ctx.closePath(); ctx.fill();
+      // Pine layers — 3 tiers, each with highlight + shadow
+      [[0,.44,1.02,"#1a5c1a"],[.1,.3,.85,"#226622"],[.24,.15,.66,"#2d7a2d"]].forEach(([top,mid,wide,col],li)=>{
+        const ty=y+h*top, by=y+h*(top+mid+.12);
+        // shadow side
+        ctx.fillStyle="rgba(0,0,0,.18)";
+        ctx.beginPath(); ctx.moveTo(cx,ty); ctx.lineTo(cx+w*wide/2,by); ctx.lineTo(cx,by); ctx.closePath(); ctx.fill();
+        // main fill
+        ctx.fillStyle=col;
+        ctx.beginPath(); ctx.moveTo(cx,ty); ctx.lineTo(cx+w*wide/2,by); ctx.lineTo(cx-w*wide/2,by); ctx.closePath(); ctx.fill();
+        // light edge highlight
+        ctx.fillStyle="rgba(140,210,90,.22)";
+        ctx.beginPath(); ctx.moveTo(cx,ty); ctx.lineTo(cx-w*wide/2,by); ctx.lineTo(cx-w*wide/2+4,by); ctx.lineTo(cx,ty+7); ctx.closePath(); ctx.fill();
+        // snow tip hint
+        if(li===2){ ctx.fillStyle="rgba(255,255,255,.12)"; ctx.beginPath(); ctx.moveTo(cx,ty); ctx.lineTo(cx+8,ty+12); ctx.lineTo(cx-8,ty+12); ctx.closePath(); ctx.fill(); }
+      });
+
+    } else if(kind===1){ // ── OAK TREE ──
+      ctx.fillStyle="rgba(0,0,0,.16)";
+      ctx.beginPath(); ctx.ellipse(cx,groundY,w*.6,5,0,0,Math.PI*2); ctx.fill();
+      // Trunk
+      const tk2=ctx.createLinearGradient(cx-w*.18,0,cx+w*.18,0);
+      tk2.addColorStop(0,"#2c1406"); tk2.addColorStop(.4,"#7a4818"); tk2.addColorStop(.7,"#6e4220"); tk2.addColorStop(1,"#2c1406");
+      ctx.fillStyle=tk2; ctx.beginPath(); ctx.roundRect(cx-w*.17,y+h*.5,w*.34,h*.52,4); ctx.fill();
+      // Bark texture lines
+      ctx.strokeStyle="rgba(30,10,0,.25)"; ctx.lineWidth=1;
+      for(let i=0;i<3;i++){ const by2=y+h*(.58+i*.1); ctx.beginPath(); ctx.moveTo(cx-w*.15,by2); ctx.quadraticCurveTo(cx,by2+3,cx+w*.15,by2); ctx.stroke(); }
+      // Root flare
+      ctx.fillStyle="#3a1e08";
+      ctx.beginPath(); ctx.moveTo(cx-w*.24,groundY); ctx.lineTo(cx-w*.17,y+h*.82); ctx.lineTo(cx+w*.17,y+h*.82); ctx.lineTo(cx+w*.24,groundY); ctx.closePath(); ctx.fill();
+      // Canopy layers
+      const cany=y+h*.32;
+      ctx.fillStyle="rgba(10,30,10,.35)"; ctx.beginPath(); ctx.ellipse(cx+w*.08,cany+h*.07,w*.58,h*.43,0,0,Math.PI*2); ctx.fill();
+      const cg=ctx.createRadialGradient(cx-w*.1,cany-h*.1,w*.04,cx,cany,w*.64);
+      cg.addColorStop(0,"#5ac840"); cg.addColorStop(.45,"#2d8c2d"); cg.addColorStop(1,"#155c15");
+      ctx.fillStyle=cg; ctx.beginPath(); ctx.ellipse(cx,cany,w*.62,h*.46,0,0,Math.PI*2); ctx.fill();
+      // Secondary canopy blob
+      ctx.fillStyle="#257025"; ctx.beginPath(); ctx.ellipse(cx+w*.3,cany+h*.08,w*.32,h*.3,-.3,0,Math.PI*2); ctx.fill();
+      // Highlight
+      ctx.fillStyle="rgba(160,255,100,.24)"; ctx.beginPath(); ctx.ellipse(cx-w*.14,cany-h*.16,w*.26,h*.16,-.4,0,Math.PI*2); ctx.fill();
+
+    } else if(kind===2){ // ── BIRCH TREE ──
+      ctx.fillStyle="rgba(0,0,0,.12)";
+      ctx.beginPath(); ctx.ellipse(cx,groundY,w*.45,4,0,0,Math.PI*2); ctx.fill();
+      // White bark trunk — gradient
+      const tkg=ctx.createLinearGradient(cx-w*.16,0,cx+w*.16,0);
+      tkg.addColorStop(0,"#b0a898"); tkg.addColorStop(.35,"#e8e0d0"); tkg.addColorStop(.65,"#d4c9b8"); tkg.addColorStop(1,"#a09080");
+      ctx.fillStyle=tkg; ctx.beginPath(); ctx.roundRect(cx-w*.15,y+h*.14,w*.3,h*.86,4); ctx.fill();
+      // Bark marks (dark horizontal patches)
+      ctx.fillStyle="rgba(60,40,20,.38)";
+      for(let i=0;i<5;i++){ const by3=y+h*(.22+i*.14); ctx.beginPath(); ctx.roundRect(cx-w*.14,by3,w*.28,4,2); ctx.fill(); }
+      // Leaf clusters — multiple overlapping, varied greens
+      [["#3a9e3a",-.32,.06,.40,.30],["#2d8c2d",.14,-.02,.42,.32],["#45b040",-.08,.24,.38,.26],["#257025",.28,.18,.30,.24]].forEach(([c,ox,oy,ew,eh])=>{
+        ctx.fillStyle=c; ctx.beginPath(); ctx.ellipse(cx+ox*w,y+oy*h,ew*w,eh*h,rnd(-.5,.5),0,Math.PI*2); ctx.fill();
+        ctx.fillStyle="rgba(150,240,100,.18)"; ctx.beginPath(); ctx.ellipse(cx+ox*w-ew*w*.25,y+oy*h-eh*h*.3,ew*w*.3,eh*h*.22,-.4,0,Math.PI*2); ctx.fill();
+      });
+
+    } else if(kind===3){ // ── BUSH CLUSTER ──
+      ctx.fillStyle="rgba(0,0,0,.14)";
+      ctx.beginPath(); ctx.ellipse(cx,groundY,w*.62,5,0,0,Math.PI*2); ctx.fill();
+      // Multiple bush mounds with detail
+      [{ox:0,oy:.55,rx:.52,ry:.46,c:"#2d8c2d",h2:"#3aa83a"},{ox:-.36,oy:.68,rx:.34,ry:.35,c:"#1e6b1e",h2:"#2d7a2d"},{ox:.36,oy:.7,rx:.32,ry:.32,c:"#257025",h2:"#309030"},{ox:-.18,oy:.4,rx:.28,ry:.24,c:"#2d7a2d",h2:"#45a040"}].forEach(b=>{
+        const bx=cx+b.ox*w, by4=y+b.oy*h;
+        // Shadow
+        ctx.fillStyle="rgba(0,0,0,.18)"; ctx.beginPath(); ctx.ellipse(bx+2,by4+3,b.rx*w,b.ry*h,0,0,Math.PI*2); ctx.fill();
+        // Body
+        ctx.fillStyle=b.c; ctx.beginPath(); ctx.ellipse(bx,by4,b.rx*w,b.ry*h,0,0,Math.PI*2); ctx.fill();
+        // Highlight
+        ctx.fillStyle="rgba(160,240,90,.24)"; ctx.beginPath(); ctx.ellipse(bx-b.rx*w*.22,by4-b.ry*h*.28,b.rx*w*.38,b.ry*h*.28,-.35,0,Math.PI*2); ctx.fill();
+        // Berry dots
+        ctx.fillStyle="#e53e3e";
+        for(let j=0;j<3;j++) { const bx2=bx+rnd(-b.rx*w*.4,b.rx*w*.4); ctx.beginPath(); ctx.arc(bx2,by4+rnd(-b.ry*h*.2,b.ry*h*.1),2,0,Math.PI*2); ctx.fill(); }
+      });
+      // Ground stems
+      ctx.strokeStyle="#2d5c0a"; ctx.lineWidth=2;
+      for(let i=0;i<4;i++){ const sx=cx+rnd(-w*.4,w*.4); ctx.beginPath(); ctx.moveTo(sx,groundY); ctx.lineTo(sx+rnd(-4,4),groundY-10); ctx.stroke(); }
+
+    } else if(kind===4){ // ── LOG ──
+      ctx.fillStyle="rgba(0,0,0,.2)"; ctx.beginPath(); ctx.ellipse(cx,groundY,w*.52,5,0,0,Math.PI*2); ctx.fill();
+      const lg=ctx.createLinearGradient(x,y,x,y+h);
+      lg.addColorStop(0,"#9c6832"); lg.addColorStop(.3,"#7a5230"); lg.addColorStop(.7,"#5a3a18"); lg.addColorStop(1,"#3a1e08");
+      ctx.fillStyle=lg; ctx.beginPath(); ctx.roundRect(x,y,w,h,h/2); ctx.fill();
+      ctx.fillStyle="rgba(0,0,0,.25)"; ctx.beginPath(); ctx.roundRect(x+2,y+h*.6,w-4,h*.38,h/2); ctx.fill();
+      ctx.strokeStyle="rgba(80,40,10,.2)"; ctx.lineWidth=1.2;
+      for(let i=0;i<4;i++){ const gy=y+h*(.28+i*.14); ctx.beginPath(); ctx.moveTo(x+8,gy); ctx.bezierCurveTo(x+w*.3,gy+rnd(-1,2),x+w*.7,gy+rnd(-1,2),x+w-8,gy); ctx.stroke(); }
+      const fx=x+h*.55, fy=y+h/2;
+      ctx.fillStyle="#6e4220"; ctx.beginPath(); ctx.ellipse(fx,fy,h*.46,h*.44,0,0,Math.PI*2); ctx.fill();
+      [.36,.26,.16,.07].forEach((r,i)=>{ ctx.strokeStyle=i===0?"rgba(40,20,5,.5)":"rgba(40,20,5,.22)"; ctx.lineWidth=i===0?1.5:1; ctx.beginPath(); ctx.ellipse(fx,fy,h*r,h*(r-.02),0,0,Math.PI*2); ctx.stroke(); });
+      ctx.fillStyle="#8c5020"; ctx.beginPath(); ctx.ellipse(fx,fy,h*.04,h*.04,0,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle="rgba(255,255,255,.1)"; ctx.beginPath(); ctx.roundRect(x+h*.8,y+2,w-h*.9,4,2); ctx.fill();
+      ctx.fillStyle="rgba(60,120,40,.35)";
+      ctx.beginPath(); ctx.ellipse(x+w*.62,y+h*.14,w*.14,3,0,0,Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(x+w*.32,y+h*.1,w*.1,2.5,0,0,Math.PI*2); ctx.fill();
+    } else if(kind===5 || kind===6){ // ── UFO VARIANTS — slide under ──
+      const variant = o.variant || 0;
+      const ufoY=y+h*.38;
+      const hullPalettes=[
+        ["#e2e8f0","#cbd5e1","#94a3b8","#475569"],
+        ["#f8fafc","#dbeafe","#93c5fd","#1d4ed8"],
+        ["#fef3c7","#fcd34d","#f59e0b","#92400e"],
+        ["#dcfce7","#86efac","#22c55e","#166534"]
+      ];
+      const domePalettes=[
+        ["rgba(220,250,255,.95)","rgba(120,200,255,.75)","rgba(60,130,220,.4)","rgba(30,80,180,.1)"],
+        ["rgba(255,255,255,.95)","rgba(196,181,253,.78)","rgba(124,58,237,.42)","rgba(76,29,149,.12)"],
+        ["rgba(255,255,220,.95)","rgba(253,224,71,.78)","rgba(245,158,11,.42)","rgba(120,53,15,.12)"],
+        ["rgba(220,255,240,.95)","rgba(110,231,183,.78)","rgba(16,185,129,.42)","rgba(6,78,59,.12)"]
+      ];
+      const hp=hullPalettes[variant % hullPalettes.length];
+      const dp=domePalettes[variant % domePalettes.length];
+      const widthScale=[1,.92,1.08,.98][variant % 4];
+      const domeScale=[1,.88,1.12,.95][variant % 4];
+      const beamHue=["80,255,120","150,120,255","255,210,80","80,255,220"][variant % 4];
+      // Outer atmosphere glow
+      const atm=ctx.createRadialGradient(cx,ufoY,0,cx,ufoY,w*.7);
+      atm.addColorStop(0,`rgba(${beamHue},.12)`); atm.addColorStop(1,`rgba(${beamHue},0)`);
+      ctx.fillStyle=atm; ctx.beginPath(); ctx.ellipse(cx,ufoY,w*.7,h*.5,0,0,Math.PI*2); ctx.fill();
+      // Disc shadow underneath
+      ctx.fillStyle="rgba(0,0,0,.22)"; ctx.beginPath(); ctx.ellipse(cx+4,ufoY+h*.14+4,w*.44,h*.14,0,0,Math.PI*2); ctx.fill();
+      // Bottom disc rim
+      const rimG=ctx.createLinearGradient(x,ufoY,x,ufoY+h*.28);
+      rimG.addColorStop(0,hp[2]); rimG.addColorStop(1,hp[3]);
+      ctx.fillStyle=rimG; ctx.beginPath(); ctx.ellipse(cx,ufoY+h*.08,w*.46*widthScale,h*.18,0,0,Math.PI*2); ctx.fill();
+      // Main saucer body
+      const sg=ctx.createLinearGradient(x,ufoY-h*.24,x,ufoY+h*.24);
+      sg.addColorStop(0,hp[0]); sg.addColorStop(.25,hp[1]); sg.addColorStop(.6,hp[2]); sg.addColorStop(1,hp[3]);
+      ctx.fillStyle=sg; ctx.beginPath(); ctx.ellipse(cx,ufoY,w*.5*widthScale,h*.22,0,0,Math.PI*2); ctx.fill();
+      // Disc edge detail
+      ctx.strokeStyle=`rgba(${beamHue},.42)`; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.ellipse(cx,ufoY,w*.5*widthScale,h*.22,0,0,Math.PI*2); ctx.stroke();
+      // Panel lines
+      ctx.strokeStyle="rgba(70,90,120,.3)"; ctx.lineWidth=1;
+      for(let i=0;i<3;i++){ const pr=w*((.18+i*.1)*widthScale); ctx.beginPath(); ctx.ellipse(cx,ufoY,pr,pr*h*.22/(w*.5*widthScale),0,0,Math.PI*2); ctx.stroke(); }
+      // Dome
+      const dg=ctx.createRadialGradient(cx-w*.1,ufoY-h*.2,2,cx,ufoY-h*.05,w*.25*domeScale);
+      dg.addColorStop(0,dp[0]); dg.addColorStop(.4,dp[1]); dg.addColorStop(.8,dp[2]); dg.addColorStop(1,dp[3]);
+      ctx.fillStyle=dg; ctx.beginPath(); ctx.ellipse(cx,ufoY-h*.1,w*.24*domeScale,h*.3,0,Math.PI,Math.PI*2); ctx.fill();
+      // Dome frame ring
+      ctx.strokeStyle=`rgba(${beamHue},.5)`; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.ellipse(cx,ufoY-h*.1,w*.24*domeScale,h*.3,0,Math.PI,Math.PI*2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx-w*.24*domeScale,ufoY-h*.1); ctx.lineTo(cx+w*.24*domeScale,ufoY-h*.1); ctx.stroke();
+      // Rim lights
+      const lit=Math.sin(score*.22+variant)>.0;
+      const lit2=Math.sin(score*.22+Math.PI+variant)>.0;
+      const lc=["#ff4444","#ffaa00","#44ff44","#4488ff","#ff44ff","#ffff44"];
+      for(let i=0;i<6;i++){
+        const ang=(i/6)*Math.PI*2-(Math.PI/2);
+        const lx=cx+Math.cos(ang)*w*.42*widthScale, ly=ufoY+Math.sin(ang)*h*.16;
+        const isOn=i%2===0?lit:lit2;
+        ctx.fillStyle="#2d3748"; ctx.beginPath(); ctx.arc(lx,ly,4.5,0,Math.PI*2); ctx.fill();
+        if(isOn){
+          const lg2=ctx.createRadialGradient(lx,ly,0,lx,ly,8);
+          lg2.addColorStop(0,lc[(i+variant)%lc.length]); lg2.addColorStop(1,lc[(i+variant)%lc.length]+"00");
+          ctx.fillStyle=lg2; ctx.beginPath(); ctx.arc(lx,ly,8,0,Math.PI*2); ctx.fill();
+        }
+        ctx.fillStyle=isOn?lc[(i+variant)%lc.length]:"rgba(60,60,60,.6)"; ctx.beginPath(); ctx.arc(lx,ly,3.5,0,Math.PI*2); ctx.fill();
+      }
+      // Tractor beam
+      const beam=ctx.createLinearGradient(cx,ufoY+h*.2,cx,groundY);
+      beam.addColorStop(0,`rgba(${beamHue},.22)`); beam.addColorStop(.5,`rgba(${beamHue},.08)`); beam.addColorStop(1,`rgba(${beamHue},0)`);
+      ctx.fillStyle=beam;
+      ctx.beginPath();
+      ctx.moveTo(cx-w*.1,ufoY+h*.2); ctx.lineTo(cx-w*.42,groundY); ctx.lineTo(cx+w*.42,groundY); ctx.lineTo(cx+w*.1,ufoY+h*.2);
+      ctx.closePath(); ctx.fill();
+      ctx.strokeStyle=`rgba(${beamHue},.2)`; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(cx,ufoY+h*.22); ctx.lineTo(cx,groundY); ctx.stroke();
+      // Warning hint
+      ctx.fillStyle="rgba(0,0,0,.35)"; ctx.beginPath(); ctx.roundRect(cx-30,y-24,60,17,4); ctx.fill();
+      ctx.fillStyle=`rgba(${beamHue},.95)`; ctx.font="bold 11px Arial";
+      ctx.textAlign="center"; ctx.fillText("↓ SLIDE",cx,y-11); ctx.textAlign="left";
+
+    } else if(false) { // old UFO block disabled
+      const ufoY=y+h*.38;
+      // Outer atmosphere glow
+      const atm=ctx.createRadialGradient(cx,ufoY,0,cx,ufoY,w*.7);
+      atm.addColorStop(0,"rgba(80,255,120,.12)"); atm.addColorStop(1,"rgba(80,255,120,0)");
+      ctx.fillStyle=atm; ctx.beginPath(); ctx.ellipse(cx,ufoY,w*.7,h*.5,0,0,Math.PI*2); ctx.fill();
+      // Disc shadow underneath
+      ctx.fillStyle="rgba(0,0,0,.22)"; ctx.beginPath(); ctx.ellipse(cx+4,ufoY+h*.14+4,w*.44,h*.14,0,0,Math.PI*2); ctx.fill();
+      // Bottom disc rim — darker
+      const rimG=ctx.createLinearGradient(x,ufoY,x,ufoY+h*.28);
+      rimG.addColorStop(0,"#64748b"); rimG.addColorStop(1,"#334155");
+      ctx.fillStyle=rimG; ctx.beginPath(); ctx.ellipse(cx,ufoY+h*.08,w*.46,h*.18,0,0,Math.PI*2); ctx.fill();
+      // Main saucer disc body
+      const sg=ctx.createLinearGradient(x,ufoY-h*.24,x,ufoY+h*.24);
+      sg.addColorStop(0,"#e2e8f0"); sg.addColorStop(.25,"#cbd5e1"); sg.addColorStop(.6,"#94a3b8"); sg.addColorStop(1,"#475569");
+      ctx.fillStyle=sg; ctx.beginPath(); ctx.ellipse(cx,ufoY,w*.5,h*.22,0,0,Math.PI*2); ctx.fill();
+      // Disc edge detail line
+      ctx.strokeStyle="rgba(100,150,255,.4)"; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.ellipse(cx,ufoY,w*.5,h*.22,0,0,Math.PI*2); ctx.stroke();
+      // Panel lines on disc
+      ctx.strokeStyle="rgba(70,90,120,.3)"; ctx.lineWidth=1;
+      for(let i=0;i<3;i++){ const pr=w*(.18+i*.1); ctx.beginPath(); ctx.ellipse(cx,ufoY,pr,pr*h*.22/(w*.5),0,0,Math.PI*2); ctx.stroke(); }
+      // Dome
+      const dg=ctx.createRadialGradient(cx-w*.1,ufoY-h*.2,2,cx,ufoY-h*.05,w*.25);
+      dg.addColorStop(0,"rgba(220,250,255,.95)"); dg.addColorStop(.4,"rgba(120,200,255,.75)"); dg.addColorStop(.8,"rgba(60,130,220,.4)"); dg.addColorStop(1,"rgba(30,80,180,.1)");
+      ctx.fillStyle=dg; ctx.beginPath(); ctx.ellipse(cx,ufoY-h*.1,w*.24,h*.3,0,Math.PI,Math.PI*2); ctx.fill();
+      // Dome frame ring
+      ctx.strokeStyle="rgba(100,180,255,.5)"; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.ellipse(cx,ufoY-h*.1,w*.24,h*.3,0,Math.PI,Math.PI*2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx-w*.24,ufoY-h*.1); ctx.lineTo(cx+w*.24,ufoY-h*.1); ctx.stroke();
+      // Rim lights — alternate blink pattern
+      const lit=Math.sin(score*.22)>.0;
+      const lit2=Math.sin(score*.22+Math.PI)>.0;
+      const lc=["#ff4444","#ffaa00","#44ff44","#4488ff","#ff44ff","#ffff44"];
+      for(let i=0;i<6;i++){
+        const ang=(i/6)*Math.PI*2-(Math.PI/2);
+        const lx=cx+Math.cos(ang)*w*.42, ly=ufoY+Math.sin(ang)*h*.16;
+        const isOn=i%2===0?lit:lit2;
+        // Light housing
+        ctx.fillStyle="#2d3748"; ctx.beginPath(); ctx.arc(lx,ly,4.5,0,Math.PI*2); ctx.fill();
+        // Light glow
+        if(isOn){
+          const lg2=ctx.createRadialGradient(lx,ly,0,lx,ly,8);
+          lg2.addColorStop(0,lc[i]); lg2.addColorStop(1,lc[i]+"00");
+          ctx.fillStyle=lg2; ctx.beginPath(); ctx.arc(lx,ly,8,0,Math.PI*2); ctx.fill();
+        }
+        ctx.fillStyle=isOn?lc[i]:"rgba(60,60,60,.6)"; ctx.beginPath(); ctx.arc(lx,ly,3.5,0,Math.PI*2); ctx.fill();
+      }
+      // Tractor beam — cone from disc bottom to ground
+      const beam=ctx.createLinearGradient(cx,ufoY+h*.2,cx,groundY);
+      beam.addColorStop(0,"rgba(80,255,120,.22)"); beam.addColorStop(.5,"rgba(80,255,120,.08)"); beam.addColorStop(1,"rgba(80,255,120,0)");
+      ctx.fillStyle=beam;
+      ctx.beginPath();
+      ctx.moveTo(cx-w*.1,ufoY+h*.2); ctx.lineTo(cx-w*.42,groundY); ctx.lineTo(cx+w*.42,groundY); ctx.lineTo(cx+w*.1,ufoY+h*.2);
+      ctx.closePath(); ctx.fill();
+      // Beam shimmer line
+      ctx.strokeStyle="rgba(120,255,160,.2)"; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(cx,ufoY+h*.22); ctx.lineTo(cx,groundY); ctx.stroke();
+      // Warning hint
+      ctx.fillStyle="rgba(0,0,0,.35)"; ctx.beginPath(); ctx.roundRect(cx-30,y-24,60,17,4); ctx.fill();
+      ctx.fillStyle="rgba(80,255,120,.95)"; ctx.font="bold 11px Arial";
+      ctx.textAlign="center"; ctx.fillText("↓ SLIDE",cx,y-11); ctx.textAlign="left";
+    }
+  }
+
+  function rectsHit(a,b){
+    return a.x<b.x+b.w && a.x+a.w>b.x && a.y<b.y+b.h && a.y+a.h>b.y;
+  }
+
+  function endGame(){
+    gameOver=true; running=false;
+    bestScore=Math.max(bestScore,Math.floor(score));
+    const cx=player.x+player.w/2, cy=player.y+player.h/2;
+    for(let i=0;i<18;i++) particles.push({x:cx,y:cy,vx:rnd(-220,220),vy:rnd(-260,-40),s:rnd(3,9),life:rnd(.35,.9),green:i%3===0});
+    showOverlay("Dish Broken!",`Score: <strong>${Math.floor(score)}</strong> &nbsp;|&nbsp; Best: <strong>${bestScore}</strong><br/><br/>Tap or press <strong>Space</strong> to run again.`,"▶ Play Again");
+  }
+
+  function startGame(){
+    if(!selectedDish) return;
+    gameStarted=true; gameOver=false; running=true;
+    score=0; speed=300; spawnTimer=0; sunProgress=0; actionCount=0;
+    obstacles=[]; particles=[]; cloudOffset=0;
+    initStars(stage.getBoundingClientRect().width, stage.getBoundingClientRect().height);
+    initClouds(stage.getBoundingClientRect().width);
+    resetPlayer(); hideOverlay();
+    cancelAnimationFrame(raf); lastTime=performance.now();
+    raf=requestAnimationFrame(loop);
+  }
+
+  function jump(){
+    if(!running||gameOver||!player.grounded) return;
+    player.sliding=false; player.slideTimer=0; player.h=PLAYER_NORMAL_H;
+    player.grounded=false; player.vy=-780;
+  }
+
+  function slide(){
+    if(!running||gameOver||player.sliding) return;
+    player.sliding=true; player.slideTimer=0.75;
+    player.h=PLAYER_SLIDE_H;
+    player.y=groundY-PLAYER_SLIDE_H;
+    // Count slide as an action for speed boost
+    actionCount++;
+    if(actionCount>=2){ speed*=1.10; actionCount=0; }
+  }
+
+  // ── UPDATE ──
+  function update(dt){
+    if(!running||gameOver) return;
+    score+=dt*10; spawnTimer-=dt; cloudOffset+=28*dt;
+
+    // Sun sets as score increases — full night by score ~600
+    sunProgress=clamp(score/600,0,1);
+
+    // Slide timer
+    if(player.sliding){
+      player.slideTimer-=dt;
+      if(player.slideTimer<=0){ player.sliding=false; player.h=PLAYER_NORMAL_H; }
+    }
+
+    // Speed boost: +10% every 2 jumps/slides, no cap
+    const wasAir=!player.grounded;
+    player.vy+=2200*dt; player.y+=player.vy*dt;
+    if(player.y+player.h>=groundY){
+      if(wasAir){
+        actionCount++;
+        if(actionCount>=2){ speed*=1.10; actionCount=0; }
+      }
+      player.y=groundY-player.h; player.vy=0; player.grounded=true; player.rot*=.5;
+    } else { player.grounded=false; if(!player.sliding) player.rot=clamp(player.vy/1800,-.4,.4); }
+
+    // Spawn
+    if(spawnTimer<=0){
+      spawnObstacle();
+      const sf=clamp((speed-300)/600,0,1);
+      spawnTimer=clamp(rnd(1.5-sf*.5,1.8-sf*.3),.7,1.8);
+    }
+
+    // Move obstacles + collision
+    for(let i=obstacles.length-1;i>=0;i--){
+      const o=obstacles[i]; o.x-=speed*dt;
+      // hit box
+      const hx=o.x+o.w*o.hitOffX, hw=o.w*o.hitOffW;
+      const hy=o.y+o.h*o.hitOffY, hh=o.h*o.hitOffH;
+      const px=player.x+player.w*.1, pw=player.w*.8;
+      const py=player.y, ph=player.h;
+      if(px<hx+hw && px+pw>hx && py<hy+hh && py+ph>hy){ endGame(); break; }
+      if(o.x+o.w<-20) obstacles.splice(i,1);
+    }
+
+    // Update speed badge
+    if(speedBadge) speedBadge.textContent="Speed: "+Math.floor(speed);
+  }
+
+  // ── DRAW SKY (day→night transition) ──
+  function drawSky(W,H){
+    const p=sunProgress;
+    // Interpolate sky colors from sunset to night
+    function lerp(a,b,t){return Math.round(a+(b-a)*t);}
+    function lerpCol(day,night,t){return `rgb(${lerp(day[0],night[0],t)},${lerp(day[1],night[1],t)},${lerp(day[2],night[2],t)})`;}
+
+    const sky=ctx.createLinearGradient(0,0,0,groundY);
+    // Day top: #060d2e→night: #010208
+    sky.addColorStop(0, lerpCol([6,13,46],[1,2,8],p));
+    sky.addColorStop(.25, lerpCol([14,44,114],[3,6,20],p));
+    sky.addColorStop(.5, lerpCol([34,100,184],[8,14,36],p));
+    // Sunset band (fades out at night)
+    const sunsetA=1-p;
+    sky.addColorStop(.68, `rgba(${lerp(212,8,p)},${lerp(88,12,p)},${lerp(26,30,p)},${clamp(sunsetA+.1,0,1)})`);
+    sky.addColorStop(.85, `rgba(${lerp(240,12,p)},${lerp(135,18,p)},${lerp(42,40,p)},${clamp(sunsetA,0,1)})`);
+    sky.addColorStop(1, lerpCol([253,225,117],[10,15,30],p));
+    ctx.fillStyle=sky; ctx.fillRect(0,0,W,groundY);
+
+    // Stars (fade in as night progresses)
+    if(p>0.15 && stars.length){
+      const starAlpha=clamp((p-.15)/.5,0,1);
+      stars.forEach(s=>{
+        const twink=0.5+0.5*Math.sin(s.twinkle+score*.04);
+        ctx.globalAlpha=starAlpha*twink*.9;
+        ctx.fillStyle="#fff";
+        ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill();
+      });
+      ctx.globalAlpha=1;
+    }
+
+    // Moon (rises as sun sets)
+    if(p>0.3){
+      const moonAlpha=clamp((p-.3)/.4,0,1);
+      const moonX=W*.22, moonY=groundY*(0.25-p*.1);
+      ctx.globalAlpha=moonAlpha;
+      // glow
+      const mg=ctx.createRadialGradient(moonX,moonY,0,moonX,moonY,40);
+      mg.addColorStop(0,"rgba(220,230,255,.25)"); mg.addColorStop(1,"rgba(220,230,255,0)");
+      ctx.fillStyle=mg; ctx.beginPath(); ctx.arc(moonX,moonY,40,0,Math.PI*2); ctx.fill();
+      // disk
+      ctx.fillStyle="#dde8ff"; ctx.beginPath(); ctx.arc(moonX,moonY,16,0,Math.PI*2); ctx.fill();
+      // crescent shadow
+      ctx.fillStyle=lerpCol([6,13,46],[1,2,8],p);
+      ctx.beginPath(); ctx.arc(moonX+6,moonY-2,13,0,Math.PI*2); ctx.fill();
+      ctx.globalAlpha=1;
+    }
+
+    // Sun — starts high, descends behind mountains over time
+    // p=0: sun at 42% down the sky; p=1: sun deep behind mountains
+    const sunX=W*.65;
+    const sunYStart=groundY*.42;      // high in sky at start
+    const sunYEnd=groundY*1.18;       // well below horizon (hidden behind mountains)
+    const sunY=sunYStart+(sunYEnd-sunYStart)*p;
+    const sunR=30;
+
+    // Only draw sun corona/disk when above the mountain ridge (~groundY*0.73)
+    // The mountain fill drawn below will naturally occlude it
+    const sunVisible=sunY<groundY*.98;
+    if(sunVisible){
+      ctx.save();
+      // Clip sun to above mountain line so it can't bleed through
+      // (mountains will be drawn solid on top anyway)
+      const corona=ctx.createRadialGradient(sunX,sunY,0,sunX,sunY,sunR*5.5);
+      corona.addColorStop(0,`rgba(255,220,60,${clamp(.55*(1-p*.4),.0,1)})`);
+      corona.addColorStop(.5,`rgba(255,140,20,${clamp(.22*(1-p*.5),0,1)})`);
+      corona.addColorStop(1,"rgba(255,80,0,0)");
+      ctx.fillStyle=corona; ctx.beginPath(); ctx.arc(sunX,sunY,sunR*5.5,0,Math.PI*2); ctx.fill();
+      // Mid glow
+      const glow=ctx.createRadialGradient(sunX,sunY,0,sunX,sunY,sunR*2.2);
+      glow.addColorStop(0,`rgba(255,240,100,${clamp(.7*(1-p*.5),0,1)})`);
+      glow.addColorStop(1,"rgba(255,120,0,0)");
+      ctx.fillStyle=glow; ctx.beginPath(); ctx.arc(sunX,sunY,sunR*2.2,0,Math.PI*2); ctx.fill();
+      // Sun disk
+      const disk=ctx.createRadialGradient(sunX,sunY-4,2,sunX,sunY,sunR);
+      disk.addColorStop(0,"#fffde0"); disk.addColorStop(.4,"#ffe04a"); disk.addColorStop(1,"#ff8c00");
+      ctx.fillStyle=disk; ctx.beginPath(); ctx.arc(sunX,sunY,sunR,0,Math.PI*2); ctx.fill();
+      // Sunrays when high
+      if(p<0.35){
+        ctx.globalAlpha=clamp(.12*(1-p/.35),0,.12);
+        ctx.strokeStyle="#ffe04a"; ctx.lineWidth=1.5;
+        for(let i=0;i<12;i++){
+          const ang=(i/12)*Math.PI*2;
+          ctx.beginPath();
+          ctx.moveTo(sunX+Math.cos(ang)*sunR*1.1,sunY+Math.sin(ang)*sunR*1.1);
+          ctx.lineTo(sunX+Math.cos(ang)*sunR*4,sunY+Math.sin(ang)*sunR*4);
+          ctx.stroke();
+        }
+        ctx.globalAlpha=1;
+      }
+      ctx.restore();
+    }
+
+    // Horizon haze
+    if(p<0.75){
+      const haze=ctx.createLinearGradient(0,groundY-32,0,groundY);
+      haze.addColorStop(0,"rgba(253,200,80,0)");
+      haze.addColorStop(1,`rgba(253,160,40,${clamp(.5-p*.58,0,.5)})`);
+      ctx.fillStyle=haze; ctx.fillRect(0,groundY-32,W,32);
+    }
+
+    // ── MOUNTAINS — drawn SOLID so sun disappears behind them ──
+    // Use the sky night color so they're opaque and hide the sun perfectly
+    function lerp2(a,b,t){return Math.round(a+(b-a)*t);}
+    // Far mountains — slightly lighter
+    const mCol1=`rgb(${lerp2(18,8,p)},${lerp2(32,10,p)},${lerp2(72,22,p)})`;
+    ctx.fillStyle=mCol1;
+    ctx.beginPath(); ctx.moveTo(0,groundY);
+    ctx.bezierCurveTo(W*.05,groundY*.82,W*.15,groundY*.68,W*.28,groundY*.74);
+    ctx.bezierCurveTo(W*.38,groundY*.8,W*.46,groundY*.65,W*.58,groundY*.7);
+    ctx.bezierCurveTo(W*.68,groundY*.75,W*.76,groundY*.72,W*.86,groundY*.79);
+    ctx.bezierCurveTo(W*.93,groundY*.84,W,groundY*.81,W,groundY*.81);
+    ctx.lineTo(W,groundY); ctx.lineTo(0,groundY); ctx.closePath(); ctx.fill();
+
+    // Near mountains — darker, in front
+    const mCol2=`rgb(${lerp2(12,5,p)},${lerp2(22,6,p)},${lerp2(52,14,p)})`;
+    ctx.fillStyle=mCol2;
+    ctx.beginPath(); ctx.moveTo(0,groundY);
+    ctx.bezierCurveTo(W*.08,groundY*.86,W*.18,groundY*.76,W*.32,groundY*.82);
+    ctx.bezierCurveTo(W*.44,groundY*.88,W*.54,groundY*.74,W*.66,groundY*.8);
+    ctx.bezierCurveTo(W*.76,groundY*.86,W*.86,groundY*.83,W,groundY*.82);
+    ctx.lineTo(W,groundY); ctx.lineTo(0,groundY); ctx.closePath(); ctx.fill();
+  }
+
+  function drawClouds(W){
+    const alpha=clamp(1-sunProgress*1.4,0,1); if(alpha<=0) return;
+    clouds.forEach(c=>{
+      const cx=(c.x+cloudOffset*c.speed/28+W*2)%(W+200)-100;
+      const t=clamp(c.y/(groundY*.6),0,1);
+      ctx.fillStyle=`rgba(255,${Math.floor(255-t*40)},${Math.floor(255-t*80)},.${Math.floor(72*alpha)})`; 
+      [[0,0,1],[-.55,.22,.72],[.55,.22,.72],[-.3,-.25,.62],[.3,-.25,.62],[0,-.38,.52]].forEach(([ox,oy,rs])=>{
+        ctx.beginPath(); ctx.arc(cx+ox*c.r,c.y+oy*c.r,c.r*rs,0,Math.PI*2); ctx.fill();
+      });
+    });
+  }
+
+  function drawGround(W,H){
+    // Dirt darkens at night
+    const nightFactor=sunProgress;
+    function dc(r,g,b){return `rgb(${Math.floor(r*(1-nightFactor*.6))},${Math.floor(g*(1-nightFactor*.6))},${Math.floor(b*(1-nightFactor*.6))})` }
+    const dirt=ctx.createLinearGradient(0,groundY,0,H);
+    dirt.addColorStop(0,dc(107,74,30)); dirt.addColorStop(1,dc(46,28,8));
+    ctx.fillStyle=dirt; ctx.fillRect(0,groundY,W,H-groundY);
+    const grass=ctx.createLinearGradient(0,groundY-10,0,groundY+10);
+    grass.addColorStop(0,dc(93,191,66)); grass.addColorStop(.4,dc(61,154,46)); grass.addColorStop(1,dc(42,110,32));
+    ctx.fillStyle=grass; ctx.fillRect(0,groundY-8,W,18);
+    if(nightFactor<.8){
+      ctx.fillStyle=`rgba(255,160,40,${clamp(.14-nightFactor*.16,0,.14)})`;
+      ctx.fillRect(0,groundY-8,W,6);
+    }
+    // Grass blades
+    for(let gx=4;gx<W;gx+=14){
+      const jit=Math.sin(gx*.27+score*.008)*3;
+      const h1=6+Math.sin(gx*.53)*3, h2=5+Math.cos(gx*.41)*2;
+      ctx.strokeStyle=gx%3===0?dc(93,191,66):dc(61,154,46); ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.moveTo(gx+jit,groundY); ctx.quadraticCurveTo(gx+jit-2,groundY-h1*.6,gx+jit-1,groundY-h1); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(gx+jit+7,groundY); ctx.quadraticCurveTo(gx+jit+9,groundY-h2*.5,gx+jit+8,groundY-h2); ctx.stroke();
+    }
+  }
+
+  function render(dt){
+    const W=stage.getBoundingClientRect().width, H=stage.getBoundingClientRect().height;
+    drawSky(W,H);
+    drawClouds(W);
+    drawGround(W,H);
+
+    // Obstacles
+    obstacles.forEach(o=>drawObstacle(o));
+
+    // Player dish
+    const cx=player.x+player.w/2;
+    const cy=player.y+player.h/2;
+    ctx.save(); ctx.translate(cx,cy);
+    if(player.sliding) ctx.rotate(Math.PI/2); // rotate 90° when sliding
+    else ctx.rotate(player.rot);
+    if(selectedImg){ ctx.drawImage(selectedImg,-player.w/2,-player.h/2,player.w,player.h); }
+    else { ctx.fillStyle="#fff"; ctx.beginPath(); ctx.arc(0,0,22,0,Math.PI*2); ctx.fill(); }
+    ctx.restore();
+
+    // Slide indicator under dish
+    if(player.sliding){
+      ctx.fillStyle="rgba(100,200,255,.35)";
+      ctx.beginPath(); ctx.ellipse(player.x+player.w/2,groundY+2,player.w/2,4,0,0,Math.PI*2); ctx.fill();
+    }
+
+    // Particles
+    for(let i=particles.length-1;i>=0;i--){
+      const p2=particles[i]; p2.life-=dt; p2.x+=p2.vx*dt; p2.y+=p2.vy*dt; p2.vy+=700*dt;
+      if(p2.life<=0){particles.splice(i,1);continue;}
+      ctx.globalAlpha=clamp(p2.life*1.5,0,1);
+      ctx.fillStyle=p2.green?"#3a9e3a":"#c0392b";
+      ctx.fillRect(p2.x,p2.y,p2.s,p2.s);
+      ctx.globalAlpha=1;
+    }
+
+    // HUD
+    ctx.shadowColor="rgba(0,0,0,.6)"; ctx.shadowBlur=5;
+    ctx.fillStyle="#fff";
+    ctx.font=`bold ${clamp(18,14,22)}px Georgia,serif`;
+    ctx.fillText("Score: "+Math.floor(score),14,28);
+    ctx.font="bold 13px Georgia,serif"; ctx.fillText("Best: "+bestScore,14,46);
+    // Night progress label
+    if(sunProgress>0.1){
+      ctx.fillStyle=`rgba(180,200,255,${clamp(sunProgress,.1,1)})`;
+      ctx.font="12px Georgia,serif";
+      const label=sunProgress<.5?"Sunset…":sunProgress<.85?"Dusk…":"Night 🌙";
+      ctx.fillText(label,14,64);
+    }
+    ctx.shadowBlur=0;
+    if(selectedDish){
+      ctx.shadowColor="rgba(0,0,0,.6)"; ctx.shadowBlur=4;
+      ctx.fillStyle="#fff"; ctx.textAlign="right"; ctx.font="bold 12px Georgia,serif";
+      const lbl=selectedDish.name.length>24?selectedDish.name.slice(0,22)+"…":selectedDish.name;
+      ctx.fillText(lbl,W-12,26); ctx.textAlign="left"; ctx.shadowBlur=0;
+    }
+  }
+
+  function loop(ts){
+    const dt=Math.min((ts-lastTime)/1000,.033); lastTime=ts;
+    update(dt); render(dt);
+    raf=requestAnimationFrame(loop);
+  }
+
+  function handleJump(){ if(!gameStarted||gameOver) startGame(); else jump(); }
+  function handleSlide(){ if(running&&!gameOver) slide(); }
+
+  // Keyboard
+  window.addEventListener("keydown",e=>{
+    if(!document.getElementById("dd-canvas")) return;
+    if(e.code==="Space"||e.code==="ArrowUp"||e.key==="w"){e.preventDefault();handleJump();}
+    if(e.code==="ArrowDown"||e.key==="s"){e.preventDefault();handleSlide();}
+  });
+
+  // Touch/click on stage — left half=jump, right half=slide
+  stage.addEventListener("pointerdown",e=>{
+    const r=stage.getBoundingClientRect();
+    const relX=e.clientX-r.left;
+    if(relX < r.width/2) handleJump(); else handleSlide();
+  });
+
+  // Mobile buttons
+  if(jumpBtn) jumpBtn.addEventListener("pointerdown",e=>{e.stopPropagation();handleJump();});
+  if(slideBtn) slideBtn.addEventListener("pointerdown",e=>{e.stopPropagation();handleSlide();});
+
+  startBtn.addEventListener("click",()=>startGame());
+  restartBtn.addEventListener("click",()=>startGame());
+  randomBtn.addEventListener("click",()=>{ const i=Math.floor(Math.random()*inv.length); select.value=i; setDish(i); });
+  select.addEventListener("change",e=>setDish(Number(e.target.value)));
+  window.addEventListener("resize",()=>{ resize(); if(!running) render(0); });
+
+  resize();
+  select.value=0;
+  loadDish(inv[0]).then(()=>{ initStars(stage.getBoundingClientRect().width,stage.getBoundingClientRect().height); initClouds(stage.getBoundingClientRect().width); render(0); });
+}
+
+// ─────────────────────────────────────────────
 // LEADERBOARD SYSTEM
 // ─────────────────────────────────────────────
-const GAME_LABELS = {pong:"🏓 Dish Pong", stack:"🍽️ Stack The Dishes", ninja:"⚔️ Dish Ninja"};
+const GAME_LABELS = {dish21:"🃏 Dish 21", pong:"🏓 Dish Pong", stack:"🍽️ Stack The Dishes", ninja:"⚔️ Dish Ninja"};
 const RANK_MEDALS = ["🥇","🥈","🥉","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟"];
 
 function getLeaderboard(game){
@@ -1775,11 +2859,40 @@ function saveLeaderboard(game,name,score){
 }
 
 function refreshLeaderboards(){
+  const d21=document.getElementById('lb-block-dish21'); if(d21) d21.innerHTML=renderDish21SummaryBlock();
   ['pong','stack','ninja'].forEach(game=>{
     const el=document.getElementById(`lb-block-${game}`);
     if(el) el.innerHTML=renderLeaderboardBlock(game,GAME_LABELS[game]);
   });
 }
+
+function getDish21Summary(){
+  try{
+    const raw=localStorage.getItem('dd-dish21-summary');
+    if(!raw) return {bestRun:100,bestStreak:0,totalWins:0,sessions:0};
+    const s=JSON.parse(raw);
+    return {bestRun:Number(s.bestRun||100),bestStreak:Number(s.bestStreak||0),totalWins:Number(s.totalWins||0),sessions:Number(s.sessions||0)};
+  }catch(e){ return {bestRun:100,bestStreak:0,totalWins:0,sessions:0}; }
+}
+function saveDish21Summary(s){ try{ localStorage.setItem('dd-dish21-summary', JSON.stringify(s)); }catch(e){} }
+function renderDish21SummaryBlock(){
+  const s=getDish21Summary();
+  return `
+    <div id="lb-block-dish21" style="border:2px solid var(--ink);border-radius:12px;overflow:hidden;background:var(--cream)">
+      <div style="padding:8px 14px;background:linear-gradient(90deg,#3b2306,#7c4a0d);display:flex;align-items:center;justify-content:space-between">
+        <span style="font-family:var(--display);font-size:13px;font-weight:900;text-transform:uppercase;color:#fff7d6">🃏 Dish 21</span>
+        <button onclick="clearDish21Summary()" style="font-family:var(--serif);background:transparent;border:1px solid rgba(255,255,255,.2);border-radius:999px;color:rgba(255,255,255,.5);font-size:9px;padding:2px 8px;cursor:pointer;letter-spacing:.05em">Reset</button>
+      </div>
+      <div style="padding:10px 14px;display:grid;gap:8px;font-size:12px">
+        <div style="display:flex;justify-content:space-between;gap:10px"><span>Best Run</span><strong style="font-family:var(--display);font-size:18px;color:#92400e">${s.bestRun}</strong></div>
+        <div style="display:flex;justify-content:space-between;gap:10px"><span>Best Streak</span><strong>${s.bestStreak}</strong></div>
+        <div style="display:flex;justify-content:space-between;gap:10px"><span>Total Wins</span><strong>${s.totalWins}</strong></div>
+        <div style="display:flex;justify-content:space-between;gap:10px"><span>Sessions</span><strong>${s.sessions}</strong></div>
+      </div>
+    </div>
+  `;
+}
+function clearDish21Summary(){ if(!confirm('Reset Dish 21 session stats?')) return; try{ localStorage.removeItem('dd-dish21-summary'); }catch(e){} refreshLeaderboards(); }
 
 function renderLeaderboardBlock(game,label){
   const scores=getLeaderboard(game);
@@ -1930,7 +3043,7 @@ function viewProduct(productId, fromFrontPage=false){
               <p style="font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:6px;font-family:var(--serif)">${p.collection}</p>
               <h2 style="font-family:var(--display);font-size:clamp(22px,5vw,34px);font-weight:900;text-transform:uppercase;color:white;line-height:1.1;text-shadow:0 2px 12px rgba(0,0,0,.5)">${p.title}</h2>
             </div>
-            ${p.oneOfOne ? `<div style="position:absolute;top:14px;right:14px;background:linear-gradient(135deg,#b45309,#d97706);color:white;font-family:var(--display);font-size:10px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:6px 14px;border-radius:999px;box-shadow:0 4px 12px rgba(0,0,0,.3)">⚠️ Only 1 Left</span>` : ""}
+            ${p.oneOfOne ? `<div style="position:absolute;top:14px;right:14px;background:linear-gradient(135deg,#b45309,#d97706);color:white;font-family:var(--display);font-size:10px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:6px 14px;border-radius:999px;box-shadow:0 4px 12px rgba(0,0,0,.3)">⚠️ Only 1 Left</div>` : ""}
           </div>
         `}
       </div>
@@ -2008,6 +3121,7 @@ let gameRunning = false;
 // ─────────────────────────────────────────────
 let _gl = null;         // game loop RAF id
 let _gRunning = false;  // is game running
+let _gameAreaBaseMarkup = null; // original inline game shell markup
 let _gMY = 0;           // mouse/touch Y
 let _gKH = null;        // key handler ref
 let _gMH = null;        // mouse handler ref
@@ -2038,6 +3152,15 @@ function _gImg(i){ return _gImgs[i%(_dishes().length)]; }
 function stopGame(hideArea=false){
   _gRunning=false;
   gameRunning=false;
+  window.__currentInlineGame='';
+  const area=document.getElementById("game-area");
+  if(window.__dish21 && typeof stopDish21==='function'){
+    try{ stopDish21(false); }catch(e){}
+  }
+  if(area && area.dataset && area.dataset.mode==='dishdash' && _gameAreaBaseMarkup){
+    area.innerHTML=_gameAreaBaseMarkup;
+    area.dataset.mode='';
+  }
   if(_gl){ cancelAnimationFrame(_gl); _gl=null; }
   if(gameLoop){ clearInterval(gameLoop); gameLoop=null; }
   if(_gKH){ window.removeEventListener("keydown",_gKH); _gKH=null; }
@@ -2045,7 +3168,13 @@ function stopGame(hideArea=false){
   const canvas=document.getElementById("game-canvas");
   if(canvas){ canvas.onclick=null; canvas.ontouchmove=null; canvas.ontouchend=null; canvas.ontouchstart=null; canvas.onpointerdown=null; }
   if(hideArea){
-    const area=document.getElementById("game-area"); if(area) area.style.display="none";
+    const area=document.getElementById("game-area"); 
+    if(area){
+      area.style.display="none";
+      if(_gameAreaBaseMarkup && !document.getElementById('game-canvas')){
+        area.innerHTML=_gameAreaBaseMarkup;
+      }
+    }
     // Also exit fullscreen if active
     const fc=document.getElementById("game-fullscreen-container");
     if(fc&&fc.classList.contains("active")){
@@ -2182,6 +3311,9 @@ function _gameSetup(title){
     const canvas=document.getElementById("game-canvas");
     if(!canvas) return null;
     const W=area.clientWidth||Math.min(window.innerWidth-32,700);
+    requestAnimationFrame(()=>{
+      try{ area.scrollIntoView({behavior:'smooth', block:'center'}); }catch(e){}
+    });
     return {area,canvas,isMob:false,W};
   }
 }
@@ -2975,6 +4107,156 @@ function startStackGame(){
   }
   frame();
 }
+
+
+// ─────────────────────────────────────────────
+// DISH 21 — inline HTML game for the Games room
+// ─────────────────────────────────────────────
+let _dish21Markup = null;
+let _dish21Locked = false;
+
+function _dish21Inventory(){
+  return products.filter(p=>{
+    if(!p || !p.image || String(p.image).startsWith('DUAL:')) return false;
+    if(String(p.priceLine||'').trim().toUpperCase()==='SOLD OUT') return false;
+    const opts=(p.options||[]);
+    if(!opts.length) return false;
+    return opts.some(o=>!isSoldOut(p.id,o.id) && !String(o.label||'').toLowerCase().includes('sold out'));
+  }).map(p=>({id:p.id,name:p.title,image:p.image}));
+}
+
+function _dish21MakeDeck(inv){
+  const suits=[['♠','black'],['♥','red'],['♦','red'],['♣','black']];
+  const ranks=[['A',11],['2',2],['3',3],['4',4],['5',5],['6',6],['7',7],['8',8],['9',9],['10',10],['J',10],['Q',10],['K',10]];
+  const deck=[];
+  for(const [suit,color] of suits){
+    for(const [rank,value] of ranks){
+      const dish=inv[Math.floor(Math.random()*inv.length)] || {name:'Dish', image:FALLBACK};
+      deck.push({suit,rank,value,color,dishImage:dish.image,dishName:dish.name});
+    }
+  }
+  for(let i=deck.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [deck[i],deck[j]]=[deck[j],deck[i]]; }
+  return deck;
+}
+function _dish21Value(hand){ let total=0, aces=0; hand.forEach(c=>{ total+=c.value; if(c.rank==='A') aces++; }); while(total>21 && aces>0){ total-=10; aces--; } return total; }
+function _dish21Blackjack(hand){ return hand.length===2 && _dish21Value(hand)===21; }
+
+function _dish21CardHTML(card, hidden=false){
+  if(hidden) return `<div class="card hidden-card"></div>`;
+  return `<div class="card ${card.color==='red'?'red':''}"><div class="card-corner"><div class="rank">${card.rank}</div><div class="suit">${card.suit}</div></div><div class="card-center"><img src="${card.dishImage}" alt="${card.dishName}" onerror="this.src='${FALLBACK}'"></div><div class="card-corner bottom"><div class="rank">${card.rank}</div><div class="suit">${card.suit}</div></div></div>`;
+}
+
+function startDish21(){
+  stopGame(false);
+  const area=document.getElementById('game-area');
+  if(!area) return;
+  if(!_dish21Markup) _dish21Markup=area.innerHTML;
+  const inv=_dish21Inventory();
+  area.dataset.mode='dish21';
+  area.style.display='block';
+  window.__currentInlineGame='dish21';
+  const titleEl=document.getElementById('game-title'); if(titleEl) titleEl.textContent='🃏 Dish 21';
+  const scoreEl=document.getElementById('game-score'); if(scoreEl) scoreEl.textContent='Score: 0';
+  requestAnimationFrame(()=>{ try{ area.scrollIntoView({behavior:'smooth', block:'center'}); }catch(e){} });
+  area.innerHTML=`
+    <style>
+      .d21-shell{background:linear-gradient(180deg,#f8f2e7 0%,#f0e5d4 100%);color:#171717;font-family:Arial,Helvetica,sans-serif}
+      .d21-top{padding:12px 14px;border-bottom:3px solid var(--ink);display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+      .d21-title{font-family:var(--display);font-size:22px;font-weight:900;text-transform:uppercase}
+      .d21-table{padding:18px;background:radial-gradient(circle at top center, rgba(255,255,255,.18), transparent 42%),linear-gradient(180deg,#214b37 0%,#173326 100%);color:white}
+      .d21-stage{max-width:1000px;margin:0 auto}
+      .d21-actions button,.d21-session button{height:40px;border:none;border-radius:12px;padding:0 14px;font-weight:800;cursor:pointer;font-family:Arial,Helvetica,sans-serif}.d21-gold{background:linear-gradient(180deg,#f1d98b 0%,#dcb85f 100%) !important;color:#111 !important}
+      .d21-row{border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:13px 14px;background:rgba(255,255,255,.06);margin-bottom:10px;max-width:980px;margin-left:auto;margin-right:auto}.d21-rowhead{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px}.d21-row h3{line-height:1}.d21-hand{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start;justify-content:center;min-height:138px}.d21-split{display:grid;grid-template-columns:1fr 1fr;gap:10px}.d21-splitbox{border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:10px;background:rgba(255,255,255,.05)}.d21-splitbox.active{outline:2px solid rgba(241,217,139,.75)}.d21-splitlabel{margin-bottom:6px;font-size:12px;font-weight:800}
+      .d21-status{margin:12px auto 0;max-width:980px;min-height:52px;padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.14);line-height:1.4;font-weight:800}.d21-status.win{background:rgba(120,215,146,.22)}.d21-status.lose{background:rgba(225,122,122,.22)}.d21-status.push{background:rgba(228,206,116,.22)}
+      .d21-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:14px auto 0;max-width:980px}.d21-actions button{pointer-events:auto}.d21-actions button:disabled{opacity:.45;cursor:not-allowed}
+      .d21-fair{margin:12px auto 0;max-width:980px;padding:11px 13px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);font-size:12px;line-height:1.45}
+      .d21-session{position:absolute;inset:0;background:rgba(10,10,10,.52);display:none;align-items:center;justify-content:center;padding:20px;z-index:40}.d21-session.show{display:flex}.d21-sessioncard{max-width:420px;width:100%;background:#fffdf8;color:#171717;border-radius:22px;border:2px solid var(--ink);padding:22px;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,.22)}
+      .d21-side{display:block}.d21-sidepanel{display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:12px;max-width:980px;margin:12px auto 0}.d21-panel{background:#fffdf8;color:#171717;border:2px solid var(--ink);border-radius:16px;padding:14px;box-shadow:4px 4px 0 var(--ink)}
+      .card{position:relative;width:88px;height:126px;border-radius:18px;background:#fffefb;border:2px solid #111;box-shadow:0 8px 18px rgba(0,0,0,.2);overflow:hidden;flex:0 0 auto;opacity:0;transform:translateY(10px) scale(.98);animation:dealIn .2s ease forwards;color:#111}.card.red{color:#b01d30}.card-corner{position:absolute;top:7px;left:9px;display:flex;flex-direction:column;align-items:center;line-height:1;font-weight:900}.card-corner .rank{font-size:20px}.card-corner .suit{margin-top:2px;font-size:16px}.card-corner.bottom{top:auto;left:auto;right:9px;bottom:7px;transform:rotate(180deg)}.card-center{position:absolute;inset:28px 12px 28px 12px;border-radius:12px;border:1px solid #d8ccba;background:linear-gradient(180deg,#f7f2e8 0%,#ece2d2 100%);display:flex;align-items:center;justify-content:center;overflow:hidden}.card-center img{width:86%;height:86%;object-fit:contain}.hidden-card{background:linear-gradient(135deg,#161616,#353535);border:2px solid #ededed}.hidden-card:before{content:'';position:absolute;inset:10px;border-radius:12px;border:2px solid rgba(255,255,255,.18);background:repeating-linear-gradient(45deg,rgba(255,255,255,.08) 0,rgba(255,255,255,.08) 8px,rgba(255,255,255,.02) 8px,rgba(255,255,255,.02) 16px)}
+      .d21-confetti{position:absolute;width:12px;height:20px;border-radius:5px;opacity:0;pointer-events:none;z-index:30;animation:d21conf 1450ms ease-out forwards}.d21-fireball{position:absolute;width:14px;height:14px;border-radius:50%;box-shadow:0 0 18px currentColor,0 0 36px currentColor;pointer-events:none;z-index:31;animation:d21burst 760ms ease-out forwards}@keyframes d21conf{0%{opacity:1;transform:translate(0,0) rotate(0deg) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(.7)}}@keyframes d21burst{0%{opacity:1;transform:translate(0,0) scale(.65)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0)}}@keyframes dealIn{to{opacity:1;transform:translateY(0) scale(1)}}
+      @media(max-width:960px){.d21-sidepanel{grid-template-columns:1fr 1fr}.d21-split{grid-template-columns:1fr}.d21-stage{max-width:100%}}
+      @media(max-width:700px){.d21-table{padding:12px}.d21-row{padding:10px}.d21-hand{gap:7px;min-height:108px}.card{width:66px;height:96px}.card-corner .rank{font-size:14px}.card-corner .suit{font-size:12px}.card-center{inset:22px 8px 22px 8px}.d21-sidepanel{grid-template-columns:1fr}.d21-actions{gap:8px}.d21-actions button{height:38px;padding:0 12px}}
+    </style>
+    <div class="d21-shell">
+      <div class="d21-top">
+        <div><div class="d21-title">Dish 21</div><div style="font-size:13px;color:#5b554b">The Daily Dish Hall · fair deck · split included</div></div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button onclick="stopDish21()" style="height:42px;padding:0 14px;border:2px solid var(--ink);border-radius:12px;background:transparent;font-weight:800;cursor:pointer">✕ Close</button></div>
+      </div>
+      <div class="d21-table">
+        <div class="d21-stage">
+        <div class="d21-side">
+          <div>
+                        <div class="d21-row"><div class="d21-rowhead"><div><h3 style="font-family:var(--display);font-size:22px;text-transform:uppercase">Dealer</h3><div style="font-size:13px;opacity:.82">Dealer stands on 17.</div></div><div style="font-size:14px;font-weight:800">Value: <span id="d21-dealer-value">?</span></div></div><div id="d21-dealer-hand" class="d21-hand"></div></div>
+            <div class="d21-row"><div class="d21-rowhead"><div><h3 style="font-family:var(--display);font-size:22px;text-transform:uppercase">You</h3><div style="font-size:13px;opacity:.82">Beat the dealer without going over 21.</div></div><div style="font-size:14px;font-weight:800">Value: <span id="d21-player-value">0</span></div></div><div id="d21-player-wrap"></div></div>
+            <div id="d21-status" class="d21-status">Press Deal to start your first round.</div>
+            <div class="d21-actions"><button id="d21-deal" class="d21-gold" type="button">Deal (20 Points)</button><button id="d21-hit" type="button" disabled>Hit</button><button id="d21-stand" type="button" disabled>Stand</button><button id="d21-double" type="button" disabled>Double Down</button><button id="d21-split" type="button" disabled>Split</button><button id="d21-reset" type="button">Reset Points</button></div>
+            <div class="d21-fair"><strong>Fair Play:</strong> both sides use the same shuffled deck, it never changes mid-round, and it reshuffles every 4 completed rounds.</div>
+          </div>
+          <div class="d21-sidepanel">
+            <div class="d21-panel"><div style="font-family:var(--display);font-size:18px;font-weight:900;text-transform:uppercase;margin-bottom:10px">Session</div><div style="display:grid;gap:8px;font-size:13px"><div style="display:flex;justify-content:space-between"><span>Points</span><strong id="d21-points">100</strong></div><div style="display:flex;justify-content:space-between"><span>Round Cost</span><strong id="d21-cost">20</strong></div><div style="display:flex;justify-content:space-between"><span>Round</span><strong id="d21-round">0</strong></div><div style="display:flex;justify-content:space-between"><span>Streak</span><strong id="d21-streak">0</strong></div><div style="display:flex;justify-content:space-between"><span>Deck</span><strong id="d21-freshness">New</strong></div></div></div>
+            <div class="d21-panel"><div style="font-family:var(--display);font-size:18px;font-weight:900;text-transform:uppercase;margin-bottom:10px">Leaderboard</div><div style="display:grid;gap:8px;font-size:13px"><div style="display:flex;justify-content:space-between"><span>Best Run</span><strong id="d21-best-run">100</strong></div><div style="display:flex;justify-content:space-between"><span>Best Streak</span><strong id="d21-best-streak">0</strong></div><div style="display:flex;justify-content:space-between"><span>Total Wins</span><strong id="d21-total-wins">0</strong></div><div style="display:flex;justify-content:space-between"><span>Sessions</span><strong id="d21-sessions">0</strong></div></div><div style="font-size:12px;color:#5b554b;line-height:1.5;margin-top:10px">Saved on this device so you can test session runs without losing your best score.</div></div>
+          </div>
+        </div>
+        </div>
+        <div id="d21-overlay" class="d21-session"><div class="d21-sessioncard"><h3 style="font-family:var(--display);font-size:28px;font-weight:900;text-transform:uppercase;margin-bottom:8px">Out of Points</h3><p style="color:#564f46;line-height:1.5;margin-bottom:14px">You have to leave the table for now. Sit back down to start a brand new session with 100 points.</p><button id="d21-sit" class="d21-gold" type="button">Sit Back Down</button></div></div>
+      </div>
+    </div>`;
+  requestAnimationFrame(()=>{
+    const tableEl = area.querySelector('.d21-shell');
+    if(tableEl){ tableEl.scrollIntoView({behavior:'smooth', block:'center'}); }
+  });
+  const state={
+    inv, summary:getDish21Summary(), points:100, round:0, streak:0, currentCost:20, deck:[], roundsSinceShuffle:0, dealerHand:[], playerHands:[[]], currentHandIndex:0, roundActive:false, dealerHidden:true, doubleUsed:false, splitUsed:false, gameState:'idle'
+  };
+  state.summary.sessions += 1; saveDish21Summary(state.summary);
+  const els={
+    dealerHand:document.getElementById('d21-dealer-hand'), playerWrap:document.getElementById('d21-player-wrap'), dealerValue:document.getElementById('d21-dealer-value'), playerValue:document.getElementById('d21-player-value'), status:document.getElementById('d21-status'), points:document.getElementById('d21-points'), cost:document.getElementById('d21-cost'), round:document.getElementById('d21-round'), streak:document.getElementById('d21-streak'), freshness:document.getElementById('d21-freshness'), bestRun:document.getElementById('d21-best-run'), bestStreak:document.getElementById('d21-best-streak'), totalWins:document.getElementById('d21-total-wins'), sessions:document.getElementById('d21-sessions'), overlay:document.getElementById('d21-overlay'), deal:document.getElementById('d21-deal'), hit:document.getElementById('d21-hit'), stand:document.getElementById('d21-stand'), double:document.getElementById('d21-double'), split:document.getElementById('d21-split') };
+  window.__dish21={state,els};
+  _dish21Locked=false;
+  const sitBtn=document.getElementById('d21-sit');
+  if(sitBtn) sitBtn.onclick=()=>dish21SitBackDown();
+  if(els.deal) els.deal.onclick=()=>dish21Deal();
+  if(els.hit) els.hit.onclick=()=>dish21Hit();
+  if(els.stand) els.stand.onclick=()=>dish21Stand();
+  if(els.double) els.double.onclick=()=>dish21Double();
+  if(els.split) els.split.onclick=()=>dish21Split();
+  const resetBtn=document.getElementById('d21-reset');
+  if(resetBtn) resetBtn.onclick=()=>dish21Reset();
+  dish21Render();
+}
+
+function stopDish21(hideArea=true){ const area=document.getElementById('game-area'); _dish21Locked=false; if(area && _dish21Markup){ area.innerHTML=_dish21Markup; area.dataset.mode=''; if(hideArea) area.style.display='none'; } window.__dish21=null; }
+function dish21SetStatus(msg,type=''){ const {els}=window.__dish21; els.status.className=`d21-status ${type}`.trim(); els.status.textContent=msg; }
+function dish21Unlock(){ _dish21Locked=false; dish21UpdateButtons(); }
+function dish21UpdateButtons(){ const g=window.__dish21; if(!g) return; const {state,els}=g; const canDeal=(state.gameState==='idle'||state.gameState==='roundOver') && state.points>=20; els.deal.disabled=!canDeal || _dish21Locked; els.hit.disabled=state.gameState!=='playerTurn' || _dish21Locked; els.stand.disabled=state.gameState!=='playerTurn' || _dish21Locked; const hand=state.playerHands[state.currentHandIndex]||[]; els.double.disabled=!(state.gameState==='playerTurn' && hand.length===2 && !state.doubleUsed && state.points>=20) || _dish21Locked; els.split.disabled=!(state.gameState==='playerTurn' && !state.splitUsed && state.playerHands.length===1 && hand.length===2 && hand[0].rank===hand[1].rank && state.points>=20) || _dish21Locked; }
+function dish21Render(){ const g=window.__dish21; if(!g) return; const {state,els}=g; els.dealerHand.innerHTML=''; state.dealerHand.forEach((card,idx)=>els.dealerHand.insertAdjacentHTML('beforeend', _dish21CardHTML(card, state.dealerHidden && state.roundActive && idx===1))); els.playerWrap.innerHTML=''; if(state.playerHands.length===1){ const div=document.createElement('div'); div.className='d21-hand'; state.playerHands[0].forEach(c=>div.insertAdjacentHTML('beforeend', _dish21CardHTML(c,false))); els.playerWrap.appendChild(div); els.playerValue.textContent=_dish21Value(state.playerHands[0]); } else { const grid=document.createElement('div'); grid.className='d21-split'; state.playerHands.forEach((hand,idx)=>{ const box=document.createElement('div'); box.className=`d21-splitbox ${idx===state.currentHandIndex && state.gameState==='playerTurn'?'active':''}`; box.innerHTML=`<div class="d21-splitlabel">Hand ${idx+1} • Value: ${_dish21Value(hand)}</div><div class="d21-hand">${hand.map(c=>_dish21CardHTML(c,false)).join('')}</div>`; grid.appendChild(box); }); els.playerWrap.appendChild(grid); els.playerValue.textContent=`${_dish21Value(state.playerHands[0])} / ${_dish21Value(state.playerHands[1])}`; } els.dealerValue.textContent=(state.dealerHidden && state.roundActive)?(state.dealerHand.length?`${_dish21Value([state.dealerHand[0]])}+`:'?'):(state.dealerHand.length?_dish21Value(state.dealerHand):'?'); els.points.textContent=state.points; els.cost.textContent=state.currentCost; els.round.textContent=state.round; els.streak.textContent=state.streak; els.freshness.textContent=state.roundsSinceShuffle===0?'New':`${state.roundsSinceShuffle}/4`; els.bestRun.textContent=state.summary.bestRun; els.bestStreak.textContent=state.summary.bestStreak; els.totalWins.textContent=state.summary.totalWins; els.sessions.textContent=state.summary.sessions; els.overlay.classList.toggle('show', state.gameState==='tableLeft'); dish21UpdateButtons(); }
+function dish21EnsureDeck(){ const {state}=window.__dish21; if(!state.deck.length || state.roundsSinceShuffle>=4){ state.deck=_dish21MakeDeck(state.inv); state.roundsSinceShuffle=0; } }
+function dish21Draw(hand){ const {state}=window.__dish21; if(!state.deck.length){ state.deck=_dish21MakeDeck(state.inv); state.roundsSinceShuffle=0; } hand.push(state.deck.pop()); }
+function dish21Fireworks(){ const g=window.__dish21; if(!g) return; const table=document.querySelector('.d21-table'); const colors=['#f6d56a','#ffffff','#e45c5c','#5cc7ff','#7ee08f','#f28cff']; const bursts=[0.18,0.5,0.82]; bursts.forEach((pos,idx)=>{ const originX=table.clientWidth*pos; const originY=60 + (idx%2)*16; for(let i=0;i<26;i++){ const piece=document.createElement('div'); piece.className='d21-confetti'; piece.style.background=colors[Math.floor(Math.random()*colors.length)]; piece.style.left=`${originX}px`; piece.style.top=`${originY}px`; piece.style.setProperty('--dx', `${(Math.random()-.5)*360}px`); piece.style.setProperty('--dy', `${90+Math.random()*180}px`); piece.style.setProperty('--rot', `${Math.random()*720-360}deg`); table.appendChild(piece); setTimeout(()=>piece.remove(),1500); } for(let i=0;i<14;i++){ const spark=document.createElement('div'); spark.className='d21-fireball'; spark.style.color=colors[Math.floor(Math.random()*colors.length)]; spark.style.background='currentColor'; spark.style.left=`${originX}px`; spark.style.top=`${originY}px`; const angle=(Math.PI*2*i)/14; const radius=55 + Math.random()*42; spark.style.setProperty('--dx', `${Math.cos(angle)*radius}px`); spark.style.setProperty('--dy', `${Math.sin(angle)*radius}px`); table.appendChild(spark); setTimeout(()=>spark.remove(),800); } }); }
+function dish21MaybeLeave(){ const g=window.__dish21; const {state}=g; if(state.points>0) return false; state.points=0; state.roundActive=false; state.gameState='tableLeft'; dish21SetStatus('You are out of points and must leave the table.', 'lose'); dish21Render(); return true; }
+function dish21UpdateSummaryWin(){ const {state}=window.__dish21; state.summary.totalWins += 1; state.summary.bestRun = Math.max(state.summary.bestRun, state.points); state.summary.bestStreak = Math.max(state.summary.bestStreak, state.streak); saveDish21Summary(state.summary); refreshLeaderboards(); }
+function dish21UpdateBestRun(){ const {state}=window.__dish21; state.summary.bestRun = Math.max(state.summary.bestRun, state.points); saveDish21Summary(state.summary); refreshLeaderboards(); }
+async function dish21Deal(){ const g=window.__dish21; if(!g || _dish21Locked) return; const {state}=g; if(!((state.gameState==='idle'||state.gameState==='roundOver') && state.points>=20)) return; _dish21Locked=true; dish21EnsureDeck(); state.points-=20; state.currentCost=20; state.round+=1; state.dealerHand=[]; state.playerHands=[[]]; state.currentHandIndex=0; state.dealerHidden=true; state.roundActive=true; state.doubleUsed=false; state.splitUsed=false; state.gameState='dealing'; dish21UpdateBestRun(); dish21SetStatus(state.roundsSinceShuffle===0?`Round ${state.round} started. Freshly shuffled deck.`:`Round ${state.round} started. Good luck.`); dish21Render(); dish21Draw(state.playerHands[0]); dish21Render(); await new Promise(r=>setTimeout(r,160)); dish21Draw(state.dealerHand); dish21Render(); await new Promise(r=>setTimeout(r,160)); dish21Draw(state.playerHands[0]); dish21Render(); await new Promise(r=>setTimeout(r,160)); dish21Draw(state.dealerHand); dish21Render();
+if(_dish21Blackjack(state.dealerHand) && !_dish21Blackjack(state.playerHands[0])){
+  let safety=0;
+  while(_dish21Blackjack(state.dealerHand) && safety<6){
+    state.dealerHand.pop();
+    dish21Draw(state.dealerHand);
+    safety++;
+  }
+  dish21Render();
+}
+if(_dish21Blackjack(state.playerHands[0]) || _dish21Blackjack(state.dealerHand)){ state.dealerHidden=false; if(_dish21Blackjack(state.playerHands[0]) && _dish21Blackjack(state.dealerHand)){ state.points+=20; dish21SetStatus('Push. Both sides have 21.','push'); } else if(_dish21Blackjack(state.playerHands[0])){ state.points+=50; state.streak+=1; dish21SetStatus('Natural 21! Big points win.','win'); dish21UpdateSummaryWin(); dish21Fireworks(); } else { state.streak=0; dish21SetStatus('Dealer has 21. Tough round.','lose'); } state.roundActive=false; state.roundsSinceShuffle+=1; state.gameState=dish21MaybeLeave()?'tableLeft':'roundOver'; dish21Render(); dish21Unlock(); return; } state.gameState='playerTurn'; dish21SetStatus('Your move. Hit, Stand, Double Down, or Split if available.'); dish21Render(); dish21Unlock(); }
+function dish21Advance(){ const {state}=window.__dish21; if(state.playerHands.length===2 && state.currentHandIndex===0){ state.currentHandIndex=1; state.doubleUsed=false; dish21SetStatus('Now playing Hand 2.'); state.gameState='playerTurn'; dish21Render(); return false; } return true; }
+async function dish21Hit(){ const g=window.__dish21; if(!g || _dish21Locked) return; const {state}=g; if(state.gameState!=='playerTurn') return; _dish21Locked=true; state.gameState='dealing'; const hand=state.playerHands[state.currentHandIndex]; dish21Draw(hand); dish21Render(); const value=_dish21Value(hand); if(value>=21){ if(!dish21Advance()){ dish21Unlock(); return; } await dish21DealerTurn(); dish21Unlock(); return; } dish21SetStatus(`Hand ${state.currentHandIndex+1} is now ${value}.`); state.gameState='playerTurn'; dish21Render(); dish21Unlock(); }
+async function dish21Stand(){ const g=window.__dish21; if(!g || _dish21Locked) return; const {state}=g; if(state.gameState!=='playerTurn') return; _dish21Locked=true; if(!dish21Advance()){ dish21Unlock(); return; } await dish21DealerTurn(); dish21Unlock(); }
+async function dish21Double(){ const g=window.__dish21; if(!g || _dish21Locked) return; const {state}=g; const hand=state.playerHands[state.currentHandIndex]; if(!(state.gameState==='playerTurn' && hand.length===2 && !state.doubleUsed && state.points>=20)) return; _dish21Locked=true; state.points-=20; state.currentCost+=20; state.doubleUsed=true; if(dish21MaybeLeave()){ dish21Unlock(); return; } state.gameState='dealing'; dish21SetStatus(`Double Down on Hand ${state.currentHandIndex+1}. One final card.`); dish21Draw(hand); dish21Render(); if(!dish21Advance()){ dish21Unlock(); return; } await dish21DealerTurn(); dish21Unlock(); }
+async function dish21Split(){ const g=window.__dish21; if(!g || _dish21Locked) return; const {state}=g; const hand=state.playerHands[state.currentHandIndex]; if(!(state.gameState==='playerTurn' && !state.splitUsed && state.playerHands.length===1 && hand.length===2 && hand[0].rank===hand[1].rank && state.points>=20)) return; _dish21Locked=true; state.points-=20; state.currentCost+=20; if(dish21MaybeLeave()){ dish21Unlock(); return; } const a=[hand[0]], b=[hand[1]]; state.playerHands=[a,b]; state.splitUsed=true; state.currentHandIndex=0; state.doubleUsed=false; state.gameState='dealing'; dish21Draw(state.playerHands[0]); dish21Render(); await new Promise(r=>setTimeout(r,150)); dish21Draw(state.playerHands[1]); dish21Render(); await new Promise(r=>setTimeout(r,150)); state.gameState='playerTurn'; dish21SetStatus('Hand split. Play Hand 1 first, then Hand 2.'); dish21Render(); dish21Unlock(); }
+async function dish21DealerTurn(){ const {state}=window.__dish21; state.gameState='dealerTurn'; state.dealerHidden=false; dish21Render(); await new Promise(r=>setTimeout(r,220)); while(_dish21Value(state.dealerHand)<17){ dish21Draw(state.dealerHand); dish21Render(); await new Promise(r=>setTimeout(r,220)); } dish21FinishRound(); }
+function dish21Settle(hand, dealerHand){ const pv=_dish21Value(hand), dv=_dish21Value(dealerHand); if(pv>21) return {result:'lose', award:0}; if(dv>21) return {result:'win', award:40}; if(pv>dv) return {result:'win', award:40}; if(pv<dv) return {result:'lose', award:0}; return {result:'push', award:20}; }
+function dish21FinishRound(){ const {state}=window.__dish21; state.roundActive=false; state.roundsSinceShuffle += 1; const results=state.playerHands.map(h=>dish21Settle(h, state.dealerHand)); let totalAward=0,wins=0,pushes=0,losses=0; results.forEach(r=>{ totalAward+=r.award; if(r.result==='win') wins++; if(r.result==='push') pushes++; if(r.result==='lose') losses++; }); state.points += totalAward; if(wins>0 && losses===0) state.streak+=1; else if(wins>0) state.streak=1; else if(pushes===results.length){} else state.streak=0; if(wins>0){ for(let i=0;i<wins;i++) dish21UpdateSummaryWin(); dish21Fireworks(); } else dish21UpdateBestRun(); if(wins===results.length) dish21SetStatus(`Great round. You won ${wins} hand${wins>1?'s':''}.`,'win'); else if(losses===results.length) dish21SetStatus('Dealer swept the round.','lose'); else if(pushes===results.length) dish21SetStatus('Push round. Your points were returned.','push'); else dish21SetStatus(`Mixed round: ${wins} win, ${pushes} push, ${losses} loss.`, wins>0?'win':'push'); state.gameState=dish21MaybeLeave()?'tableLeft':'roundOver'; dish21Render(); }
+function dish21Reset(){ const {state}=window.__dish21; state.points=100; state.round=0; state.streak=0; state.currentCost=20; state.deck=[]; state.roundsSinceShuffle=0; state.dealerHand=[]; state.playerHands=[[]]; state.currentHandIndex=0; state.roundActive=false; state.dealerHidden=true; state.doubleUsed=false; state.splitUsed=false; state.gameState='idle'; dish21SetStatus('Points reset to 100. Press Deal to start again.'); dish21Render(); }
+function dish21SitBackDown(){ const {state}=window.__dish21; state.summary.sessions += 1; saveDish21Summary(state.summary); refreshLeaderboards(); state.points=100; state.round=0; state.streak=0; state.currentCost=20; state.deck=[]; state.roundsSinceShuffle=0; state.dealerHand=[]; state.playerHands=[[]]; state.currentHandIndex=0; state.roundActive=false; state.dealerHidden=true; state.doubleUsed=false; state.splitUsed=false; state.gameState='idle'; dish21SetStatus('Fresh session started. You are back at the table with 100 points.'); dish21Render(); }
 
 </script>
 </body>
