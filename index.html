@@ -527,6 +527,35 @@ body.game-fullscreen .wrap > *:not(#game-fullscreen-container){display:none!impo
       <span class="cart-subtotal-label">Subtotal</span>
       <span class="cart-subtotal-val" id="cart-subtotal">$0.00</span>
     </div>
+
+    <!-- Discount code section -->
+    <div id="cart-discount-section" style="margin:8px 0">
+      <div id="cart-discount-input-row" style="display:flex;gap:6px;align-items:center">
+        <input id="cart-discount-input" type="text" placeholder="Discount code"
+          style="flex:1;height:36px;border:2px solid var(--ink);border-radius:6px;padding:0 10px;font-size:13px;font-family:var(--serif);background:#faf7f1;text-transform:uppercase;letter-spacing:.05em"
+          onkeydown="if(event.key==='Enter') _applyDiscountCode()"/>
+        <button onclick="_applyDiscountCode()"
+          style="height:36px;padding:0 14px;border:2px solid var(--ink);border-radius:6px;background:var(--ink);color:var(--cream);font-size:12px;font-weight:700;font-family:var(--serif);cursor:pointer;white-space:nowrap">Apply</button>
+      </div>
+      <div id="cart-discount-msg" style="font-size:12px;margin-top:5px;min-height:16px;font-family:var(--serif)"></div>
+      <div id="cart-discount-applied" style="display:none;margin-top:6px">
+        <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(22,163,74,.1);border:1.5px solid rgba(22,163,74,.35);border-radius:6px;padding:6px 10px">
+          <div>
+            <span style="font-size:11px;font-weight:700;color:#15803d;font-family:var(--serif)" id="cart-discount-tag"></span>
+          </div>
+          <button onclick="removeDiscount()" style="font-size:11px;color:#b91c1c;background:none;border:none;cursor:pointer;font-family:var(--serif);font-weight:700;padding:0 2px">✕ Remove</button>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:13px;font-family:var(--serif)">
+          <span style="color:rgba(0,0,0,.5)">Discount</span>
+          <span style="color:#15803d;font-weight:700" id="cart-discount-amt"></span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:14px;font-weight:700;font-family:var(--serif)">
+          <span>Total</span>
+          <span id="cart-total-discounted"></span>
+        </div>
+      </div>
+    </div>
+
     <div id="checkout-err" class="checkout-err" style="display:none"></div>
     <button class="checkout-btn" id="checkout-btn" onclick="startCheckout()">
       <span id="checkout-btn-text">Secure Checkout →</span>
@@ -821,6 +850,66 @@ let activePage = "Front Page";
 let cart = {}; // key => {key,title,optionLabel,price,image,qty}
 let shippingMethod = "pickup";
 let checkingOut = false;
+let appliedDiscount = null; // {code, pct, label, eligible} or null
+
+// ── DISCOUNT CODES ──
+const DISCOUNT_CODES = {
+  "DAH2026": {
+    pct: 0.20,
+    label: "20% off Plates, Bowls & Cups",
+    eligible(it){
+      const p = products.find(x => x.id === it.productId);
+      if(!p) return false;
+      if(p.collection === "Sets") return false;
+      const col = (p.collection || "").toLowerCase();
+      const title = (p.title || "").toLowerCase();
+      return col.includes("plate") || col.includes("bowl") || col.includes("drinkware")
+          || col.includes("cup") || col.includes("glass") || col.includes("vintage")
+          || col.includes("lighthouse") || col.includes("red glass")
+          || title.includes("plate") || title.includes("bowl") || title.includes("mug")
+          || title.includes("glass") || title.includes("cup") || title.includes("pitcher")
+          || title.includes("flute") || title.includes("stein");
+    }
+  }
+};
+
+function applyDiscountCode(code){
+  const key = (code || "").trim().toUpperCase();
+  const def = DISCOUNT_CODES[key];
+  if(!def) return { ok:false, msg:"Code not recognized. Check the spelling and try again." };
+  appliedDiscount = { code:key, pct:def.pct, label:def.label, eligible:def.eligible };
+  updateCartUI();
+  return { ok:true, msg:"✓ " + key + " applied — " + def.label };
+}
+
+function removeDiscount(){
+  appliedDiscount = null;
+  updateCartUI();
+}
+
+function _applyDiscountCode(){
+  const input = document.getElementById("cart-discount-input");
+  const msgEl = document.getElementById("cart-discount-msg");
+  if(!input || !msgEl) return;
+  const result = applyDiscountCode(input.value);
+  if(result.ok){
+    msgEl.style.color = "#15803d";
+    input.value = "";
+  } else {
+    msgEl.style.color = "#b91c1c";
+  }
+  msgEl.textContent = result.msg;
+}
+
+function discountedSubtotal(){
+  if(!appliedDiscount) return cartSubtotal();
+  return Object.values(cart).reduce((sum, it) => {
+    const price = appliedDiscount.eligible(it) ? it.price * (1 - appliedDiscount.pct) : it.price;
+    return sum + price * it.qty;
+  }, 0);
+}
+
+function discountAmount(){ return cartSubtotal() - discountedSubtotal(); }
 
 // ─────────────────────────────────────────────
 // HELPERS
@@ -1030,6 +1119,25 @@ function updateCartUI(){
 
   const btn = document.getElementById("checkout-btn");
   btn.disabled = items.length===0 || checkingOut;
+
+  // Discount section visibility
+  const discApplied = document.getElementById("cart-discount-applied");
+  const discInputRow = document.getElementById("cart-discount-input-row");
+  const discMsg = document.getElementById("cart-discount-msg");
+  if(appliedDiscount){
+    if(discApplied) discApplied.style.display = "block";
+    if(discInputRow) discInputRow.style.display = "none";
+    if(discMsg) discMsg.textContent = "";
+    const tag = document.getElementById("cart-discount-tag");
+    const amt = document.getElementById("cart-discount-amt");
+    const tot = document.getElementById("cart-total-discounted");
+    if(tag) tag.textContent = "✓ " + appliedDiscount.code + " — " + appliedDiscount.label;
+    if(amt) amt.textContent = "−" + money(discountAmount());
+    if(tot) tot.textContent = money(discountedSubtotal());
+  } else {
+    if(discApplied) discApplied.style.display = "none";
+    if(discInputRow) discInputRow.style.display = "flex";
+  }
 }
 
 function openCart(){ document.getElementById("cart-overlay").style.display="block"; document.getElementById("cart-drawer").style.display="flex"; updateCartUI(); }
@@ -1054,13 +1162,22 @@ async function startCheckout(){
   document.getElementById("checkout-err").style.display="none";
 
   try {
-    const lineItems = items.map(it=>({
-      name: it.title,
-      description: it.optionLabel,
-      unitAmount: Math.round(it.price*100),
-      quantity: it.qty,
-      image: it.image && it.image.startsWith("http") ? it.image : null,
-    }));
+    const lineItems = items.map(it=>{
+      let unitPrice = it.price;
+      if(appliedDiscount && appliedDiscount.eligible(it)){
+        unitPrice = it.price * (1 - appliedDiscount.pct);
+      }
+      const name = (appliedDiscount && appliedDiscount.eligible(it))
+        ? it.title + " (" + appliedDiscount.code + " -" + Math.round(appliedDiscount.pct*100) + "%)"
+        : it.title;
+      return {
+        name,
+        description: it.optionLabel,
+        unitAmount: Math.round(unitPrice * 100),
+        quantity: it.qty,
+        image: it.image && it.image.startsWith("http") ? it.image : null,
+      };
+    });
 
     const res = await fetch("/api/create-checkout-session",{
       method:"POST",
@@ -1086,6 +1203,10 @@ async function startCheckout(){
 // NAVIGATION
 // ─────────────────────────────────────────────
 function goToPage(page){
+  // Stop any running game before navigating
+  if(typeof stopGame === 'function') stopGame(true);
+  if(typeof stopDish21 === 'function' && window.__dish21) stopDish21(false);
+  window.__pokerActive = false;
   activePage=page;
   renderNav();
   renderPage();
@@ -1798,43 +1919,41 @@ function renderGamesPage(){
     <!-- ═══ GAME CABINETS ═══ -->
     <div class="game-cabinets">
 
-<!-- DISH DASH CABINET -->
-      <div class="cabinet" onclick="launchDishDash()">
-        <div class="cabinet-screen" style="background:linear-gradient(160deg,#0a1a08,#1a4a0a,#0a1a08)">
-          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(74,222,128,.28) 0%,transparent 70%);pointer-events:none"></div>
-          <span class="cabinet-emoji" style="filter:drop-shadow(0 0 14px rgba(74,222,128,.75))">🏃</span>
-          <p class="cabinet-name">Dish Dash</p>
-          <p class="cabinet-tagline" style="color:rgba(74,222,128,.6)">How Far Can You Run?</p>
+
+      <div class="cabinet" onclick="startDishPoker()">
+        <div class="cabinet-screen" style="background:linear-gradient(160deg,#0a2010,#0d3a18,#0a2010)">
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(74,222,128,.22) 0%,transparent 70%);pointer-events:none"></div>
+          <span class="cabinet-emoji" style="filter:drop-shadow(0 0 14px rgba(74,222,128,.75))">🃏</span>
+          <p class="cabinet-name">Dish Poker</p>
+          <p class="cabinet-tagline" style="color:rgba(134,239,172,.65)">Texas Hold 'Em</p>
         </div>
         <div class="cabinet-body">
-          <p class="cabinet-rules">Pick any dish from the shop and run. Jump over obstacles before they smash your dish. The longer you survive, the faster it gets.</p>
+          <p class="cabinet-rules">Sit down at the felt with 3 AI opponents. Dishes on every card. Bet, bluff, and go all-in — Texas Hold 'Em style.</p>
           <div class="cabinet-chips">
-            <span class="chip" style="background:rgba(74,222,128,.18);color:#86efac;border:1px solid rgba(74,222,128,.3)">👆 Tap to jump</span>
-            <span class="chip" style="background:rgba(74,222,128,.18);color:#86efac;border:1px solid rgba(74,222,128,.3)">⌨️ Spacebar</span>
+            <span class="chip" style="background:rgba(74,222,128,.15);color:#4ade80;border:1px solid rgba(74,222,128,.3)">🃏 Texas Hold 'Em</span>
+            <span class="chip" style="background:rgba(74,222,128,.15);color:#4ade80;border:1px solid rgba(74,222,128,.3)">4 Players</span>
           </div>
         </div>
-        <div class="cabinet-play" style="background:linear-gradient(90deg,#052e16,#14532d);color:#86efac;border-top:2px solid rgba(74,222,128,.35)">▶ PLAY NOW</div>
+        <div class="cabinet-play" style="background:linear-gradient(90deg,#052e16,#14532d)">▶ PLAY NOW</div>
       </div>
 
-<!-- NINJA -->
-      <div class="cabinet" onclick="startDishNinja()">
-        <div class="cabinet-screen" style="background:linear-gradient(160deg,#180404,#480606,#180404)">
-          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(239,68,68,.28) 0%,transparent 70%);pointer-events:none"></div>
-          <span class="cabinet-emoji" style="filter:drop-shadow(0 0 14px rgba(239,68,68,.75))">⚔️</span>
-          <p class="cabinet-name">Dish Ninja</p>
-          <p class="cabinet-tagline" style="color:rgba(239,68,68,.6)">3 Misses &amp; You're Out</p>
+      <div class="cabinet" onclick="startDishCrossyRoad()">
+        <div class="cabinet-screen" style="background:linear-gradient(160deg,#0a1808,#1a3a08,#0a2010)">
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(134,239,172,.25) 0%,transparent 70%);pointer-events:none"></div>
+          <span class="cabinet-emoji" style="filter:drop-shadow(0 0 14px rgba(134,239,172,.75))">🐔</span>
+          <p class="cabinet-name">Dish Crossy Road</p>
+          <p class="cabinet-tagline" style="color:rgba(134,239,172,.65)">Cross The Road!</p>
         </div>
         <div class="cabinet-body">
-          <p class="cabinet-rules">Dishes fly in from every direction — tap each one to smash it before it escapes. Every smash = 1 point. They speed up each time. 3 misses and it's over.</p>
+          <p class="cabinet-rules">Hop your favorite dish across busy roads and rivers. Dodge cars, trucks, and logs. How far can you go?</p>
           <div class="cabinet-chips">
-            <span class="chip" style="background:rgba(220,38,38,.18);color:#fca5a5;border:1px solid rgba(220,38,38,.3)">👆 Tap to smash</span>
-            <span class="chip" style="background:rgba(220,38,38,.18);color:#fca5a5;border:1px solid rgba(220,38,38,.3)">❤️❤️❤️ 3 lives</span>
+            <span class="chip" style="background:rgba(134,239,172,.15);color:#86efac;border:1px solid rgba(134,239,172,.3)">🐔 Crossy Style</span>
+            <span class="chip" style="background:rgba(134,239,172,.15);color:#86efac;border:1px solid rgba(134,239,172,.3)">All 92 Dishes</span>
           </div>
         </div>
-        <div class="cabinet-play" style="background:linear-gradient(90deg,#1e0404,#3d0808);color:#fca5a5;border-top:2px solid rgba(220,38,38,.35)">▶ PLAY NOW</div>
+        <div class="cabinet-play" style="background:linear-gradient(90deg,#052e16,#14532d)">▶ PLAY NOW</div>
       </div>
 
-      <!-- DISH 21 -->
       <div class="cabinet" onclick="startDish21()">
         <div class="cabinet-screen" style="background:linear-gradient(160deg,#12080a,#4a2312,#12080a)">
           <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(244,204,88,.28) 0%,transparent 70%);pointer-events:none"></div>
@@ -1852,7 +1971,23 @@ function renderGamesPage(){
         <div class="cabinet-play" style="background:linear-gradient(90deg,#3b2306,#7c4a0d);color:#fde68a;border-top:2px solid rgba(244,204,88,.35)">▶ PLAY NOW</div>
       </div>
 
-      <!-- PONG -->
+      <div class="cabinet" onclick="startDishNinja()">
+        <div class="cabinet-screen" style="background:linear-gradient(160deg,#180404,#480606,#180404)">
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(239,68,68,.28) 0%,transparent 70%);pointer-events:none"></div>
+          <span class="cabinet-emoji" style="filter:drop-shadow(0 0 14px rgba(239,68,68,.75))">⚔️</span>
+          <p class="cabinet-name">Dish Ninja</p>
+          <p class="cabinet-tagline" style="color:rgba(239,68,68,.6)">3 Misses &amp; You're Out</p>
+        </div>
+        <div class="cabinet-body">
+          <p class="cabinet-rules">Dishes fly in from every direction — tap each one to smash it before it escapes. Every smash = 1 point. They speed up each time. 3 misses and it's over.</p>
+          <div class="cabinet-chips">
+            <span class="chip" style="background:rgba(220,38,38,.18);color:#fca5a5;border:1px solid rgba(220,38,38,.3)">👆 Tap to smash</span>
+            <span class="chip" style="background:rgba(220,38,38,.18);color:#fca5a5;border:1px solid rgba(220,38,38,.3)">❤️❤️❤️ 3 lives</span>
+          </div>
+        </div>
+        <div class="cabinet-play" style="background:linear-gradient(90deg,#1e0404,#3d0808);color:#fca5a5;border-top:2px solid rgba(220,38,38,.35)">▶ PLAY NOW</div>
+      </div>
+
       <div class="cabinet" onclick="startDishPong()">
         <div class="cabinet-screen" style="background:linear-gradient(160deg,#080820,#10104a,#080820)">
           <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.28) 0%,transparent 70%);pointer-events:none"></div>
@@ -1870,7 +2005,6 @@ function renderGamesPage(){
         <div class="cabinet-play" style="background:linear-gradient(90deg,#1e1b4b,#312e81);color:#a5b4fc;border-top:2px solid rgba(99,102,241,.4)">▶ PLAY NOW</div>
       </div>
 
-      <!-- STACK -->
       <div class="cabinet" onclick="startStackGame()">
         <div class="cabinet-screen" style="background:linear-gradient(160deg,#0a0f1a,#0c1e50,#0a0f1a)">
           <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,.28) 0%,transparent 70%);pointer-events:none"></div>
@@ -1887,6 +2021,24 @@ function renderGamesPage(){
         </div>
         <div class="cabinet-play" style="background:linear-gradient(90deg,#1c1a06,#3a3005);color:#fcd34d;border-top:2px solid rgba(212,168,67,.35)">▶ PLAY NOW</div>
       </div>
+
+      <div class="cabinet" onclick="launchDishDash()">
+        <div class="cabinet-screen" style="background:linear-gradient(160deg,#0a1a08,#1a4a0a,#0a1a08)">
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(74,222,128,.28) 0%,transparent 70%);pointer-events:none"></div>
+          <span class="cabinet-emoji" style="filter:drop-shadow(0 0 14px rgba(74,222,128,.75))">🏃</span>
+          <p class="cabinet-name">Dish Dash</p>
+          <p class="cabinet-tagline" style="color:rgba(74,222,128,.6)">How Far Can You Run?</p>
+        </div>
+        <div class="cabinet-body">
+          <p class="cabinet-rules">Pick any dish from the shop and run. Jump over obstacles before they smash your dish. The longer you survive, the faster it gets.</p>
+          <div class="cabinet-chips">
+            <span class="chip" style="background:rgba(74,222,128,.18);color:#86efac;border:1px solid rgba(74,222,128,.3)">👆 Tap to jump</span>
+            <span class="chip" style="background:rgba(74,222,128,.18);color:#86efac;border:1px solid rgba(74,222,128,.3)">⌨️ Spacebar</span>
+          </div>
+        </div>
+        <div class="cabinet-play" style="background:linear-gradient(90deg,#052e16,#14532d);color:#86efac;border-top:2px solid rgba(74,222,128,.35)">▶ PLAY NOW</div>
+      </div>
+
 
           </div>
 
@@ -1917,6 +2069,8 @@ function renderGamesPage(){
           </div>
           <div style="padding:12px 14px;display:grid;gap:12px">
             <div id="lb-block-dish21">${renderDish21SummaryBlock()}</div>
+            <div id="lb-block-poker">${renderLeaderboardBlock('poker','🃏 Dish Poker')}</div>
+            <div id="lb-block-crossy">${renderLeaderboardBlock('crossy','🐔 Dish Crossy Road')}</div>
             <div id="lb-block-pong">${renderLeaderboardBlock('pong','🏓 Dish Pong')}</div>
             <div id="lb-block-stack">${renderLeaderboardBlock('stack','🍽️ Stack The Dishes')}</div>
             <div id="lb-block-ninja">${renderLeaderboardBlock('ninja','⚔️ Dish Ninja')}</div>
@@ -1938,6 +2092,11 @@ function renderGamesPage(){
 // DISH DASH GAME
 // ─────────────────────────────────────────────
 function launchDishDash(){
+  if(activePage !== "Dish Games"){
+    goToPage("Dish Games");
+    setTimeout(() => { try{ startDishDashInline(); }catch(e){} }, 300);
+    return;
+  }
   try{
     startDishDashInline();
   }catch(err){
@@ -2814,7 +2973,7 @@ function initDishDash(){
 // ─────────────────────────────────────────────
 // LEADERBOARD SYSTEM
 // ─────────────────────────────────────────────
-const GAME_LABELS = {dish21:"🃏 Dish 21", pong:"🏓 Dish Pong", stack:"🍽️ Stack The Dishes", ninja:"⚔️ Dish Ninja"};
+const GAME_LABELS = {dish21:"🃏 Dish 21", crossy:"🐔 Dish Crossy Road", pong:"🏓 Dish Pong", stack:"🍽️ Stack The Dishes", ninja:"⚔️ Dish Ninja"};
 const RANK_MEDALS = ["🥇","🥈","🥉","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟"];
 
 function getLeaderboard(game){
@@ -2837,7 +2996,7 @@ function saveLeaderboard(game,name,score){
 
 function refreshLeaderboards(){
   const d21=document.getElementById('lb-block-dish21'); if(d21) d21.innerHTML=renderDish21SummaryBlock();
-  ['pong','stack','ninja'].forEach(game=>{
+  ['poker','crossy','pong','stack','ninja'].forEach(game=>{
     const el=document.getElementById(`lb-block-${game}`);
     if(el) el.innerHTML=renderLeaderboardBlock(game,GAME_LABELS[game]);
   });
@@ -3131,11 +3290,22 @@ function stopGame(hideArea=false){
   gameRunning=false;
   window.__currentInlineGame='';
   const area=document.getElementById("game-area");
+  // Stop Dish 21
   if(window.__dish21 && typeof stopDish21==='function'){
     try{ stopDish21(false); }catch(e){}
   }
+  // Stop Poker — nuke its state so mid-hand timeouts do nothing
+  if(window.__pokerActive){
+    window.__pokerActive = false;
+  }
+  // Restore game-area if Dish Dash was running
   if(area && area.dataset && area.dataset.mode==='dishdash' && _gameAreaBaseMarkup){
     area.innerHTML=_gameAreaBaseMarkup;
+    area.dataset.mode='';
+  }
+  // Restore game-area if Poker was running
+  if(area && area.dataset && (area.dataset.mode==='poker') && _pokerMarkup){
+    area.innerHTML=_pokerMarkup;
     area.dataset.mode='';
   }
   if(_gl){ cancelAnimationFrame(_gl); _gl=null; }
@@ -3227,12 +3397,20 @@ function exitMobileGame(){
 
 function _gameSetup(title){
   _dishes();
-  const titleMap={pong:"🏓 Dish Pong",stack:"🍽️ Stack The Dishes",ninja:"⚔️ Dish Ninja"};
+  const titleMap={poker:"🃏 Dish Poker",crossy:"🐔 Dish Crossy Road",pong:"🏓 Dish Pong",stack:"🍽️ Stack The Dishes",ninja:"⚔️ Dish Ninja"};
   const isMob=window.innerWidth<=768;
 
   if(activePage!=="Dish Games"){
     goToPage("Dish Games");
-    setTimeout(()=>{ const fn=window[{pong:"startDishPong",stack:"startStackGame",ninja:"startDishNinja"}[title]]; if(fn) fn(); },150);
+    setTimeout(()=>{
+      const dispatch={
+        pong:'startDishPong', stack:'startStackGame', ninja:'startDishNinja',
+        crossy:'startDishCrossyRoad', dish21:'startDish21', poker:'startDishPoker',
+        dishdash:'launchDishDash'
+      };
+      const fn=window[dispatch[title]];
+      if(fn) fn();
+    },250);
     return null;
   }
 
@@ -3244,7 +3422,9 @@ function _gameSetup(title){
     const wrap=document.getElementById("game-fullscreen-canvas-wrap");
     if(!fc||!wrap) return null;
 
-    // Clear any old canvas
+    // Ensure clean state from any previous game
+    fc.classList.remove('active');
+    document.body.classList.remove('game-fullscreen');
     wrap.innerHTML="";
     const canvas=document.createElement("canvas");
     canvas.id="game-canvas";
@@ -3288,9 +3468,9 @@ function _gameSetup(title){
     const canvas=document.getElementById("game-canvas");
     if(!canvas) return null;
     const W=area.clientWidth||Math.min(window.innerWidth-32,700);
-    requestAnimationFrame(()=>{
-      try{ area.scrollIntoView({behavior:'smooth', block:'center'}); }catch(e){}
-    });
+    setTimeout(()=>{
+      try{ area.scrollIntoView({behavior:'smooth', block:'nearest'}); }catch(e){}
+    }, 80);
     return {area,canvas,isMob:false,W};
   }
 }
@@ -3439,7 +3619,7 @@ function startDishNinja(){
     ctx.fillStyle='rgba(255,255,255,.55)'; ctx.font=`${isMob?13:15}px Georgia,serif`;
     ctx.fillText('Tap to play again',W/2,H/2+52);
     promptSaveScore('ninja', score, startDishNinja);
-    canvas.onpointerdown=()=>{ canvas.onpointerdown=null; startDishNinja(); };
+    canvas.onpointerdown=(e)=>{ if(document.getElementById('score-save-overlay')) return; canvas.onpointerdown=null; startDishNinja(); };
   }
 
   function handleHit(clientX,clientY){
@@ -3639,7 +3819,7 @@ function startDishPong(){
   _gMH=e=>{ const r=canvas.getBoundingClientRect(); _gMY=(e.clientY-r.top)*(H/r.height); };
   window.addEventListener("mousemove",_gMH);
   // Touch
-  canvas.ontouchmove=e=>{ e.preventDefault(); const r=canvas.getBoundingClientRect(); _gMY=(e.touches[0].clientY-r.top)*(H/r.height); };
+  canvas.ontouchmove=e=>{ e.preventDefault(); e.stopPropagation(); const r=canvas.getBoundingClientRect(); _gMY=(e.touches[0].clientY-r.top)*(H/r.height); };
   // Keys
   _gKH=e=>{
     if(e.key==="ArrowUp"||e.key==="w"){ e.preventDefault(); py=Math.max(0,py-24); }
@@ -3991,7 +4171,7 @@ function startStackGame(){
   }
 
   canvas.style.touchAction='none';
-  canvas.onpointerdown=function(e){ e.preventDefault(); drop(); };
+  canvas.onpointerdown=function(e){ if(document.getElementById('score-save-overlay')) return; e.preventDefault(); drop(); };
   canvas.onclick=null;
   canvas.ontouchend=null;
   _gKH=e=>{ if(e.code==="Space"||e.key===" "){ e.preventDefault(); drop(); }};
@@ -4124,6 +4304,11 @@ function _dish21CardHTML(card, hidden=false){
 }
 
 function startDish21(){
+  if(activePage !== "Dish Games"){
+    goToPage("Dish Games");
+    setTimeout(() => startDish21(), 300);
+    return;
+  }
   stopGame(false);
   const area=document.getElementById('game-area');
   if(!area) return;
@@ -4234,6 +4419,1556 @@ function dish21Settle(hand, dealerHand){ const pv=_dish21Value(hand), dv=_dish21
 function dish21FinishRound(){ const {state}=window.__dish21; state.roundActive=false; state.roundsSinceShuffle += 1; const results=state.playerHands.map(h=>dish21Settle(h, state.dealerHand)); let totalAward=0,wins=0,pushes=0,losses=0; results.forEach(r=>{ totalAward+=r.award; if(r.result==='win') wins++; if(r.result==='push') pushes++; if(r.result==='lose') losses++; }); state.points += totalAward; if(wins>0 && losses===0) state.streak+=1; else if(wins>0) state.streak=1; else if(pushes===results.length){} else state.streak=0; if(wins>0){ for(let i=0;i<wins;i++) dish21UpdateSummaryWin(); dish21Fireworks(); } else dish21UpdateBestRun(); if(wins===results.length) dish21SetStatus(`Great round. You won ${wins} hand${wins>1?'s':''}.`,'win'); else if(losses===results.length) dish21SetStatus('Dealer swept the round.','lose'); else if(pushes===results.length) dish21SetStatus('Push round. Your points were returned.','push'); else dish21SetStatus(`Mixed round: ${wins} win, ${pushes} push, ${losses} loss.`, wins>0?'win':'push'); state.gameState=dish21MaybeLeave()?'tableLeft':'roundOver'; dish21Render(); }
 function dish21Reset(){ const {state}=window.__dish21; state.points=100; state.round=0; state.streak=0; state.currentCost=20; state.deck=[]; state.roundsSinceShuffle=0; state.dealerHand=[]; state.playerHands=[[]]; state.currentHandIndex=0; state.roundActive=false; state.dealerHidden=true; state.doubleUsed=false; state.splitUsed=false; state.gameState='idle'; dish21SetStatus('Points reset to 100. Press Deal to start again.'); dish21Render(); }
 function dish21SitBackDown(){ const {state}=window.__dish21; state.summary.sessions += 1; saveDish21Summary(state.summary); refreshLeaderboards(); state.points=100; state.round=0; state.streak=0; state.currentCost=20; state.deck=[]; state.roundsSinceShuffle=0; state.dealerHand=[]; state.playerHands=[[]]; state.currentHandIndex=0; state.roundActive=false; state.dealerHidden=true; state.doubleUsed=false; state.splitUsed=false; state.gameState='idle'; dish21SetStatus('Fresh session started. You are back at the table with 100 points.'); dish21Render(); }
+
+
+
+// ════════════════════════════════════════════
+// 🐔 DISH CROSSY ROAD — Full Crossy Road Clone
+// ════════════════════════════════════════════
+
+const CROSSY_DISHES = [
+  {id:"cobalt-blue-pitcher",name:"Cobalt Blue Floral Pitcher",img:"https://i.imgur.com/7l8yH8M.jpeg"},
+  {id:"american-eagle-plate",name:"American Eagle Collector Plate",img:"https://i.imgur.com/0ie0rvR.jpeg"},
+  {id:"grapevine-plate",name:"Grapevine Dinner Plate",img:"https://i.imgur.com/hdDJXtD.jpeg"},
+  {id:"magnolia-floral-bowl",name:"Magnolia Soup Bowl",img:"https://i.imgur.com/pU437LJ.jpeg"},
+  {id:"red-dinner-plates",name:"Red Glass Dinner Plates",img:"https://i.imgur.com/EdI3INH.jpeg"},
+  {id:"white-embossed-floral-plate",name:"White Floral Rim Plates",img:"https://i.imgur.com/6ZJb0Jk.jpeg"},
+  {id:"centerpiece-bowl",name:"Big Centerpiece Popcorn Bowl",img:"https://i.imgur.com/ZPXaQFI.jpeg"},
+  {id:"orange-swirl-plates",name:"Sunset Orange Swirl Plates",img:"https://i.imgur.com/j8d3d1H.jpeg"},
+  {id:"earth-tone-dinner-plates",name:"Earth Tone Dinner Plates",img:"https://i.imgur.com/WwVyCxT.jpeg"},
+  {id:"tribal-diamond-bowl",name:"Diamond Pattern Ceramic Bowl",img:"https://i.imgur.com/LMlPbiJ.jpeg"},
+  {id:"blue-swirl-plates",name:"Ocean Blue Swirl Plates",img:"https://i.imgur.com/SRb1eG2.jpeg"},
+  {id:"lighthouse-bowls",name:"Lighthouse Soup Bowls",img:"https://i.imgur.com/YIDDz9V.jpeg"},
+  {id:"solid-black-bowl",name:"Solid Black Ceramic Bowls",img:"https://i.imgur.com/5ct0WgG.jpeg"},
+  {id:"red-appetizer-plates",name:"Red Glass Appetizer Plates",img:"https://i.imgur.com/2nIIUwa.jpeg"},
+  {id:"colorful-glass-plate-set",name:"Colorful Glass Dinner Plates",img:"https://i.imgur.com/xhxXdzm.jpeg"},
+  {id:"red-bowls",name:"Red Glass Bowls",img:"https://i.imgur.com/MEFyLMQ.jpeg"},
+  {id:"fall-harvest-plates",name:"Fall Harvest Plates",img:"https://i.imgur.com/VubHZ4R.jpeg"},
+  {id:"vintage-fruit-appetizer-plate",name:"Vintage Fruit Appetizer Plate",img:"https://i.imgur.com/RFbQzK9.jpeg"},
+  {id:"sleek-soup-bowls",name:"Clear Glass Soup Bowls",img:"https://i.imgur.com/uQbpbBb.jpeg"},
+  {id:"blue-rimmed-deep-plate",name:"Deep Blue Rimmed Plate",img:"https://i.imgur.com/FCsqILC.jpeg"},
+  {id:"blue-cream-bowl",name:"Blue & Cream Ceramic Bowl",img:"https://i.imgur.com/RQbW9iN.jpeg"},
+  {id:"deep-red-square-plate",name:"Deep Red Square Plates",img:"https://i.imgur.com/Dsw1Z6c.jpeg"},
+  {id:"brown-mugs",name:"Three-Tone Coffee Mugs",img:"https://i.imgur.com/CoTjjh6.jpeg"},
+  {id:"pumpkin-patch-bowl",name:"Pumpkin Patch Bowl",img:"https://i.imgur.com/uZcXT2e.jpeg"},
+  {id:"minimal-earth-dinner-plates",name:"Smooth Earth Tone Dinner Plates",img:"https://i.imgur.com/SLXy3Fd.jpeg"},
+  {id:"color-pattern-bowl",name:"Colorful Geometric Bowl",img:"https://i.imgur.com/y5KsKKz.jpeg"},
+  {id:"southwest-ranch-plate",name:"Southwest Pattern Dinner Plate",img:"https://i.imgur.com/us8luRh.jpeg"},
+  {id:"coconut-style-glass-bowl",name:"Tropical Glass Bowl",img:"https://i.imgur.com/pU4fkqU.jpeg"},
+  {id:"purple-flower-square-plate",name:"Purple Flower Square Plate",img:"https://i.imgur.com/wbAXpwr.jpeg"},
+  {id:"fruit-ceramic-creamer",name:"Vintage Fruit Creamer Pitcher",img:"https://i.imgur.com/ST6b5UY.jpeg"},
+  {id:"green-tea-plates",name:"Green Tea Side Plates",img:"https://i.imgur.com/EiotFbg.jpeg"},
+  {id:"clear-stem-glasses",name:"Clear Stemmed Drinking Glasses",img:"https://i.imgur.com/buOSp3B.jpeg"},
+  {id:"blue-plastic-plates",name:"Blue Dinner Plates",img:"https://i.imgur.com/f3BAVyl.jpeg"},
+  {id:"tall-botanical-mug",name:"Botanical Leaf Mug",img:"https://i.imgur.com/u4Hr885.jpeg"},
+  {id:"autumn-leaf-cup",name:"Autumn Leaf Ceramic Cup",img:"https://i.imgur.com/TiSQ5rV.jpeg"},
+  {id:"green-amber-mug",name:"Green & Amber Two-Tone Mug",img:"https://i.imgur.com/PpzpQFD.jpeg"},
+  {id:"terracotta-mug",name:"Terracotta Coffee Mug",img:"https://i.imgur.com/G43vDEo.jpeg"},
+  {id:"champagne-flutes",name:"Clear Champagne Flutes",img:"https://i.imgur.com/vc7YhUx.jpeg"},
+  {id:"earth-tone-appetizer-plate",name:"Earth Tone Appetizer Plates",img:"https://i.imgur.com/1jZWQOw.jpeg"},
+  {id:"bold-stripe-plate",name:"Bold Stripe Dinner Plate",img:"https://i.imgur.com/qOiIkFT.jpeg"},
+  {id:"blue-white-glass-plates",name:"Light Blue & White Glass Plates",img:"https://i.imgur.com/NAYrNYp.jpeg"},
+  {id:"cat-dog-bowl",name:"Cat & Dog Novelty Bowl",img:"https://i.imgur.com/dhJP8Gz.jpeg"},
+  {id:"colorful-plates-set",name:"Colorful Glass Dinner Plate Set",img:"https://i.imgur.com/xhxXdzm.jpeg"},
+  {id:"brown-mugs-set",name:"Three-Tone Coffee Mug Set",img:"https://i.imgur.com/CoTjjh6.jpeg"},
+  {id:"popcorn-bowl-set",name:"Big Centerpiece Popcorn Bowl Set",img:"https://i.imgur.com/ZPXaQFI.jpeg"},
+  {id:"blue-white-plates-set",name:"Light Blue & White Plate Set",img:"https://i.imgur.com/NAYrNYp.jpeg"},
+  {id:"smooth-earth-plates-set",name:"Smooth Earth Tone Plate Set",img:"https://i.imgur.com/SLXy3Fd.jpeg"},
+  {id:"deep-red-square-set",name:"Deep Red Square Plate Set",img:"https://i.imgur.com/Dsw1Z6c.jpeg"},
+  {id:"twisted-glasses-bundle-set",name:"Twisted Dinner Glass Set",img:"https://i.imgur.com/QtkcT7j.jpeg"},
+  {id:"red-glass-full-set",name:"Red Dinner/App Plate & Bowl Set",img:"https://i.imgur.com/EdI3INH.jpeg"},
+  {id:"white-floral-set",name:"White Floral Rim Plate Set",img:"https://i.imgur.com/6ZJb0Jk.jpeg"},
+  {id:"red-robin-beer-glass",name:"Red Robin Beer Glass",img:"https://i.imgur.com/BE2eBxi.jpeg"},
+  {id:"murphys-stout-glass",name:"Murphy\'s Irish Stout Glass",img:"https://i.imgur.com/QYsmhEC.jpeg"},
+  {id:"terrapin-turtle-glass",name:"Terrapin Turtle Beer Glass",img:"https://i.imgur.com/DFcQOId.jpeg"},
+  {id:"don-pedro-whiskey-glass",name:"Don Pedro Square Whiskey Glass",img:"https://i.imgur.com/4EtrN7u.jpeg"},
+  {id:"southeastern-whiskey-glass",name:"Southeastern Division Whiskey Glass",img:"https://i.imgur.com/swYNnqq.jpeg"},
+  {id:"red-bumpy-bowl",name:"Red Bumpy Bowl",img:"https://i.imgur.com/wdgMrf2.jpeg"},
+  {id:"red-ceramic-plates",name:"Red Ceramic Dinner Plates",img:"https://i.imgur.com/zHhkrqz.jpeg"},
+  {id:"unique-wine-glass",name:"Unique Wine Glass",img:"https://i.imgur.com/dwjXxy7.jpeg"},
+  {id:"twisted-dinner-glasses",name:"Twisted Dinner Glasses",img:"https://i.imgur.com/QtkcT7j.jpeg"},
+  {id:"autumn-leaves-plate",name:"Autumn Leaves Glass Plates",img:"https://i.imgur.com/5XUNj3U.jpeg"},
+  {id:"cocacola-glasses",name:"Coca-Cola OG Glasses",img:"https://i.imgur.com/AtMKqHL.jpeg"},
+  {id:"longhorn-whiskey-small",name:"Longhorn Whiskey Glass — Small",img:"https://i.imgur.com/BDU1DVC.jpeg"},
+  {id:"longhorn-whiskey-large",name:"Longhorn Whiskey Glass — Large",img:"https://i.imgur.com/W1BRZK2.jpeg"},
+  {id:"sweetwater-ipa-glass",name:"SweetWater IPA Drinking Glass",img:"https://i.imgur.com/LWZgaYb.jpeg"},
+  {id:"sweetwater-420-glass",name:"SweetWater 420 Glass",img:"https://i.imgur.com/bF8rr7B.jpeg"},
+  {id:"ballast-point-glass",name:"Ballast Point Skeleton Glass",img:"https://i.imgur.com/CTLheaO.jpeg"},
+  {id:"smirnoff-golf-glass",name:"Smirnoff Golf Ball Glass",img:"https://i.imgur.com/TkULwys.jpeg"},
+  {id:"sweetwater-420-glass-new",name:"Sweetwater 420 Glass",img:"https://i.imgur.com/SR8sHAA.jpeg"},
+  {id:"guinness-beer-glass",name:"Guinness Beer Glass",img:"https://i.imgur.com/LbESLO3.jpeg"},
+  {id:"wrought-iron-ipa-glass",name:"Wrought Iron IPA Dark Frosted Glass",img:"https://i.imgur.com/1N7wRro.jpeg"},
+  {id:"thirsty-frog-glass",name:"Thirsty Frog Glass",img:"https://i.imgur.com/TtAA54V.jpeg"},
+  {id:"bubba-gump-glass",name:"Bubba Gump Shrimp Co. Glass",img:"https://i.imgur.com/32WGxsW.jpeg"},
+  {id:"butte-creek-glass",name:"Butte Creek Glass",img:"https://i.imgur.com/KD6lqxI.jpeg"},
+  {id:"black-drinking-glasses",name:"Black Drinking Glasses",img:"https://i.imgur.com/y8aW4Fd.jpeg"},
+  {id:"blue-glass-drinking-pair",name:"Blue Glass Drinking Glasses",img:"https://i.imgur.com/m1mxIlG.jpeg"},
+  {id:"fruit-mug-set",name:"Fruit Mug Set",img:"https://i.imgur.com/JuChz2X.jpeg"},
+  {id:"glass-jar-mugs",name:"Glass Jar Mugs",img:"https://i.imgur.com/PrGf3vz.jpeg"},
+  {id:"black-drinking-glasses-set",name:"Black Drinking Glasses Set",img:"https://i.imgur.com/y8aW4Fd.jpeg"},
+  {id:"blue-glass-drinking-set",name:"Blue Glass Drinking Set",img:"https://i.imgur.com/m1mxIlG.jpeg"},
+  {id:"fruit-mug-collection",name:"Fruit Mug Collection",img:"https://i.imgur.com/JuChz2X.jpeg"},
+  {id:"orange-teal-plate-set",name:"Orange & Teal Plates",img:"https://i.imgur.com/IZsBarz.jpeg"},
+  {id:"orange-teal-plate-set-bundle",name:"Orange & Teal Plate Set",img:"https://i.imgur.com/IZsBarz.jpeg"},
+  {id:"flower-rim-plates",name:"Flower Rim Plates",img:"https://i.imgur.com/MhWLz8S.jpeg"},
+  {id:"smooth-black-ceramic-plates",name:"Smooth Black Ceramic Plates",img:"https://i.imgur.com/JTEppD3.jpeg"},
+  {id:"blue-white-swirl-set",name:"Blue & White Swirl Plate & Bowl Set",img:"https://i.imgur.com/QFdd2ad.jpeg"},
+  {id:"brown-gold-square-plates",name:"Brown & Gold Square Dinner Plates",img:"https://i.imgur.com/D6VVjIR.jpeg"},
+  {id:"brown-gold-square-plates-set",name:"Brown & Gold Square Plate Set",img:"https://i.imgur.com/D6VVjIR.jpeg"},
+  {id:"large-white-square-plates",name:"Large White Square Dinner Plates",img:"https://i.imgur.com/SLdDguJ.jpeg"},
+  {id:"large-white-square-plates-set",name:"Large White Square Plate Set",img:"https://i.imgur.com/SLdDguJ.jpeg"},
+  {id:"heavy-glass-beer-mugs",name:"Heavy Glass Beer Mugs",img:"https://i.imgur.com/4NE9vQB.jpeg"},
+  {id:"heavy-glass-beer-mugs-set",name:"Heavy Glass Beer Mug Set",img:"https://i.imgur.com/4NE9vQB.jpeg"}
+];
+
+function startDishCrossyRoad(){
+  const setup = _gameSetup("crossy");
+  if(!setup) return;
+  const {canvas, isMob, W} = setup;
+  const H = isMob ? (setup.H || window.innerHeight - 48) : 560;
+  if(!isMob){ canvas.width = W; canvas.height = H; canvas.style.height = H + "px"; }
+
+  // Show character selector overlay first
+  const parentArea = isMob ? (document.getElementById("game-fullscreen-canvas-wrap") || canvas.parentElement) : (document.getElementById("game-area") || canvas.parentElement);
+  _crossyShowSelector(canvas, isMob, W, H, parentArea);
+}
+
+function _crossyShowSelector(canvas, isMob, W, H, parentArea){
+  // Dish Dash-style: dropdown + single thumbnail preview, no image grid
+  const area = parentArea || document.getElementById("game-area") || canvas.parentElement;
+  if(!area) return;
+  area.style.display = "block";
+
+  const existing = document.getElementById("crossy-selector");
+  if(existing) existing.remove();
+
+  const dishes = CROSSY_DISHES;
+  let selIdx = 0;
+
+  const sel = document.createElement("div");
+  sel.id = "crossy-selector";
+  sel.style.cssText = "position:absolute;inset:0;z-index:50;background:linear-gradient(180deg,#0a1a08,#0f2a10);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px;gap:20px;";
+
+  sel.innerHTML = `
+    <p style="font-family:var(--display);font-size:clamp(20px,5vw,28px);font-weight:900;color:#f4ecd8;text-transform:uppercase;text-align:center;letter-spacing:.04em">🐔 Choose Your Dish</p>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;max-width:320px">
+      <img id="crossy-preview" src="${dishes[0].img}" style="width:100px;height:100px;object-fit:cover;border-radius:50%;border:4px solid rgba(134,239,172,.5);box-shadow:0 0 24px rgba(134,239,172,.2);flex-shrink:0"/>
+      <p id="crossy-preview-name" style="font-family:var(--serif);font-size:13px;color:rgba(255,255,255,.7);text-align:center;max-width:260px;line-height:1.4">${dishes[0].name}</p>
+      <div style="display:flex;gap:8px;width:100%;align-items:center">
+        <select id="crossy-sel-drop" style="flex:1;height:40px;border-radius:8px;border:2px solid rgba(134,239,172,.4);padding:0 10px;background:#0f2010;color:#f4ecd8;font-size:13px;font-family:var(--serif);cursor:pointer"></select>
+        <button id="crossy-rnd-btn" style="height:40px;padding:0 14px;border-radius:8px;border:none;background:rgba(134,239,172,.2);color:#86efac;font-size:18px;cursor:pointer;flex-shrink:0" title="Random">🎲</button>
+      </div>
+      <button id="crossy-play-btn" style="width:100%;font-family:var(--display);font-size:15px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;border:none;border-radius:10px;background:linear-gradient(135deg,#15803d,#16a34a,#22c55e);color:#fff;padding:14px 24px;cursor:pointer;box-shadow:0 4px 20px rgba(22,163,74,.4)">▶ Play Now!</button>
+    </div>
+  `;
+
+  area.style.position = "relative";
+  area.appendChild(sel);
+  if(!isMob){ setTimeout(() => { try{ area.scrollIntoView({behavior:'smooth', block:'nearest'}); }catch(e){} }, 80); }
+
+  const drop = sel.querySelector("#crossy-sel-drop");
+  const preview = sel.querySelector("#crossy-preview");
+  const prevName = sel.querySelector("#crossy-preview-name");
+  const playBtn = sel.querySelector("#crossy-play-btn");
+  const rndBtn = sel.querySelector("#crossy-rnd-btn");
+
+  dishes.forEach((d, i) => {
+    const o = document.createElement("option");
+    o.value = i;
+    o.textContent = d.name;
+    drop.appendChild(o);
+  });
+
+  function pick(idx){
+    selIdx = idx;
+    drop.value = idx;
+    preview.src = dishes[idx].img;
+    prevName.textContent = dishes[idx].name;
+  }
+  pick(Math.floor(Math.random() * dishes.length));
+
+  drop.onchange = () => pick(Number(drop.value));
+  rndBtn.onclick = () => pick(Math.floor(Math.random() * dishes.length));
+  playBtn.onclick = () => {
+    sel.remove();
+    _crossyStartGame(canvas, isMob, W, H, dishes[selIdx]);
+  };
+}
+
+function _crossyStartGame(canvas, isMob, W, H, dish){
+  // Kill any previous loop before starting fresh
+  if(_gl){ cancelAnimationFrame(_gl); _gl = null; }
+  if(_gKH){ window.removeEventListener("keydown", _gKH); _gKH = null; }
+  canvas.ontouchstart = null;
+  canvas.ontouchmove = null;
+  canvas.ontouchend = null;
+  canvas.onpointerdown = null;
+  _gRunning = true;
+
+  const ctx = canvas.getContext("2d");
+
+  // ── CONSTANTS ──
+  const CELL = isMob ? 44 : 52;
+  const COLS = Math.floor(W / CELL);
+  const VISIBLE_ROWS = Math.ceil(H / CELL);
+  const PLAYER_SIZE = CELL * 0.72;
+
+  // ── STATE ── (all local — no leaks between runs)
+  let score = 0;
+  let bestScore = 0;
+  try { bestScore = parseInt(localStorage.getItem("crossy-best") || "0"); } catch(e){}
+  let playerRow = 0;
+  let playerCol = Math.floor(COLS / 2);
+  let playerX = playerCol * CELL + CELL / 2;
+  let playerY = H - 1.5 * CELL;
+  let playerBob = 0;
+  let camRow = 0;
+  let gameOver = false;
+  let gameStarted = false;
+  let moveQueue = [];
+  let isMoving = false;
+  let playerImg = null;
+  let deathAnim = null;
+  let hopAnim = null;
+  let squishAnim = 0;
+  let lastTime = performance.now();
+
+  // ── WORLD ──
+  const worldRows = new Map();
+
+  function mulberry32(seed){
+    let s = seed >>> 0;
+    return function(){
+      s += 0x6D2B79F5;
+      let t = s;
+      t = Math.imul(t ^ t >>> 15, t | 1);
+      t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+
+  function randomVehicleColor(rand){
+    const colors = ["#e53e3e","#dd6b20","#38a169","#2b6cb0","#805ad5","#d69e2e","#e8e8e8","#2d3748","#fc8181","#fbd38d"];
+    return colors[Math.floor(rand() * colors.length)];
+  }
+
+  function genRow(r){
+    if(r <= 0) return { type:"safe", trees:[] };
+    const rng = mulberry32(r * 1000007 + 314159);
+    const rand = () => rng();
+
+    // Decide type — no more than 3 same type in a row
+    let forceSafe = false;
+    let prevTypes = [];
+    for(let rr = r-1; rr >= r-4 && rr > 0; rr--){
+      const p = worldRows.get(rr);
+      if(p) prevTypes.push(p.type); else break;
+    }
+    if(prevTypes.length >= 3 && prevTypes.slice(0,3).every(t => t === prevTypes[0] && t !== "safe")) forceSafe = true;
+    if(r === 1) forceSafe = true;
+
+    let type;
+    if(forceSafe){ type = "safe"; }
+    else {
+      const roll = rand();
+      if(roll < 0.15) type = "safe";
+      else if(roll < 0.6) type = "road";
+      else type = "water";
+    }
+
+    if(type === "safe"){
+      const trees = [];
+      const gaps = new Set();
+      gaps.add(playerCol);
+      gaps.add(Math.max(0, playerCol - 1));
+      gaps.add(Math.min(COLS-1, playerCol + 1));
+      for(let c = 0; c < COLS; c++){
+        if(!gaps.has(c) && rand() < 0.25) trees.push(c);
+      }
+      return { type:"safe", trees };
+    }
+
+    if(type === "water"){
+      const dir = rand() < 0.5 ? 1 : -1;
+      const spd = 0.7 + rand() * 1.6;
+      const numLogs = 2 + Math.floor(rand() * 3);
+      const logs = [];
+      for(let i = 0; i < numLogs; i++){
+        const len = 2 + Math.floor(rand() * 2);
+        logs.push({ x: rand() * (W + 200) - 100, len, w: len * CELL * 0.88 });
+      }
+      return { type:"water", dir, spd, logs };
+    }
+
+    // Road
+    const dir = rand() < 0.5 ? 1 : -1;
+    const difficulty = Math.min(r / 25, 1);
+    const spd = 100 + rand() * (60 + difficulty * 180);
+    const numV = 1 + Math.floor(rand() * (2 + difficulty * 2));
+    const vehicles = [];
+    for(let i = 0; i < numV; i++){
+      const isTruck = rand() < 0.28;
+      vehicles.push({
+        x: rand() * (W + 400) - 200,
+        w: isTruck ? CELL * 2.3 : CELL * 1.5,
+        isTruck,
+        color: randomVehicleColor(rand),
+      });
+    }
+    return { type:"road", dir, spd, vehicles };
+  }
+
+  function getRow(r){
+    if(!worldRows.has(r)) worldRows.set(r, genRow(r));
+    return worldRows.get(r);
+  }
+
+  // Pre-gen starting rows
+  for(let r = -1; r <= VISIBLE_ROWS + 3; r++) getRow(r);
+
+  // ── IMAGE LOAD ──
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.onload = () => { playerImg = img; };
+  img.src = dish.img;
+
+  // ── COORDS ──
+  function rowToScreenY(r){ return H - (r - camRow + 1.5) * CELL; }
+
+  function updateCamera(){
+    const sy = rowToScreenY(playerRow);
+    if(sy < H * 0.4){
+      camRow = Math.max(0, playerRow - Math.floor(VISIBLE_ROWS * 0.6));
+      for(let r = camRow; r <= camRow + VISIBLE_ROWS + 3; r++) getRow(r);
+    }
+  }
+
+  // ── MOVEMENT ──
+  function enqueueMove(dir){
+    if(gameOver){ doRestart(); return; }
+    if(!gameStarted) gameStarted = true;
+    if(moveQueue.length < 2) moveQueue.push(dir);
+  }
+
+  function processMove(){
+    if(moveQueue.length === 0 || isMoving || gameOver) return;
+    const dir = moveQueue.shift();
+    let nr = playerRow, nc = playerCol;
+    if(dir === "up")    nr = playerRow + 1;
+    if(dir === "down")  nr = Math.max(0, playerRow - 1);
+    if(dir === "left")  nc = Math.max(0, playerCol - 1);
+    if(dir === "right") nc = Math.min(COLS - 1, playerCol + 1);
+
+    // Block on trees
+    const destRow = getRow(nr);
+    if(destRow.type === "safe" && destRow.trees && destRow.trees.includes(nc)){
+      return; // blocked
+    }
+
+    isMoving = true;
+    playerRow = nr;
+    playerCol = nc;
+
+    if(dir === "up" && playerRow > score){
+      score = playerRow;
+      _setScore(score, "dd-crossy");
+      if(score > bestScore){
+        bestScore = score;
+        try { localStorage.setItem("crossy-best", bestScore); } catch(e){}
+      }
+    }
+
+    updateCamera();
+    const endX = playerCol * CELL + CELL / 2;
+    const endY = rowToScreenY(playerRow);
+    hopAnim = { startX: playerX, startY: playerY, endX, endY, t: 0, dir };
+    squishAnim = 8;
+  }
+
+  // ── COLLISION ──
+  function checkCollisions(dt){
+    if(gameOver || isMoving) return;
+    const row = getRow(playerRow);
+    const pr = PLAYER_SIZE * 0.36;
+    const sy = rowToScreenY(playerRow);
+
+    if(row.type === "road"){
+      for(const v of row.vehicles){
+        const vcy = sy + CELL * 0.5;
+        if(Math.abs(playerY - vcy) < CELL * 0.55){
+          const vLeft = v.x, vRight = v.x + v.w;
+          if(playerX + pr > vLeft && playerX - pr < vRight){
+            triggerDeath("squish"); return;
+          }
+        }
+      }
+    }
+
+    if(row.type === "water"){
+      let onLog = false;
+      for(const log of row.logs){
+        const lcy = sy + CELL * 0.5;
+        if(Math.abs(playerY - lcy) < CELL * 0.55){
+          if(playerX > log.x - pr && playerX < log.x + log.w + pr){
+            onLog = true;
+            // Ride log
+            const drift = row.dir * row.spd * dt * CELL * 0.65;
+            playerX = Math.max(PLAYER_SIZE*0.3, Math.min(W - PLAYER_SIZE*0.3, playerX + drift));
+            playerCol = Math.round((playerX - CELL/2) / CELL);
+            break;
+          }
+        }
+      }
+      if(!onLog){ triggerDeath("drown"); return; }
+    }
+  }
+
+  function triggerDeath(cause){
+    if(gameOver) return;
+    gameOver = true;
+    deathAnim = { x: playerX, y: playerY, t: 0, cause };
+    setTimeout(() => {
+      promptSaveScore("crossy", score, () => _crossyShowSelector(canvas, isMob, W, H, parentArea));
+    }, 600);
+  }
+
+  function doRestart(){
+    if(_gl){ cancelAnimationFrame(_gl); _gl = null; }
+    _gRunning = false;
+    _crossyShowSelector(canvas, isMob, W, H, parentArea);
+  }
+
+  // Store parentArea reference for restarts
+  const parentArea = document.getElementById(isMob ? "game-fullscreen-canvas-wrap" : "game-area") || canvas.parentElement;
+
+  // ── INPUT ──
+  _gKH = (e) => {
+    if(!canvas.isConnected) return;
+    const map = { ArrowUp:"up", ArrowDown:"down", ArrowLeft:"left", ArrowRight:"right",
+                  w:"up", s:"down", a:"left", d:"right", W:"up", S:"down", A:"left", D:"right" };
+    if(map[e.key]){ e.preventDefault(); enqueueMove(map[e.key]); }
+  };
+  window.addEventListener("keydown", _gKH);
+
+  let touchStart = null;
+  canvas.ontouchstart = (e) => { e.preventDefault(); touchStart = {x: e.touches[0].clientX, y: e.touches[0].clientY}; };
+  canvas.ontouchmove = (e) => { e.preventDefault(); };
+  canvas.ontouchend = (e) => {
+    if(!touchStart) return;
+    const dx = e.changedTouches[0].clientX - touchStart.x;
+    const dy = e.changedTouches[0].clientY - touchStart.y;
+    touchStart = null;
+    if(Math.max(Math.abs(dx), Math.abs(dy)) < 14){ enqueueMove("up"); return; }
+    if(Math.abs(dx) > Math.abs(dy)) enqueueMove(dx > 0 ? "right" : "left");
+    else enqueueMove(dy > 0 ? "down" : "up");
+  };
+  canvas.onpointerdown = null;
+
+  // ── DRAW HELPERS ──
+  function drawTree(cx, cy){
+    ctx.fillStyle = "#5c3d1e";
+    ctx.fillRect(cx - 5, cy, 10, CELL * 0.45);
+    ctx.fillStyle = "#2d5a1b";
+    ctx.beginPath(); ctx.arc(cx, cy - CELL*0.06, CELL*0.36, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = "#38711f";
+    ctx.beginPath(); ctx.arc(cx - 6, cy - CELL*0.16, CELL*0.24, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx + 7, cy - CELL*0.12, CELL*0.21, 0, Math.PI*2); ctx.fill();
+  }
+
+  function drawVehicle(v, dir, sy){
+    const x = v.x, w = v.w, h = CELL * 0.76;
+    ctx.save();
+    ctx.translate(x + (dir === -1 ? w : 0), sy - h/2);
+    if(dir === -1) ctx.scale(-1, 1);
+    // Body
+    ctx.fillStyle = v.color;
+    ctx.beginPath(); ctx.roundRect(0, h*0.14, w, h*0.72, 5); ctx.fill();
+    // Cab
+    ctx.fillStyle = lighten(v.color, 22);
+    if(v.isTruck){
+      ctx.beginPath(); ctx.roundRect(w*0.6, h*0.07, w*0.38, h*0.54, 4); ctx.fill();
+    } else {
+      ctx.beginPath(); ctx.roundRect(w*0.21, h*0.06, w*0.57, h*0.5, 4); ctx.fill();
+    }
+    // Windows
+    ctx.fillStyle = "rgba(160,230,255,.75)";
+    if(v.isTruck){
+      ctx.fillRect(w*0.64, h*0.12, w*0.28, h*0.29);
+    } else {
+      ctx.fillRect(w*0.25, h*0.11, w*0.2, h*0.26);
+      ctx.fillRect(w*0.51, h*0.11, w*0.2, h*0.26);
+    }
+    // Wheels
+    ctx.fillStyle = "#111";
+    [[0.13, h*0.83], [0.76, h*0.83]].forEach(([wx, wy]) => {
+      ctx.beginPath(); ctx.arc(wx*w, wy, h*0.155, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = "#333"; ctx.beginPath(); ctx.arc(wx*w, wy, h*0.08, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = "#111";
+    });
+    // Headlight
+    ctx.fillStyle = "#fffde0";
+    ctx.beginPath(); ctx.arc(w*0.97, h*0.5, 3.5, 0, Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+
+  function drawLog(log, sy){
+    const x = log.x, w = log.w, h = CELL * 0.7;
+    ctx.fillStyle = "#8B5E3C";
+    ctx.beginPath(); ctx.roundRect(x, sy - h/2, w, h, h/2); ctx.fill();
+    ctx.fillStyle = "#7a4f2e";
+    ctx.beginPath(); ctx.roundRect(x+4, sy-h/2+4, w-8, h-8, h/2-3); ctx.fill();
+    ctx.strokeStyle = "rgba(120,70,30,.45)"; ctx.lineWidth = 1;
+    for(let i = 1; i < log.len; i++){
+      const lx = x + i * CELL * 0.88;
+      ctx.beginPath(); ctx.moveTo(lx, sy-h/2+5); ctx.lineTo(lx, sy+h/2-5); ctx.stroke();
+    }
+    ctx.strokeStyle = "#a07050"; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.roundRect(x, sy-h/2, w, h, h/2); ctx.stroke();
+  }
+
+  function drawRow(r){
+    const row = getRow(r);
+    const sy = rowToScreenY(r);
+    if(sy > H + CELL || sy < -CELL*2) return;
+
+    if(row.type === "safe"){
+      for(let c = 0; c < COLS; c++){
+        ctx.fillStyle = (r + c) % 2 === 0 ? "#3a6325" : "#426d2c";
+        ctx.fillRect(c*CELL, sy, CELL, CELL);
+      }
+      if(row.trees) row.trees.forEach(c => drawTree(c*CELL + CELL/2, sy + CELL*0.5));
+    }
+
+    if(row.type === "road"){
+      ctx.fillStyle = r % 2 === 0 ? "#3a3a3a" : "#414141";
+      ctx.fillRect(0, sy, W, CELL);
+      ctx.fillStyle = "rgba(255,255,180,.18)";
+      for(let c = 0; c < COLS; c += 2){
+        ctx.fillRect(c*CELL + CELL*0.32, sy + CELL/2 - 2, CELL*0.78, 4);
+      }
+      row.vehicles.forEach(v => drawVehicle(v, row.dir, sy + CELL/2));
+    }
+
+    if(row.type === "water"){
+      const t = performance.now() / 1200;
+      ctx.fillStyle = "#1a5a88";
+      ctx.fillRect(0, sy, W, CELL);
+      // Shimmer
+      ctx.fillStyle = "rgba(100,200,255,.08)";
+      for(let c = 0; c < COLS; c++){
+        const off = Math.sin(t * 1.8 + c * 0.7) * 2.5;
+        ctx.fillRect(c*CELL, sy + CELL*0.33 + off, CELL*0.65, 3);
+      }
+      row.logs.forEach(log => drawLog(log, sy + CELL/2));
+    }
+  }
+
+  function drawPlayer(){
+    const pr = PLAYER_SIZE / 2;
+    ctx.save();
+    ctx.translate(playerX, playerY + Math.sin(playerBob)*1.8);
+
+    // Squish on land
+    let sx = 1, sy2 = 1;
+    if(squishAnim > 0){ const t = squishAnim/8; sx = 1+t*0.28; sy2 = 1-t*0.22; squishAnim--; }
+    ctx.scale(sx, sy2);
+
+    // Shadow
+    ctx.globalAlpha = 0.28;
+    ctx.fillStyle = "#000";
+    ctx.beginPath(); ctx.ellipse(0, pr*0.82, pr*0.68, pr*0.22, 0, 0, Math.PI*2); ctx.fill();
+    ctx.globalAlpha = 1;
+
+    // White plate base
+    ctx.beginPath(); ctx.arc(0, 0, pr, 0, Math.PI*2);
+    ctx.fillStyle = "#fff"; ctx.fill();
+    ctx.strokeStyle = "rgba(0,0,0,.12)"; ctx.lineWidth = 2; ctx.stroke();
+
+    // Dish image
+    ctx.beginPath(); ctx.arc(0, 0, pr-1, 0, Math.PI*2); ctx.clip();
+    if(playerImg && playerImg.complete && playerImg.naturalWidth > 0){
+      ctx.drawImage(playerImg, -pr, -pr, pr*2, pr*2);
+    } else {
+      ctx.fillStyle = "#d4a843"; ctx.fillRect(-pr, -pr, pr*2, pr*2);
+    }
+    ctx.restore();
+  }
+
+  function drawMobileControls(){
+    if(!isMob) return;
+    const bs = 50, bx = W/2, by = H - bs*1.8;
+    [["up",bx,by-bs,"▲"],["down",bx,by+bs,"▼"],["left",bx-bs,by,"◀"],["right",bx+bs,by,"▶"]].forEach(([dir,x,y,lbl]) => {
+      ctx.fillStyle = "rgba(0,0,0,.45)";
+      ctx.beginPath(); ctx.arc(x, y, bs/2-2, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = "rgba(134,239,172,.85)";
+      ctx.font = "bold 13px serif"; ctx.textAlign = "center";
+      ctx.fillText(lbl, x, y+5);
+    });
+    ctx.textAlign = "left";
+    canvas.onpointerdown = (e) => {
+      e.preventDefault();
+      if(gameOver){ doRestart(); return; }
+      const rect = canvas.getBoundingClientRect();
+      const tx = (e.clientX - rect.left)*(W/rect.width);
+      const ty = (e.clientY - rect.top)*(H/rect.height);
+      const bx2 = W/2, by2 = H - bs*1.8;
+      const hits = [["up",bx2,by2-bs],["down",bx2,by2+bs],["left",bx2-bs,by2],["right",bx2+bs,by2]];
+      for(const [dir,x,y] of hits){
+        if(Math.hypot(tx-x, ty-y) < bs/2+8){ enqueueMove(dir); return; }
+      }
+      enqueueMove("up");
+    };
+  }
+
+  function drawHUD(){
+    ctx.fillStyle = "rgba(0,0,0,.52)";
+    ctx.fillRect(0, 0, W, 42);
+    ctx.fillStyle = "#fff";
+    ctx.font = `bold ${isMob?15:17}px Georgia,serif`;
+    ctx.textAlign = "center";
+    ctx.fillText(`Score: ${score}`, W/2, 27);
+    ctx.fillStyle = "rgba(134,239,172,.8)";
+    ctx.font = `${isMob?10:12}px Georgia,serif`;
+    ctx.textAlign = "left";
+    ctx.fillText(`Best: ${bestScore}`, 10, 27);
+    ctx.fillStyle = "rgba(255,255,255,.4)";
+    ctx.textAlign = "right";
+    const nm = dish.name.length > 22 ? dish.name.slice(0,20)+"…" : dish.name;
+    ctx.fillText(nm, W-10, 27);
+    ctx.textAlign = "left";
+  }
+
+  function drawDeathAnim(){
+    if(!deathAnim) return;
+    deathAnim.t++;
+    const t = deathAnim.t;
+    if(t < 24){
+      ctx.save();
+      ctx.translate(deathAnim.x, deathAnim.y);
+      ctx.globalAlpha = Math.max(0, 1 - t/24);
+      const burst = ctx.createRadialGradient(0,0,0,0,0,t*3.2);
+      burst.addColorStop(0, deathAnim.cause === "drown" ? "rgba(0,120,220,.9)" : "rgba(255,60,40,.9)");
+      burst.addColorStop(1, "transparent");
+      ctx.fillStyle = burst;
+      ctx.beginPath(); ctx.arc(0,0,t*3.2,0,Math.PI*2); ctx.fill();
+      for(let i=0;i<6;i++){
+        const a = (i/6)*Math.PI*2 + t*0.2, d = t*2.8;
+        ctx.fillStyle = deathAnim.cause === "drown" ? "#60b8ff" : "#ff7050";
+        ctx.save(); ctx.translate(Math.cos(a)*d, Math.sin(a)*d); ctx.rotate(a);
+        ctx.fillRect(-4,-4,8,8); ctx.restore();
+      }
+      ctx.restore();
+    }
+    if(t > 28){
+      ctx.fillStyle = "rgba(0,0,0,.75)";
+      ctx.fillRect(0, 0, W, H);
+      ctx.textAlign = "center";
+      ctx.font = `${isMob?52:62}px serif`;
+      ctx.fillText(deathAnim.cause === "drown" ? "💧" : "💥", W/2, H/2-72);
+      ctx.fillStyle = "#e53e3e";
+      ctx.font = `bold ${isMob?26:30}px Georgia,serif`;
+      ctx.fillText("GAME OVER", W/2, H/2-20);
+      ctx.fillStyle = "#d4a843";
+      ctx.font = `bold ${isMob?20:24}px Georgia,serif`;
+      ctx.fillText(`Score: ${score}`, W/2, H/2+16);
+      ctx.fillStyle = "rgba(134,239,172,.75)";
+      ctx.font = `${isMob?12:13}px Georgia,serif`;
+      ctx.fillText(`Best: ${bestScore}`, W/2, H/2+42);
+      ctx.fillStyle = "rgba(255,255,255,.35)";
+      ctx.fillText("Press any key or tap to play again", W/2, H/2+70);
+      ctx.textAlign = "left";
+    }
+  }
+
+  function drawStartPrompt(){
+    if(gameStarted) return;
+    ctx.fillStyle = "rgba(0,0,0,.6)";
+    ctx.fillRect(W/2-130, H-2.6*CELL-8, 260, 40);
+    ctx.fillStyle = "rgba(134,239,172,.95)";
+    ctx.font = `bold ${isMob?12:14}px Georgia,serif`;
+    ctx.textAlign = "center";
+    ctx.fillText(isMob ? "Swipe or use D-pad to hop!" : "Arrow keys / WASD to hop!", W/2, H-2.6*CELL+19);
+    ctx.textAlign = "left";
+  }
+
+  // ── MAIN LOOP ──
+  function loop(ts){
+    if(!_gRunning) return;
+    _gl = requestAnimationFrame(loop);
+    const dt = Math.min((ts - lastTime) / 1000, 0.05);
+    lastTime = ts;
+
+    if(!gameOver){
+      // Update world
+      for(let r = camRow; r <= camRow + VISIBLE_ROWS + 2; r++){
+        const row = getRow(r);
+        if(row.type === "road"){
+          row.vehicles.forEach(v => {
+            v.x += row.dir * row.spd * dt;
+            if(v.x > W + 250) v.x = -v.w - 50;
+            if(v.x < -v.w - 250) v.x = W + 50;
+          });
+        }
+        if(row.type === "water"){
+          row.logs.forEach(log => {
+            log.x += row.dir * row.spd * dt * CELL * 0.65;
+            if(log.x > W + 120) log.x = -log.w - 50;
+            if(log.x < -log.w - 120) log.x = W + 50;
+          });
+        }
+      }
+
+      // Hop animation
+      if(hopAnim){
+        hopAnim.t = Math.min(1, hopAnim.t + dt * 8);
+        const ease = 1 - Math.pow(1 - hopAnim.t, 3);
+        playerX = hopAnim.startX + (hopAnim.endX - hopAnim.startX) * ease;
+        playerY = hopAnim.startY + (hopAnim.endY - hopAnim.startY) * ease;
+        if(hopAnim.dir === "up" || hopAnim.dir === "down"){
+          playerY -= Math.sin(hopAnim.t * Math.PI) * CELL * 0.38;
+        }
+        if(hopAnim.t >= 1){
+          playerX = hopAnim.endX; playerY = hopAnim.endY;
+          hopAnim = null; isMoving = false;
+        }
+      }
+
+      playerBob += dt * 3.2;
+      processMove();
+      if(!isMoving) checkCollisions(dt);
+    }
+
+    // ── RENDER ──
+    ctx.clearRect(0, 0, W, H);
+    for(let r = Math.max(0, camRow-1); r <= camRow + VISIBLE_ROWS + 2; r++) drawRow(r);
+    if(!gameOver) drawPlayer();
+    drawMobileControls();
+    drawStartPrompt();
+    drawHUD();
+    if(gameOver) drawDeathAnim();
+  }
+
+  lastTime = performance.now();
+  _gl = requestAnimationFrame(loop);
+}
+
+
+// Helper: lighten hex color
+function lighten(hex, amt){
+  let r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  r = Math.min(255, r + amt); g = Math.min(255, g + amt); b = Math.min(255, b + amt);
+  return `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`;
+}
+
+
+
+// ════════════════════════════════════════════════════════════════
+// 🃏 DISH POKER — Texas Hold 'Em, 4 players, dish images on cards
+// ════════════════════════════════════════════════════════════════
+
+let _pokerMarkup = null;
+
+function startDishPoker(){
+  if(activePage !== "Dish Games"){
+    goToPage("Dish Games");
+    setTimeout(() => startDishPoker(), 300);
+    return;
+  }
+  stopGame(false);
+  window.__pokerActive = true;
+  const area = document.getElementById('game-area');
+  if(!area) return;
+  if(!_pokerMarkup) _pokerMarkup = area.innerHTML;
+  area.dataset.mode = 'poker';
+  area.style.display = 'block';
+  window.__currentInlineGame = 'poker';
+  const titleEl = document.getElementById('game-title');
+  if(titleEl) titleEl.textContent = '🃏 Dish Poker';
+
+  // Get available dish images
+  const inv = _dish21Inventory();
+
+  area.innerHTML = _pokerBuildHTML();
+
+  setTimeout(() => {
+    const shell = area.querySelector('.poker-shell');
+    if(shell) shell.scrollIntoView({ behavior:'smooth', block:'nearest' });
+    else area.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  }, 100);
+
+  _pokerInit(inv);
+}
+
+function _pokerBuildHTML(){
+  return `
+  <style>
+    .poker-shell{background:radial-gradient(ellipse at center,#1a4a28 0%,#0d2e18 60%,#081a0e 100%);border:3px solid #0a200f;border-radius:16px;overflow:hidden;font-family:var(--serif);position:relative;min-height:520px;user-select:none}
+    .poker-felt{padding:16px 12px 12px;display:flex;flex-direction:column;gap:10px;min-height:520px}
+    /* Table sponsor */
+    .poker-sponsor{text-align:center;font-family:var(--display);font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:rgba(212,168,67,.4);margin-bottom:2px}
+    /* Community cards area */
+    .poker-board{display:flex;justify-content:center;align-items:center;gap:8px;padding:10px 0;min-height:120px}
+    /* Player seats row */
+    .poker-seats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .poker-seat{background:rgba(0,0,0,.35);border:2px solid rgba(255,255,255,.1);border-radius:12px;padding:8px 10px;display:flex;flex-direction:column;gap:6px;transition:border-color .2s}
+    .poker-seat.active{border-color:rgba(212,168,67,.7);box-shadow:0 0 14px rgba(212,168,67,.25)}
+    .poker-seat.folded{opacity:.45}
+    .poker-seat.winner{border-color:#4ade80;box-shadow:0 0 18px rgba(74,222,128,.35)}
+    .poker-seat-name{font-size:11px;font-weight:700;color:rgba(255,255,255,.8);font-family:var(--display);text-transform:uppercase;letter-spacing:.04em}
+    .poker-seat-stack{font-size:11px;color:#d4a843;font-weight:700}
+    .poker-seat-bet{font-size:10px;color:rgba(255,255,255,.5);min-height:14px}
+    .poker-seat-cards{display:flex;gap:4px;min-height:72px;align-items:center}
+    /* Player's hand at bottom */
+    .poker-player-area{display:flex;flex-direction:column;align-items:center;gap:8px}
+    .poker-player-info{display:flex;align-items:center;gap:16px}
+    .poker-player-cards{display:flex;gap:8px;justify-content:center}
+    /* Action bar */
+    .poker-actions{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;padding:8px 0 4px}
+    .poker-btn{height:38px;padding:0 16px;border-radius:8px;border:none;font-size:13px;font-weight:700;font-family:var(--serif);cursor:pointer;transition:opacity .15s,transform .1s;white-space:nowrap}
+    .poker-btn:active{transform:scale(.96)}
+    .poker-btn:disabled{opacity:.3;cursor:default}
+    .poker-btn-fold{background:#7f1d1d;color:#fca5a5}
+    .poker-btn-check{background:#1e3a5f;color:#93c5fd}
+    .poker-btn-call{background:#1e3a5f;color:#93c5fd}
+    .poker-btn-raise{background:#78350f;color:#fcd34d}
+    .poker-btn-allin{background:#4a044e;color:#e879f9}
+    /* Status bar */
+    .poker-status{text-align:center;font-size:13px;color:rgba(255,255,255,.75);min-height:20px;font-style:italic;padding:2px 0}
+    /* Pot */
+    .poker-pot{text-align:center;font-family:var(--display);font-size:13px;font-weight:900;color:#d4a843;letter-spacing:.04em}
+    /* Cards — bigger, clearer dishes */
+    .pk-card{position:relative;width:60px;height:88px;border-radius:10px;background:#fffefb;border:2px solid #111;box-shadow:0 4px 12px rgba(0,0,0,.35);overflow:hidden;flex-shrink:0;display:flex;flex-direction:column}
+    .pk-card.red{color:#b01d30}
+    .pk-card.back{background:repeating-linear-gradient(45deg,#1a3a8a 0px,#1a3a8a 4px,#1e4499 4px,#1e4499 8px);border-color:#0f2260}
+    .pk-card-corner{position:absolute;top:3px;left:4px;line-height:1.1;z-index:2}
+    .pk-card-corner.bot{top:auto;bottom:3px;left:auto;right:4px;transform:rotate(180deg)}
+    .pk-card-rank{font-size:13px;font-weight:900;line-height:1}
+    .pk-card-suit{font-size:10px;line-height:1}
+    .pk-card-img{flex:1;display:flex;align-items:center;justify-content:center;padding:20px 3px 3px}
+    .pk-card-img img{width:100%;height:100%;object-fit:cover;border-radius:4px}
+    /* Small AI cards */
+    .pk-card-sm{width:36px;height:52px;border-radius:6px;background:#fffefb;border:1.5px solid #111;box-shadow:0 2px 6px rgba(0,0,0,.3);overflow:hidden;flex-shrink:0;position:relative}
+    .pk-card-sm.back{background:repeating-linear-gradient(45deg,#1a3a8a 0px,#1a3a8a 3px,#1e4499 3px,#1e4499 6px);border-color:#0f2260}
+    .pk-card-sm-rank{position:absolute;top:2px;left:3px;font-size:9px;font-weight:900;line-height:1;color:#111}
+    .pk-card-sm.red .pk-card-sm-rank{color:#b01d30}
+    .pk-card-sm-img{position:absolute;inset:16px 2px 2px;overflow:hidden;border-radius:2px}
+    .pk-card-sm-img img{width:100%;height:100%;object-fit:cover}
+    /* Chip animation */
+    @keyframes chipFly{from{opacity:0;transform:scale(.5) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+    .chip-anim{animation:chipFly .25s ease forwards}
+    /* Raise slider */
+    .poker-raise-row{display:flex;align-items:center;gap:8px;padding:0 8px}
+    .poker-raise-row input{flex:1;accent-color:#d4a843}
+    .poker-raise-row label{font-size:12px;color:#d4a843;white-space:nowrap}
+    /* Phase label */
+    .poker-phase{text-align:center;font-family:var(--display);font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:rgba(212,168,67,.45)}
+    /* Hand rank badge */
+    .poker-hand-rank{font-size:10px;color:rgba(134,239,172,.8);font-style:italic;text-align:center;min-height:14px}
+    @keyframes winPulse{0%,100%{box-shadow:0 0 18px rgba(74,222,128,.35)}50%{box-shadow:0 0 32px rgba(74,222,128,.7)}}
+    .poker-seat.winner{animation:winPulse .6s ease infinite}
+  </style>
+  <div class="poker-shell">
+    <div class="poker-felt">
+
+      <!-- Sponsor -->
+      <div class="poker-sponsor">The Daily Dish · Texas Hold 'Em Poker</div>
+      <div class="poker-phase" id="pk-phase">Waiting to deal...</div>
+
+      <!-- AI seats (top 3) -->
+      <div class="poker-seats" id="pk-ai-seats"></div>
+
+      <!-- Community cards + pot -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div class="poker-pot" id="pk-pot">Pot: $0</div>
+        <div class="poker-board" id="pk-board"></div>
+        <div class="poker-status" id="pk-status"></div>
+      </div>
+
+      <!-- Player area -->
+      <div class="poker-player-area">
+        <div class="poker-player-info">
+          <div>
+            <span style="font-family:var(--display);font-size:11px;font-weight:900;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:.04em">You</span>
+            <span style="font-size:10px;color:rgba(255,255,255,.45);margin-left:6px" id="pk-player-bet"></span>
+          </div>
+          <div class="poker-seat-stack" id="pk-player-stack"></div>
+        </div>
+        <div class="poker-hand-rank" id="pk-hand-rank"></div>
+        <div class="poker-player-cards" id="pk-player-cards"></div>
+      </div>
+
+      <!-- Raise slider -->
+      <div class="poker-raise-row" id="pk-raise-row" style="display:none">
+        <label>Raise: $<span id="pk-raise-val">0</span></label>
+        <input type="range" id="pk-raise-slider" min="0" max="500" value="0" step="10">
+      </div>
+
+      <!-- Actions -->
+      <div class="poker-actions" id="pk-actions"></div>
+
+    </div>
+  </div>`;
+}
+
+// ── POKER ENGINE ──
+function _pokerInit(inv){
+  // Game constants
+  const SMALL_BLIND = 10, BIG_BLIND = 20;
+  const STARTING_STACK = 500;
+  const AI_NAMES = ["Duke", "Rita", "Sal"];
+
+  // Build a deck-maker that assigns dish images
+  function makeDeck(){
+    const suits = [['♠','black'],['♥','red'],['♦','red'],['♣','black']];
+    const ranks = ['A','K','Q','J','10','9','8','7','6','5','4','3','2'];
+    const rankVal = {A:14,K:13,Q:12,J:11,'10':10,'9':9,'8':8,'7':7,'6':6,'5':5,'4':4,'3':3,'2':2};
+    const deck = [];
+    const shuffledInv = [...inv].sort(() => Math.random() - 0.5);
+    let di = 0;
+    for(const [suit,color] of suits){
+      for(const rank of ranks){
+        const dish = shuffledInv[di++ % shuffledInv.length] || {image: FALLBACK, name:'Dish'};
+        deck.push({ suit, color, rank, val: rankVal[rank], img: dish.image, dishName: dish.name });
+      }
+    }
+    // Fisher-Yates shuffle
+    for(let i = deck.length-1; i > 0; i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [deck[i],deck[j]] = [deck[j],deck[i]];
+    }
+    return deck;
+  }
+
+  // ── STATE ──
+  let state = {
+    players: [
+      { name:'You',    stack:STARTING_STACK + 20, hand:[], bet:0, folded:false, allin:false, isHuman:true  },
+      { name:AI_NAMES[0], stack:STARTING_STACK, hand:[], bet:0, folded:false, allin:false, isHuman:false },
+      { name:AI_NAMES[1], stack:STARTING_STACK, hand:[], bet:0, folded:false, allin:false, isHuman:false },
+      { name:AI_NAMES[2], stack:STARTING_STACK, hand:[], bet:0, folded:false, allin:false, isHuman:false },
+    ],
+    deck: [],
+    community: [],
+    pot: 0,
+    phase: 'idle', // idle, preflop, flop, turn, river, showdown
+    dealerIdx: 0,
+    currentIdx: 0,
+    currentBet: 0,
+    raiseAmount: BIG_BLIND * 2,
+    handNum: 0,
+    roundBets: [0,0,0,0], // total bet this round per player
+    actionsDone: 0,
+    actionsNeeded: 0,
+    lastRaiserIdx: -1,
+  };
+
+  // ── DOM REFS ──
+  const el = {
+    phase:     document.getElementById('pk-phase'),
+    pot:       document.getElementById('pk-pot'),
+    board:     document.getElementById('pk-board'),
+    status:    document.getElementById('pk-status'),
+    aiSeats:   document.getElementById('pk-ai-seats'),
+    pCards:    document.getElementById('pk-player-cards'),
+    pStack:    document.getElementById('pk-player-stack'),
+    pBet:      document.getElementById('pk-player-bet'),
+    handRank:  document.getElementById('pk-hand-rank'),
+    actions:   document.getElementById('pk-actions'),
+    raiseRow:  document.getElementById('pk-raise-row'),
+    raiseSlider: document.getElementById('pk-raise-slider'),
+    raiseVal:  document.getElementById('pk-raise-val'),
+  };
+
+  // Build AI seat HTML
+  el.aiSeats.innerHTML = [1,2,3].map(i => `
+    <div class="poker-seat" id="pk-seat-${i}">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span class="poker-seat-name" id="pk-seat-${i}-name">${state.players[i].name}</span>
+        <span class="poker-seat-stack" id="pk-seat-${i}-stack">$${state.players[i].stack}</span>
+      </div>
+      <div class="poker-seat-bet" id="pk-seat-${i}-bet"></div>
+      <div class="poker-seat-cards" id="pk-seat-${i}-cards"><span style="font-size:11px;color:rgba(255,255,255,.3);font-style:italic">Waiting...</span></div>
+      <div class="poker-hand-rank" id="pk-seat-${i}-rank"></div>
+    </div>
+  `).join('');
+
+  // Raise slider
+  el.raiseSlider.oninput = () => {
+    const v = parseInt(el.raiseSlider.value);
+    el.raiseVal.textContent = v;
+    state.raiseAmount = v;
+  };
+
+  // ── CARD RENDERING ──
+  function cardHTML(c, facedown=false, small=false){
+    if(facedown){
+      return small ? `<div class="pk-card-sm back"></div>`
+                   : `<div class="pk-card back"></div>`;
+    }
+    if(small){
+      return `<div class="pk-card-sm ${c.color==='red'?'red':''}">
+        <div class="pk-card-sm-rank">${c.rank}${c.suit}</div>
+        <div class="pk-card-sm-img"><img src="${c.img}" alt="${c.dishName}" loading="lazy" onerror="this.src='${FALLBACK}'"></div>
+      </div>`;
+    }
+    return `<div class="pk-card ${c.color==='red'?'red':''}">
+      <div class="pk-card-corner">
+        <div class="pk-card-rank">${c.rank}</div>
+        <div class="pk-card-suit">${c.suit}</div>
+      </div>
+      <div class="pk-card-img"><img src="${c.img}" alt="${c.dishName}" loading="lazy" onerror="this.src='${FALLBACK}'"></div>
+      <div class="pk-card-corner bot">
+        <div class="pk-card-rank">${c.rank}</div>
+        <div class="pk-card-suit">${c.suit}</div>
+      </div>
+    </div>`;
+  }
+
+  // ── HAND EVALUATION ──
+  function evalHand(cards){
+    // Best 5 from up to 7 cards
+    if(cards.length < 2) return {rank:0,name:'',best:[]};
+    const all = [...cards];
+    if(all.length < 5){ while(all.length < 5) all.push({val:0,suit:'x',rank:'?'}); }
+    const combos = all.length === 5 ? [all] : getCombinations(all, 5);
+    let best = null;
+    for(const combo of combos){
+      const s = scoreHand(combo);
+      if(!best || s.score > best.score) best = s;
+    }
+    return best;
+  }
+
+  function getCombinations(arr, k){
+    if(k === arr.length) return [arr];
+    if(k === 1) return arr.map(x => [x]);
+    const result = [];
+    for(let i = 0; i <= arr.length - k; i++){
+      const rest = getCombinations(arr.slice(i+1), k-1);
+      rest.forEach(r => result.push([arr[i], ...r]));
+    }
+    return result;
+  }
+
+  function scoreHand(hand){
+    const vals = hand.map(c => c.val).sort((a,b) => b-a);
+    const suits = hand.map(c => c.suit);
+    const isFlush = suits.every(s => s === suits[0]);
+    const isStraight = (() => {
+      const uv = [...new Set(vals)].sort((a,b) => b-a);
+      if(uv.length === 5 && uv[0]-uv[4] === 4) return true;
+      // Wheel: A-2-3-4-5
+      if(uv.join(',') === '14,5,4,3,2') return true;
+      return false;
+    })();
+    const counts = {};
+    vals.forEach(v => counts[v] = (counts[v]||0)+1);
+    const freq = Object.values(counts).sort((a,b) => b-a);
+    const freqVals = Object.entries(counts).sort((a,b) => b[1]-a[1] || b[0]-a[0]);
+    const kickers = freqVals.map(([v]) => parseInt(v));
+
+    let rank, name;
+    if(isFlush && isStraight){ rank = 8; name = vals[0]===14&&vals[1]===13?'Royal Flush':'Straight Flush'; }
+    else if(freq[0]===4){ rank=7; name='Four of a Kind'; }
+    else if(freq[0]===3&&freq[1]===2){ rank=6; name='Full House'; }
+    else if(isFlush){ rank=5; name='Flush'; }
+    else if(isStraight){ rank=4; name='Straight'; }
+    else if(freq[0]===3){ rank=3; name='Three of a Kind'; }
+    else if(freq[0]===2&&freq[1]===2){ rank=2; name='Two Pair'; }
+    else if(freq[0]===2){ rank=1; name='One Pair'; }
+    else{ rank=0; name='High Card'; }
+
+    const score = rank*1e10 + kickers.reduce((acc,v,i) => acc + v * Math.pow(15, 4-i), 0);
+    return { score, name, best: hand, kickers };
+  }
+
+  // ── RENDER UI ──
+  function renderAll(showAI=false){
+    // Pot
+    el.pot.textContent = `Pot: $${state.pot}`;
+
+    // Phase
+    const phaseLabels = {idle:'Waiting...',preflop:'Pre-Flop',flop:'The Flop',turn:'The Turn',river:'The River',showdown:'Showdown'};
+    el.phase.textContent = phaseLabels[state.phase] || '';
+
+    // Community cards
+    el.board.innerHTML = state.community.map(c => cardHTML(c, false, false)).join('') ||
+      '<span style="font-size:12px;color:rgba(255,255,255,.25);font-style:italic">Community cards will appear here</span>';
+
+    // AI seats
+    for(let i=1;i<=3;i++){
+      const p = state.players[i];
+      const seat = document.getElementById(`pk-seat-${i}`);
+      const stackEl = document.getElementById(`pk-seat-${i}-stack`);
+      const betEl = document.getElementById(`pk-seat-${i}-bet`);
+      const cardsEl = document.getElementById(`pk-seat-${i}-cards`);
+      const rankEl = document.getElementById(`pk-seat-${i}-rank`);
+      if(!seat) continue;
+      seat.className = 'poker-seat' + (p.folded?'  folded':state.currentIdx===i&&state.phase!=='showdown'?' active':'');
+      stackEl.textContent = '$'+p.stack;
+      betEl.textContent = p.bet > 0 ? `Bet: $${p.bet}` : (p.folded ? 'Folded' : '');
+      if(p.hand.length === 2){
+        const reveal = showAI || state.phase === 'showdown';
+        cardsEl.innerHTML = p.hand.map(c => cardHTML(c, !reveal, true)).join('');
+      } else {
+        cardsEl.innerHTML = '<span style="font-size:11px;color:rgba(255,255,255,.3);font-style:italic">Waiting...</span>';
+      }
+      // Show hand name at showdown
+      if(state.phase === 'showdown' && !p.folded && p.hand.length === 2){
+        const full = [...p.hand, ...state.community];
+        const ev = evalHand(full);
+        rankEl.textContent = ev.name;
+      } else {
+        rankEl.textContent = '';
+      }
+    }
+
+    // Player
+    el.pStack.textContent = '$'+state.players[0].stack;
+    el.pBet.textContent = state.players[0].bet > 0 ? `Bet: $${state.players[0].bet}` : '';
+    el.pCards.innerHTML = state.players[0].hand.map(c => cardHTML(c, false, false)).join('') ||
+      '<span style="font-size:12px;color:rgba(255,255,255,.25);font-style:italic">Your cards will appear here</span>';
+
+    // Live hand rank for player
+    if(state.players[0].hand.length === 2 && !state.players[0].folded){
+      const full = [...state.players[0].hand, ...state.community];
+      const ev = evalHand(full);
+      el.handRank.textContent = ev.name || '';
+    } else if(state.players[0].folded){
+      el.handRank.textContent = 'Folded';
+    } else {
+      el.handRank.textContent = '';
+    }
+  }
+
+  function setStatus(msg){ el.status.textContent = msg; }
+
+  // ── ACTIONS ──
+  function showActions(){
+    const p = state.players[0];
+    if(p.folded || p.allin || state.phase === 'showdown' || state.phase === 'idle'){
+      el.actions.innerHTML = ''; el.raiseRow.style.display='none'; return;
+    }
+    const callAmt = Math.min(state.currentBet - p.bet, p.stack);
+    const canCheck = state.currentBet === p.bet;
+    const minRaise = Math.max(BIG_BLIND, state.currentBet + BIG_BLIND);
+    const maxRaise = p.stack + p.bet;
+
+    el.raiseSlider.min = minRaise;
+    el.raiseSlider.max = maxRaise;
+    state.raiseAmount = Math.min(Math.max(state.raiseAmount, minRaise), maxRaise);
+    el.raiseSlider.value = state.raiseAmount;
+    el.raiseVal.textContent = state.raiseAmount;
+    el.raiseRow.style.display = maxRaise > minRaise ? 'flex' : 'none';
+
+    el.actions.innerHTML = `
+      <button class="poker-btn poker-btn-fold" onclick="_pkFold()">Fold</button>
+      ${canCheck
+        ? `<button class="poker-btn poker-btn-check" onclick="_pkCheck()">Check</button>`
+        : `<button class="poker-btn poker-btn-call" onclick="_pkCall()">Call $${callAmt}</button>`}
+      ${p.stack > callAmt
+        ? `<button class="poker-btn poker-btn-raise" onclick="_pkRaise()">Raise to $${state.raiseAmount}</button>`
+        : ''}
+      <button class="poker-btn poker-btn-allin" onclick="_pkAllIn()">All-In $${p.stack}</button>
+    `;
+  }
+
+  function hideActions(){
+    el.actions.innerHTML = '';
+    el.raiseRow.style.display = 'none';
+  }
+
+  // ── GAME FLOW ──
+  function dealHand(){
+    // Reset players
+    state.players.forEach(p => {
+      p.hand = []; p.bet = 0; p.folded = false; p.allin = false;
+    });
+    state.roundBets = [0,0,0,0];
+    state.community = [];
+    state.pot = 0;
+    state.phase = 'preflop';
+    state.handNum++;
+    state.deck = makeDeck();
+    state.lastRaiserIdx = -1;
+
+    // Deal 2 cards each
+    for(let card=0;card<2;card++){
+      for(let i=0;i<4;i++){
+        state.players[i].hand.push(state.deck.pop());
+      }
+    }
+    // House advantage: if player has a truly terrible starting hand
+    // (both cards below 7, off-suit, no pair) — swap the lower card once
+    (function(){
+      const h = state.players[0].hand;
+      if(h.length === 2){
+        const bothLow = h[0].val < 7 && h[1].val < 7;
+        const offsuit = h[0].suit !== h[1].suit;
+        const noPair = h[0].val !== h[1].val;
+        if(bothLow && offsuit && noPair && state.deck.length > 4){
+          // Replace the lower card with a fresh one from the deck
+          const worstIdx = h[0].val <= h[1].val ? 0 : 1;
+          state.deck.unshift(h[worstIdx]); // return to bottom
+          h[worstIdx] = state.deck.pop();  // draw fresh
+        }
+      }
+    })();
+
+    // Blinds — dealer rotates
+    state.dealerIdx = (state.dealerIdx + 1) % 4;
+    const sbIdx = (state.dealerIdx + 1) % 4;
+    const bbIdx = (state.dealerIdx + 2) % 4;
+    postBlind(sbIdx, SMALL_BLIND);
+    postBlind(bbIdx, BIG_BLIND);
+    state.currentBet = BIG_BLIND;
+    state.currentIdx = (bbIdx + 1) % 4;
+
+    renderAll(false);
+    setStatus(`Hand #${state.handNum} — Blinds: $${SMALL_BLIND}/$${BIG_BLIND}`);
+
+    // Kick off betting
+    setTimeout(() => { if(window.__pokerActive) startBettingRound(); }, 600);
+  }
+
+  function postBlind(idx, amount){
+    const p = state.players[idx];
+    const actual = Math.min(amount, p.stack);
+    p.bet = actual; p.stack -= actual; state.pot += actual;
+    state.roundBets[idx] = actual;
+  }
+
+  function startBettingRound(){
+    // Find first active player from currentIdx
+    state.actionsDone = 0;
+    // Count active players
+    const active = state.players.filter(p => !p.folded && !p.allin);
+    if(active.length <= 1){ nextPhase(); return; }
+    state.actionsNeeded = active.length;
+    state.lastRaiserIdx = -1;
+    advanceAction();
+  }
+
+  function advanceAction(){
+    // Skip folded / allin
+    let tries = 0;
+    while((state.players[state.currentIdx].folded || state.players[state.currentIdx].allin) && tries < 4){
+      state.currentIdx = (state.currentIdx + 1) % 4;
+      tries++;
+    }
+
+    // Check if betting round is over
+    const active = state.players.filter(p => !p.folded && !p.allin);
+    if(active.length === 0){ nextPhase(); return; }
+
+    const allCalled = active.every(p => p.bet === state.currentBet || p.allin);
+    if(allCalled && state.actionsDone >= active.length){ nextPhase(); return; }
+    // Preflop special: BB hasn't acted when no raise
+    if(state.phase === 'preflop' && state.actionsDone === 0 && allCalled){
+      // Big blind option — fall through to normal action
+    }
+
+    if(state.currentIdx === 0 && !state.players[0].folded && !state.players[0].allin){
+      renderAll(false);
+      showActions();
+    } else {
+      renderAll(false);
+      hideActions();
+      if(state.players[state.currentIdx].folded || state.players[state.currentIdx].allin){
+        state.currentIdx = (state.currentIdx+1)%4;
+        setTimeout(() => { if(window.__pokerActive) advanceAction(); }, 80);
+        return;
+      }
+      setTimeout(() => { if(window.__pokerActive) aiAct(state.currentIdx); }, 500 + Math.random()*400);
+    }
+  }
+
+  function playerActed(){
+    state.actionsDone++;
+    state.currentIdx = (state.currentIdx + 1) % 4;
+
+    const active = state.players.filter(p => !p.folded && !p.allin);
+    if(active.length <= 1){ hideActions(); setTimeout(() => { if(window.__pokerActive) nextPhase(); }, 400); return; }
+
+    const allCalled = active.every(p => p.bet === state.currentBet || p.allin);
+    if(allCalled && state.actionsDone >= active.length){ hideActions(); setTimeout(() => { if(window.__pokerActive) nextPhase(); }, 400); return; }
+
+    setTimeout(() => { if(window.__pokerActive) advanceAction(); }, 80);
+  }
+
+  function nextPhase(){
+    // Collect bets into pot
+    state.players.forEach(p => { state.pot += p.bet; p.bet = 0; });
+    state.roundBets = [0,0,0,0];
+    state.currentBet = 0;
+
+    const active = state.players.filter(p => !p.folded && !p.allin);
+    if(active.length === 1){ showdown(); return; }
+    const canAct = state.players.filter(p => !p.folded && !p.allin);
+
+    if(state.phase === 'preflop'){
+      state.phase = 'flop';
+      state.deck.pop(); // burn
+      state.community.push(state.deck.pop(), state.deck.pop(), state.deck.pop());
+      state.currentIdx = (state.dealerIdx + 1) % 4;
+      while(state.players[state.currentIdx].folded || state.players[state.currentIdx].allin) state.currentIdx = (state.currentIdx+1)%4;
+      renderAll(false); setStatus('The Flop');
+      setTimeout(() => { if(window.__pokerActive) startBettingRound(); }, 500);
+    } else if(state.phase === 'flop'){
+      state.phase = 'turn';
+      state.deck.pop();
+      state.community.push(state.deck.pop());
+      state.currentIdx = (state.dealerIdx + 1) % 4;
+      while(state.players[state.currentIdx].folded || state.players[state.currentIdx].allin) state.currentIdx = (state.currentIdx+1)%4;
+      renderAll(false); setStatus('The Turn');
+      setTimeout(() => { if(window.__pokerActive) startBettingRound(); }, 500);
+    } else if(state.phase === 'turn'){
+      state.phase = 'river';
+      state.deck.pop();
+      state.community.push(state.deck.pop());
+      state.currentIdx = (state.dealerIdx + 1) % 4;
+      while(state.players[state.currentIdx].folded || state.players[state.currentIdx].allin) state.currentIdx = (state.currentIdx+1)%4;
+      renderAll(false); setStatus('The River');
+      setTimeout(() => { if(window.__pokerActive) startBettingRound(); }, 500);
+    } else {
+      showdown();
+    }
+  }
+
+  function showdown(){
+    state.phase = 'showdown';
+    hideActions();
+    renderAll(true);
+    setStatus('Showdown!');
+
+    // Evaluate all non-folded players
+    const contenders = state.players
+      .map((p, i) => ({p, i, ev: p.folded ? null : evalHand([...p.hand, ...state.community])}))
+      .filter(x => x.ev !== null);
+
+    // Find winner(s)
+    const bestScore = Math.max(...contenders.map(x => x.ev.score));
+    const winners = contenders.filter(x => x.ev.score === bestScore);
+    const share = Math.floor(state.pot / winners.length);
+
+    winners.forEach(w => {
+      w.p.stack += share;
+      const seat = w.i === 0 ? null : document.getElementById(`pk-seat-${w.i}`);
+      if(seat) seat.className = 'poker-seat winner';
+    });
+
+    const winNames = winners.map(w => w.p.name).join(' & ');
+    const winHand = winners[0].ev.name;
+    setStatus(`${winNames} wins $${state.pot} with ${winHand}!`);
+    el.pot.textContent = 'Pot: $0';
+    state.pot = 0;
+
+    // Save leaderboard score for player if they won
+    if(winners.some(w => w.i === 0)){
+      saveLeaderboard('poker', state.players[0].name || 'You', state.players[0].stack);
+    }
+
+    renderAll(true);
+
+    // Next hand button
+    setTimeout(() => { if(!window.__pokerActive) return;
+      const bustedPlayers = state.players.filter(p => p.stack <= 0);
+      if(state.players[0].stack <= 0){
+        // Player busted
+        saveLeaderboard('poker', 'Player', state.handNum);
+        el.actions.innerHTML = `<button class="poker-btn poker-btn-raise" onclick="_pokerNewGame()">New Game</button>`;
+        setStatus(`You're out of chips! You lasted ${state.handNum} hands.`);
+      } else {
+        // Rebuy busted AIs
+        state.players.forEach((p,i) => { if(p.stack <= 0 && i>0) p.stack = STARTING_STACK; });
+        el.actions.innerHTML = `<button class="poker-btn poker-btn-raise" onclick="_pkDeal()">Deal Next Hand ▶</button>`;
+      }
+    }, 2200);
+  }
+
+  // ── AI LOGIC ──
+  function aiAct(idx){
+    if(!state.players[idx] || state.players[idx].folded || state.players[idx].allin){
+      state.actionsDone++;
+      state.currentIdx = (state.currentIdx+1)%4;
+      setTimeout(() => { if(window.__pokerActive) advanceAction(); }, 80);
+      return;
+    }
+    const p = state.players[idx];
+    const callAmt = Math.min(state.currentBet - p.bet, p.stack);
+    const canCheck = state.currentBet === p.bet;
+
+    // Evaluate hand strength (0=nothing, 1=pair, 2=two pair, 3=trips, 4=straight,
+    //   5=flush, 6=full house, 7=quads, 8=str.flush)
+    const full = [...p.hand, ...state.community];
+    const ev = evalHand(full);
+    const rank = ev.score / 1e10; // 0-8
+    const rand = Math.random();
+
+    // ── REALISTIC POKER AI ──
+    // Bet sizing: small (1x BB), medium (1.5-2x BB), standard (2.5-3x BB)
+    // AI avoids all-in unless huge hand or cornered
+    // Folds more with weak hands facing big bets
+    const potOdds = callAmt / (state.pot + callAmt || 1); // how much of pot we need to call
+    const bigCallPressure = callAmt > p.stack * 0.22; // calling more than 22% of stack
+
+    let action;
+
+    if(canCheck){
+      // Checking option — bet small-medium with good hands, check otherwise
+      if(rank >= 5)        action = rand < 0.65 ? 'raise' : 'check'; // flush+: often bet
+      else if(rank >= 3)   action = rand < 0.45 ? 'raise' : 'check'; // trips/straight: sometimes bet
+      else if(rank >= 1)   action = rand < 0.22 ? 'raise' : 'check'; // pair: rarely bet
+      else                  action = rand < 0.12 ? 'raise' : 'check'; // nothing: occasional bluff
+    } else {
+      // Facing a bet
+      if(rank >= 6){
+        // Full house or better: call or raise, never fold
+        action = rand < 0.55 ? 'raise' : 'call';
+      } else if(rank >= 4){
+        // Straight / flush: mostly call, sometimes raise
+        action = rand < 0.35 ? 'raise' : (rand < 0.95 ? 'call' : 'fold');
+      } else if(rank >= 2){
+        // Two pair / trips: call if not too expensive, rarely raise
+        if(bigCallPressure) action = rand < 0.55 ? 'call' : 'fold';
+        else action = rand < 0.18 ? 'raise' : (rand < 0.88 ? 'call' : 'fold');
+      } else if(rank >= 1){
+        // One pair: call small, fold big
+        if(bigCallPressure) action = rand < 0.35 ? 'call' : 'fold';
+        else action = rand < 0.08 ? 'raise' : (rand < 0.72 ? 'call' : 'fold');
+      } else {
+        // High card / nothing: fold most big bets, occasional bluff-call
+        if(bigCallPressure) action = rand < 0.12 ? 'call' : 'fold';
+        else action = rand < 0.05 ? 'raise' : (rand < 0.48 ? 'call' : 'fold');
+      }
+    }
+
+    // Safety overrides
+    if(action === 'raise' && p.stack <= callAmt + BIG_BLIND) action = 'call';
+    if(action === 'call' && callAmt >= p.stack) action = 'allin';
+    if(action === 'raise' && callAmt >= p.stack) action = 'allin';
+
+    // ── RAISE SIZING — small and realistic ──
+    // Never more than 2.5x current bet, never more than 20% of stack, capped at pot
+    function calcRaiseSize(){
+      const multiplier = rank >= 5 ? (1.8 + rand * 0.7) : (1.3 + rand * 0.7); // 1.3x-2.5x
+      const raiseTotal = Math.round(state.currentBet * multiplier / BIG_BLIND) * BIG_BLIND;
+      const maxRaise = Math.min(
+        state.pot + state.currentBet,        // pot-sized raise max
+        p.stack * 0.22 + p.bet,              // no more than 22% of stack per round
+        p.stack + p.bet                       // can't bet more than you have
+      );
+      return Math.max(state.currentBet + BIG_BLIND, Math.min(raiseTotal, maxRaise));
+    }
+
+    let msg = '';
+    if(action === 'fold'){
+      p.folded = true;
+      msg = `${p.name} folds`;
+      setStatus(msg);
+    } else if(action === 'check'){
+      msg = `${p.name} checks`;
+      setStatus(msg);
+    } else if(action === 'call'){
+      const actual = Math.min(callAmt, p.stack);
+      p.stack -= actual; p.bet += actual; state.pot += actual;
+      if(p.stack === 0) p.allin = true;
+      msg = actual === 0 ? `${p.name} checks` : `${p.name} calls $${actual}`;
+      setStatus(msg);
+    } else if(action === 'raise'){
+      const raiseTotal = calcRaiseSize();
+      const raiseBy = raiseTotal - p.bet;
+      const actual = Math.min(raiseBy, p.stack);
+      p.stack -= actual; p.bet += actual; state.pot += actual;
+      state.currentBet = Math.max(state.currentBet, p.bet);
+      if(p.stack === 0) p.allin = true;
+      state.actionsDone = 0; state.lastRaiserIdx = idx;
+      msg = `${p.name} raises to $${p.bet}`;
+      setStatus(msg);
+    } else if(action === 'allin'){
+      state.pot += p.stack; p.bet += p.stack; p.stack = 0; p.allin = true;
+      if(p.bet > state.currentBet){ state.currentBet = p.bet; state.actionsDone = 0; }
+      msg = `${p.name} goes ALL-IN $${p.bet}!`;
+      setStatus(msg);
+    }
+
+    renderAll(false);
+    state.actionsDone++;
+    state.currentIdx = (state.currentIdx + 1) % 4;
+    setTimeout(() => { if(window.__pokerActive) advanceAction(); }, 80);
+  }
+
+  // ── EXPOSED PLAYER ACTIONS ──
+  window._pkFold = function(){
+    const p = state.players[0];
+    p.folded = true;
+    setStatus('You fold.');
+    hideActions();
+    renderAll(false);
+    playerActed();
+  };
+
+  window._pkCheck = function(){
+    setStatus('You check.');
+    playerActed();
+  };
+
+  window._pkCall = function(){
+    const p = state.players[0];
+    const callAmt = Math.min(state.currentBet - p.bet, p.stack);
+    p.stack -= callAmt; p.bet += callAmt; state.pot += callAmt;
+    if(p.stack === 0){ p.allin = true; setStatus(`You call $${callAmt} — ALL-IN!`); }
+    else setStatus(`You call $${callAmt}.`);
+    hideActions();
+    renderAll(false);
+    playerActed();
+  };
+
+  window._pkRaise = function(){
+    const p = state.players[0];
+    const raiseTo = state.raiseAmount;
+    const raiseBy = raiseTo - p.bet;
+    const actual = Math.min(raiseBy, p.stack);
+    p.stack -= actual; p.bet += actual; state.pot += actual;
+    state.currentBet = p.bet;
+    if(p.stack === 0) p.allin = true;
+    state.actionsDone = 0;
+    setStatus(`You raise to $${p.bet}.`);
+    hideActions();
+    renderAll(false);
+    playerActed();
+  };
+
+  window._pkAllIn = function(){
+    const p = state.players[0];
+    state.pot += p.stack; p.bet += p.stack; p.stack = 0; p.allin = true;
+    if(p.bet > state.currentBet){ state.currentBet = p.bet; state.actionsDone = 0; }
+    setStatus(`You go ALL-IN $${p.bet}!`);
+    hideActions();
+    renderAll(false);
+    playerActed();
+  };
+
+  window._pkDeal = function(){
+    el.actions.innerHTML = '';
+    // Reset seat winner styles
+    [1,2,3].forEach(i => {
+      const s = document.getElementById(`pk-seat-${i}`);
+      if(s) s.className = 'poker-seat';
+    });
+    setTimeout(() => { if(window.__pokerActive) dealHand(); }, 200);
+  };
+
+  window._pokerNewGame = function(){
+    state.players.forEach((p,i) => { p.stack = i === 0 ? STARTING_STACK + 20 : STARTING_STACK; });
+    state.handNum = 0;
+    el.actions.innerHTML = '';
+    setTimeout(() => { if(window.__pokerActive) dealHand(); }, 200);
+  };
+
+  // Start first hand
+  setTimeout(() => { if(window.__pokerActive) dealHand(); }, 600);
+}
 
 </script>
 </body>
