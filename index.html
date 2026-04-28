@@ -25,7 +25,7 @@
   --display:'Playfair Display',Georgia,serif;
 }
 html{scroll-behavior:smooth}
-body{background:var(--cream);background-image:radial-gradient(rgba(0,0,0,0.045) 1px,transparent 1px);background-size:18px 18px;font-family:var(--serif);color:var(--ink);min-height:100vh;padding-top:44px}
+body{background:var(--cream);background-image:radial-gradient(rgba(0,0,0,0.045) 1px,transparent 1px);background-size:18px 18px;font-family:var(--serif);color:var(--ink);min-height:100vh;padding-top:44px;overflow-x:hidden;}
 img{display:block;max-width:100%}
 button{cursor:pointer;font-family:var(--serif)}
 
@@ -95,9 +95,9 @@ button{cursor:pointer;font-family:var(--serif)}
 .product-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
 @media(max-width:1100px){.product-grid{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:820px){.product-grid{grid-template-columns:repeat(3,1fr);gap:8px}}
-@media(max-width:480px){.product-grid{grid-template-columns:repeat(3,1fr);gap:6px}}
+@media(max-width:480px){.product-grid{grid-template-columns:repeat(2,1fr);gap:8px}}
 .product-card{background:var(--parchment);border:var(--border);border-radius:var(--radius-sm);overflow:hidden;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;transition:transform .15s,box-shadow .15s;cursor:pointer}
-.product-card:hover{transform:translateY(-3px);box-shadow:6px 6px 0 #1f1b16}
+.product-card:hover{transform:translateY(-3px);box-shadow:6px 6px 0 #1f1b16}.product-card:active{transform:translateY(-1px);box-shadow:3px 3px 0 #1f1b16}
 .product-card img{width:100%;height:140px;object-fit:cover;object-position:center;border-bottom:var(--border)}
 @media(max-width:820px){.product-card img{height:110px}}
 @media(max-width:480px){.product-card img{height:90px}}
@@ -317,27 +317,6 @@ body.game-fullscreen .wrap > *:not(#game-fullscreen-container){display:none!impo
 #game-fullscreen-bar{background:var(--ink);padding:8px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:10px}
 #game-fullscreen-canvas-wrap{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
 #game-fullscreen-canvas-wrap canvas{display:block;max-width:100%;max-height:100%;touch-action:none;user-select:none;-webkit-tap-highlight-color:transparent}
-/* ── STOP THE PRESSES POPUP ── */
-#stp-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;animation:fadeInOverlay .3s ease}
-@keyframes fadeInOverlay{from{opacity:0}to{opacity:1}}
-#stp-modal{background:var(--cream);border:4px solid var(--ink);border-radius:4px;max-width:680px;width:100%;box-shadow:8px 8px 0 var(--ink);animation:stampIn .4s cubic-bezier(.175,.885,.32,1.275);overflow:hidden;max-height:90vh;overflow-y:auto}
-@keyframes stampIn{from{transform:scale(.6) rotate(-3deg);opacity:0}to{transform:scale(1) rotate(0deg);opacity:1}}
-.stp-header{background:var(--ink);color:var(--cream);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--ink)}
-.stp-stamp{display:inline-block;border:3px solid #e53e3e;color:#e53e3e;font-family:var(--display);font-size:clamp(20px,4vw,32px);font-weight:900;letter-spacing:.05em;padding:4px 14px;transform:rotate(-4deg);text-transform:uppercase;animation:stampPulse 1.5s ease-in-out infinite}
-@keyframes stampPulse{0%,100%{box-shadow:0 0 0 0 rgba(229,62,62,.6)}50%{box-shadow:0 0 0 8px rgba(229,62,62,0)}}
-.stp-items{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px}
-@media(max-width:500px){.stp-items{grid-template-columns:repeat(2,1fr)}}
-.stp-item{border:2px solid var(--ink);border-radius:6px;overflow:hidden;position:relative;cursor:pointer;transition:transform .15s}
-.stp-item:hover{transform:translateY(-3px)}
-.stp-item img{width:100%;height:110px;object-fit:cover;object-position:center;display:block}
-.stp-item-info{padding:8px 10px}
-.stp-item-title{font-family:var(--display);font-size:12px;font-weight:900;text-transform:uppercase;line-height:1.2;margin-bottom:4px}
-.stp-item-price{font-family:var(--serif);font-size:12px;font-weight:700;color:#b45309}
-.stp-pulse{position:absolute;top:6px;right:6px;width:10px;height:10px;border-radius:50%;background:#e53e3e;animation:dotPulse 1.2s ease-in-out infinite}
-@keyframes coinBlink{0%,100%{opacity:1}50%{opacity:0}}
-@keyframes dotPulse{0%,100%{box-shadow:0 0 0 0 rgba(229,62,62,.6);transform:scale(1)}50%{box-shadow:0 0 0 6px rgba(229,62,62,0);transform:scale(1.1)}}
-.stp-hot-ring{position:absolute;inset:0;border-radius:6px;box-shadow:0 0 0 2px rgba(229,62,62,.4);animation:ringPulse 1.5s ease-in-out infinite}
-@keyframes ringPulse{0%,100%{box-shadow:0 0 0 2px rgba(229,62,62,.5)}50%{box-shadow:0 0 0 6px rgba(229,62,62,0)}}
 
 /* ── TYPEWRITER ── */
 .typewriter-wrap{text-align:center;padding:8px 0 4px}
@@ -357,7 +336,7 @@ body.game-fullscreen .wrap > *:not(#game-fullscreen-container){display:none!impo
 @keyframes flash{0%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(4)}}
 
 /* ── SOLD OUT STAMP ── */
-.sold-stamp-wrap{position:relative}
+.sold-stamp-wrap{position:relative}.product-card:has(.sold-stamp){opacity:.82;filter:saturate(.7)}
 .sold-stamp{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-20deg);background:rgba(0,0,0,.65);color:#fff;font-family:var(--display);font-size:clamp(13px,2.5vw,18px);font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border:2px solid #e53e3e;border-radius:4px;white-space:nowrap;pointer-events:none;z-index:3;animation:stampSlam .35s cubic-bezier(.175,.885,.32,1.275) forwards}
 @keyframes stampSlam{from{transform:translate(-50%,-50%) rotate(-20deg) scale(2.5);opacity:0}to{transform:translate(-50%,-50%) rotate(-20deg) scale(1);opacity:1}}
 
@@ -373,7 +352,7 @@ body.game-fullscreen .wrap > *:not(#game-fullscreen-container){display:none!impo
 .games-popup-sub{font-family:var(--serif);font-size:15px;line-height:1.7;color:rgba(244,236,216,.88);max-width:560px;margin:0 auto 18px}
 .games-popup-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 auto 18px;max-width:560px}
 .games-popup-chip{padding:12px 10px;border-radius:14px;border:2px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);font-family:var(--serif);font-size:12px;color:#f4ecd8}
-.games-popup-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.games-popup-actions{display:flex;flex-direction:column;gap:10px;justify-content:center;}
 .games-popup-btn{font-family:var(--serif);padding:12px 24px;font-size:13px;font-weight:700;border:2px solid #f4ecd8;border-radius:999px;background:#f4ecd8;color:#1f1b16;cursor:pointer}
 .games-popup-btn.alt{background:transparent;color:#f4ecd8}
 @keyframes popupPulse{0%{background-position:0% 50%}100%{background-position:200% 50%}}
@@ -382,27 +361,81 @@ body.game-fullscreen .wrap > *:not(#game-fullscreen-container){display:none!impo
   .games-popup-body{padding:22px 16px 18px}
 }
 
+
+/* ══════════════════════════════════════════
+   INK PRINT ANIMATION
+══════════════════════════════════════════ */
+#ink-screen{
+  position:fixed;inset:0;z-index:9999;
+  background:#0d0a06;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  pointer-events:auto;
+  will-change:opacity;
+}
+.ink-welcome{
+  font-size:clamp(10px,2.2vw,12px);letter-spacing:.4em;text-transform:uppercase;
+  color:rgba(212,168,67,.5);font-family:var(--display);
+  opacity:0;transform:translateY(5px);
+  transition:opacity .5s ease,transform .5s ease;
+  margin-bottom:14px;
+}
+.ink-logo{
+  font-size:clamp(24px,6vw,48px);font-weight:900;text-transform:uppercase;
+  letter-spacing:.05em;color:#f4ecd8;font-family:var(--display);
+  opacity:0;transform:translateY(8px);
+  transition:opacity .55s ease,transform .55s ease;
+  line-height:1;
+}
+.ink-rule{
+  width:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(212,168,67,.55),transparent);
+  margin:15px auto;transition:width .7s ease;
+}
+.ink-bar-wrap{
+  width:clamp(130px,28vw,200px);height:2px;
+  background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;
+  opacity:0;transition:opacity .3s ease;
+}
+.ink-bar-fill{
+  height:100%;width:0%;border-radius:2px;
+  background:linear-gradient(90deg,#d4a843,#f4ecd8,#d4a843);
+  background-size:200% 100%;
+  animation:inkShimmer 1s linear infinite;
+  will-change:width;
+}
+@keyframes inkShimmer{0%{background-position:200%}100%{background-position:0%}}
+.ink-sub{
+  font-size:clamp(9px,1.6vw,10px);letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(212,168,67,.3);font-family:var(--serif);
+  opacity:0;margin-top:8px;transition:opacity .3s ease;
+}
+/* Column wipe strips */
+#ink-cols{
+  position:fixed;inset:0;z-index:9998;pointer-events:none;
+  display:flex;
+}
+.ink-col{
+  flex:1;background:#0d0a06;transform-origin:top;
+  will-change:transform;
+}
 </style>
+  <meta property="og:title" content="The Daily Dish — Vintage Tableware Shop"/>
+  <meta property="og:description" content="Handpicked secondhand tableware with a newspaper twist. Shop 92+ pieces and play 11 arcade games."/>
+  <meta property="og:url" content="https://thedailydishshop.com"/>
 </head>
 <body>
-<div id="stp-overlay" onclick="handleOverlayClick(event)">
-  <div id="stp-modal">
-    <div class="stp-header">
-      <div style="display:flex;align-items:center;gap:12px">
-        <span class="stp-stamp">Stop The Presses!</span>
-      </div>
-      <button onclick="closePopup()" style="background:none;border:none;color:var(--cream);font-size:24px;cursor:pointer;line-height:1;padding:0 4px">✕</button>
-    </div>
-    <div style="padding:14px 20px 4px;border-bottom:2px solid var(--ink);background:var(--cream)">
-      <p style="font-family:var(--display);font-size:11px;letter-spacing:.2em;text-transform:uppercase;opacity:.6;margin-bottom:2px">🗞️ Breaking From The Daily Dish</p>
-      <p style="font-family:var(--serif);font-size:14px;line-height:1.6">Hot items are moving fast — don't miss out on today's most wanted pieces. Grab them before they're gone!</p>
-    </div>
-    <div class="stp-items" id="stp-items"></div>
-    <div style="padding:12px 20px;border-top:2px solid var(--ink);display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;background:#faf7f2">
-      <p style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;opacity:.5;font-family:var(--serif)">🔴 Live inventory — first come first served</p>
-      <button onclick="closePopup()" style="font-family:var(--serif);padding:10px 24px;font-size:13px;font-weight:700;border:2px solid var(--ink);border-radius:6px;background:var(--ink);color:var(--cream);cursor:pointer">Enter The Shop →</button>
-    </div>
-  </div>
+<div id="ink-cols">
+  <div class="ink-col"></div><div class="ink-col"></div>
+  <div class="ink-col"></div><div class="ink-col"></div>
+  <div class="ink-col"></div><div class="ink-col"></div>
+  <div class="ink-col"></div><div class="ink-col"></div>
+</div>
+<div id="ink-screen">
+  <div class="ink-welcome" id="ink-welcome">Welcome to</div>
+  <div class="ink-logo" id="ink-logo">The Daily Dish</div>
+  <div class="ink-rule" id="ink-rule"></div>
+  <div class="ink-bar-wrap" id="ink-bar-wrap"><div class="ink-bar-fill" id="ink-bar-fill"></div></div>
+  <div class="ink-sub" id="ink-sub">Printing today's edition...</div>
 </div>
 
 <div id="games-popup-overlay" onclick="handleGamesPopupClick(event)">
@@ -416,9 +449,9 @@ body.game-fullscreen .wrap > *:not(#game-fullscreen-container){display:none!impo
         <div class="games-popup-chip">⚔️ Dish Ninja<br><span style="opacity:.7">Tap to smash dishes</span></div>
         <div class="games-popup-chip">🃏 Dish 21<br><span style="opacity:.7">Fair play card table</span></div>
       </div>
-      <div class="games-popup-actions">
-        <button class="games-popup-btn" onclick="openGamesPopupPage()">Play The Arcade →</button>
-        <button class="games-popup-btn alt" onclick="closeGamesPopup()">Maybe Later</button>
+      <div class="games-popup-actions" style="flex-direction:column;gap:10px;padding:0 8px;">
+        <button class="games-popup-btn" onclick="openGamesPopupPage()" style="width:100%;padding:14px 22px;font-size:14px;border-radius:11px;border:none;background:linear-gradient(135deg,#f4ecd8,#e8d9b8);color:#1f1b16;box-shadow:0 4px 16px rgba(0,0,0,.4);min-height:50px;letter-spacing:.02em;">Play the Arcade →</button>
+        <button class="games-popup-btn alt" onclick="closeGamesPopup()" style="width:100%;padding:11px 22px;font-size:12px;border-radius:11px;min-height:44px;background:transparent;border:1.5px solid rgba(244,236,216,.3);color:rgba(244,236,216,.65);">Maybe Later</button>
       </div>
     </div>
   </div>
@@ -648,7 +681,7 @@ const products = [
   {id:"red-glass-full-set",collection:"Sets",section:"Dining",title:"Red Dinner/App Plate & Bowl Set",subtitle:"3 dinner plates, 4 appetizer plates and 3 bowls — all in deep red glass.",description:"The complete red glass collection — three dinner plates, four appetizer plates and three bowls all in the same bold deep red glass. Bold, matching and a serious upgrade for any table.",image:"https://i.imgur.com/EdI3INH.jpeg",priceLine:"Full Set (10 pieces) — $25",options:[{id:"full-set",label:"Add the Full Set",price:25}],story:"From the sets desk — the complete red glass collection. Three dinner plates, four appetizer plates and three bowls all in one bundle. Bold color, great price."},
   {id:"white-floral-set",collection:"Sets",section:"Dining",title:"White Floral Rim Plate Set",subtitle:"All 5 white floral rim plates together at a discount.",description:"All five white floral rim plates bundled together — heavy glass, beautiful raised flower and fruit design around the rim, and a clean elegant look that works with any table.",image:"https://i.imgur.com/6ZJb0Jk.jpeg",priceLine:"Full Set of 5 — $18",options:[{id:"full-set",label:"Add All 5",price:18}],story:"From the sets desk — all five white floral rim plates in one bundle. Elegant, heavy glass and a price that makes sense for the whole set."},
   {id:"swirl-full-set",collection:"Sets",section:"Dining",title:"Blue & Orange Swirl Plate Set",subtitle:"All 4 swirl plates — 2 ocean blue and 2 sunset orange.",description:"Two ocean blue and two sunset orange swirl plates together in one bundle. Heavy glass, hand-swirled finish, and a color combo that looks seriously intentional on any table.",image:"DUAL:https://i.imgur.com/SRb1eG2.jpeg|https://i.imgur.com/j8d3d1H.jpeg",priceLine:"Full Set of 4 — $16",options:[{id:"full-set",label:"Add All 4",price:16}],story:"From the sets desk — the complete swirl set. Two blue, two orange, one great price."},
-  {id:"wine-glasses-set",collection:"New Additions",section:"Morning Edition",title:"Classic Wine Glasses",subtitle:"A set of 9 clean, simple wine glasses at $1 each.",description:"Nine clean classic wine glasses at just $1 each — simple, elegant and perfect for everyday use or hosting. Grab one or take the full set of nine for $9.",image:"https://i.imgur.com/KJgdRRs.jpeg",priceLine:"SOLD OUT",options:[{id:"full-set",label:"Sold Out",price:9},{id:"single",label:"Sold Out",price:1}],addedAt:"2026-04-08",story:"From the glassware desk — nine simple clear wine glasses just landed in the shop. Clean, classic and ready for whatever you're pouring."},
+  {id:"wine-glasses-set",collection:"Drinkware",section:"Dining",title:"Classic Wine Glasses",subtitle:"A set of 9 clean, simple wine glasses at $1 each.",description:"Nine clean classic wine glasses at just $1 each — simple, elegant and perfect for everyday use or hosting. Grab one or take the full set of nine for $9.",image:"https://i.imgur.com/KJgdRRs.jpeg",priceLine:"SOLD OUT",options:[{id:"full-set",label:"Sold Out",price:9},{id:"single",label:"Sold Out",price:1}],addedAt:"2026-04-08",story:"From the glassware desk — nine simple clear wine glasses just landed in the shop. Clean, classic and ready for whatever you're pouring."},
   {id:"budweiser-beerstein",oneOfOne:true,collection:"New Additions",section:"Morning Edition",title:"Budweiser Beerstein 1999",subtitle:"A vintage 1999 Budweiser collector beerstein — heavy ceramic with detailed artwork.",description:"A genuine 1999 Budweiser collector beerstein in heavy ceramic with detailed vintage artwork. The kind of piece that belongs in a display case or on a shelf where people can actually see it. One of a kind and not something you find every day.",image:"DUAL:https://i.imgur.com/z33bLY8.jpeg|https://i.imgur.com/xLBp5bk.jpeg",priceLine:"Single Stein — $20",options:[{id:"single",label:"Add One",price:20}],addedAt:"2026-04-08",story:"From the collector's desk — a genuine 1999 Budweiser beerstein just made it into the shop. Heavy ceramic, vintage artwork, and only one available. This one won't last long."},
   {id:"red-robin-beer-glass",oneOfOne:true,collection:"New Additions",section:"Morning Edition",title:"Red Robin Beer Glass",subtitle:"A cool red tinted beer glass from Red Robin.",description:"A tall beer glass in a rich red tint with the Red Robin logo on it. The kind of glass you pick up at a restaurant and wish you could take home — well now you can.",image:"https://i.imgur.com/BE2eBxi.jpeg",priceLine:"Single Glass — $4",options:[{id:"single",label:"Add One",price:4}],addedAt:"2026-04-08",story:"From the glassware desk — a Red Robin beer glass just landed in the shop. Cool red color, great shape, and only one available."},
   {id:"murphys-stout-glass",oneOfOne:true,collection:"New Additions",section:"Morning Edition",title:"Murphy's Irish Stout Glass",subtitle:"A classic Murphy's Irish Stout pint glass — one of a kind.",description:"A genuine Murphy's Irish Stout pint glass in the classic tulip shape. Clean, heavy and the kind of glass that makes a cold beer taste exactly right.",image:"https://i.imgur.com/QYsmhEC.jpeg",priceLine:"Single Glass — $4",options:[{id:"single",label:"Add One",price:4}],addedAt:"2026-04-08",story:"From the glassware desk — a Murphy's Irish Stout glass just landed in the shop. Classic shape, great glass, and only one available."},
@@ -717,7 +750,7 @@ const PAGE_META = {
   "New Additions":{kicker:"🆕 New Additions",headline:"Fresh From The Field",subhead:"Brand new pieces just added to the shop — be the first to grab them before they're gone."},
   "Full Inventory":{kicker:"Full Inventory",headline:"Everything In Today's Paper",subhead:"Browse every available item in one place, regardless of section."},
   "Dish Dash":{kicker:"🏃 Dish Dash",headline:"Run For Your Dishes",subhead:"Pick a dish from the shop and dash — dodge obstacles and set a high score."},
-  "Dish Games":{kicker:"🎮 The Game Room",headline:"Welcome To The Dish Games",subhead:"Three games and counting — more are on the way. Stay tuned, things are just getting started."},
+  "Dish Games":{kicker:"🎮 The Game Room",headline:"Welcome To The Dish Games",subhead:"Eleven original games and counting — Checkers, Flappy Dish, War, Go Fish, Poker, Crossy Road, Blackjack, Ninja, Pong, Stack, and Dash. Welcome to the arcade."},
   "Dish Requests":{kicker:"Dish Requests",headline:"Leave Your Mark on The Daily Dish",subhead:"Every letter is read by the editor — your voice shapes the next edition."},
 };
 
@@ -942,8 +975,10 @@ function isNewAddition(p){
 }
 
 function sortSoldLast(arr){
-  const soldOut = arr.filter(p=>p.options.every(o=>isSoldOut(p.id,o.id)));
-  const available = arr.filter(p=>!p.options.every(o=>isSoldOut(p.id,o.id)));
+  const isFullySold = p => p.options.every(o=>isSoldOut(p.id,o.id)) ||
+    (p.priceLine && p.priceLine.toUpperCase().includes('SOLD OUT'));
+  const soldOut = arr.filter(isFullySold);
+  const available = arr.filter(p=>!isFullySold(p));
   return [...available,...soldOut];
 }
 function getPageProducts(page){
@@ -953,9 +988,9 @@ function getPageProducts(page){
   if(page==="Plates") return sortSoldLast(products.filter(p=>{const t=p.title.toLowerCase();return (t.includes("plate")||t.includes("charger"))&&p.collection!=="Sets";}));
   if(page==="Bowls") return sortSoldLast(products.filter(p=>(p.title.toLowerCase().includes("bowl")||p.id==="red-bumpy-bowl")&&p.id!=="centerpiece-bowl"&&p.id!=="popcorn-bowl-set"&&p.id!=="blue-white-swirl-set"&&p.collection!=="Sets"));
   if(page==="Cups"){
-    const cheapGlasses = ["twisted-dinner-glasses","cocacola-glasses","unique-wine-glass","terrapin-turtle-glass","red-robin-beer-glass","murphys-stout-glass","southeastern-whiskey-glass","sweetwater-420-glass","sweetwater-brewing-glass","sweetwater-ipa-glass","don-pedro-whiskey-glass","longhorn-whiskey-small","longhorn-whiskey-large","ballast-point-glass","smirnoff-golf-glass","budweiser-beerstein"];
+    const cheapGlasses = ["twisted-dinner-glasses","cocacola-glasses","unique-wine-glass","terrapin-turtle-glass","red-robin-beer-glass","murphys-stout-glass","southeastern-whiskey-glass","sweetwater-420-glass","sweetwater-ipa-glass","don-pedro-whiskey-glass","longhorn-whiskey-small","longhorn-whiskey-large","ballast-point-glass","smirnoff-golf-glass","budweiser-beerstein"];
     const mugs = ["tall-botanical-mug","autumn-leaf-cup","green-amber-mug","terracotta-mug","champagne-flutes"];
-    const soldOut = ["budweiser-racing-glasses","sweetwater-brewing-glass","samuel-adams-glass","orange-sweetwater-glass","blue-glass-cups-sold","tallboy-beer-glasses","wine-glasses-set","wine-glasses-bundle-set"];
+    const soldOut = ["budweiser-racing-glasses","sweetwater-brewing-glass","samuel-adams-glass","orange-sweetwater-glass","blue-glass-cups-sold","tallboy-beer-glasses","wine-glasses-set","bud-light-apple-glass"];
     const setDupes = ["fruit-mug-collection","blue-glass-drinking-set","black-drinking-glasses-set","heavy-glass-beer-mugs-set"];
     const drinkware = products.filter(p=>p.collection==="Drinkware"&&![...cheapGlasses,...mugs,...soldOut,...setDupes].includes(p.id));
     const cupsExtra = products.filter(p=>p.collection==="Cups"&&![...cheapGlasses,...mugs,...soldOut,...setDupes].includes(p.id));
@@ -1277,7 +1312,252 @@ function renderFrontPage(){
     "champagne-flutes","autumn-leaves-plate","american-eagle-plate","budweiser-beerstein"
   ].map(id=>products.find(p=>p.id===id)).filter(p=>p&&!p.options.every(o=>isSoldOut(p.id,o.id)));
 
-  return `
+
+  // ── FRONT PAGE ROTATOR ──
+  const FP_SLIDES = [
+    {
+      bg:'linear-gradient(160deg,#1a0b02 0%,#2e1505 40%,#1a0b02 100%)',
+      imgBg:'linear-gradient(160deg,#2a1204,#3d1c06)',
+      textBg:'linear-gradient(180deg,rgba(26,11,2,.0) 0%,rgba(26,11,2,.96) 100%)',
+      accent:'#e8a030',accentBorder:'rgba(220,150,40,.35)',
+      kicker:'☕ Morning Editor\'s Pick',kickerColor:'rgba(230,170,80,.85)',
+      title:'Fruit Mug Set',
+      subtitle:'Four ceramic mugs, each with a different fruit design.',
+      story:'A beautiful set of four mugs that make your morning feel like a little occasion. Each one different, all of them gorgeous.',
+      price:'Set of 4 — $12',priceLabel:'Today\'s Price',
+      btn:'Add to Cart — $12',btnBg:'linear-gradient(135deg,#92400e,#b45309,#d97706)',btnColor:'#fff8ec',
+      tag:'☀️ Today\'s Pick',tagBg:'rgba(180,90,20,.45)',tagColor:'rgba(255,220,120,1)',
+      stock:'✓ In Stock',stockColor:'rgba(100,220,120,.9)',
+      productId:'fruit-mug-set',optionId:'set-4',
+      img:'https://i.imgur.com/JuChz2X.jpeg',
+    },
+    {
+      bg:'linear-gradient(160deg,#040e1c 0%,#071828 40%,#040e1c 100%)',
+      imgBg:'linear-gradient(160deg,#030b18,#081a30)',
+      textBg:'linear-gradient(180deg,rgba(4,14,28,.0) 0%,rgba(4,14,28,.97) 100%)',
+      accent:'#7eb8ff',accentBorder:'rgba(80,140,255,.38)',
+      kicker:'🔵 Blue Desk Report',kickerColor:'rgba(160,210,255,.9)',
+      title:'Blue & White Swirl Set',
+      subtitle:'4 dinner plates and 3 matching bowls in a stunning swirl.',
+      story:'A complete coordinated set in gorgeous blue and white. Seven pieces, one great price, one beautiful table every single night.',
+      price:'Full Set (7 pieces) — $22',priceLabel:'Today\'s Price',
+      btn:'Add the Full Set — $22',btnBg:'linear-gradient(135deg,#1a3a8f,#2563eb,#3b82f6)',btnColor:'#eef4ff',
+      tag:'💎 Full Set',tagBg:'rgba(29,78,216,.42)',tagColor:'rgba(180,215,255,1)',
+      stock:'✓ Available',stockColor:'rgba(100,220,120,.9)',
+      productId:'blue-white-swirl-set',optionId:'full-set',
+      img:'https://i.imgur.com/QFdd2ad.jpeg',
+    },
+    {
+      bg:'linear-gradient(160deg,#061208 0%,#0c2010 40%,#061208 100%)',
+      imgBg:'linear-gradient(160deg,#050f08,#0a1c0e)',
+      textBg:'linear-gradient(180deg,rgba(6,18,8,.0) 0%,rgba(6,18,8,.97) 100%)',
+      accent:'#5de89a',accentBorder:'rgba(60,210,110,.38)',
+      kicker:'🌿 From The Kitchen Desk',kickerColor:'rgba(140,250,170,.9)',
+      title:'Heavy Glass Beer Mugs',
+      subtitle:'The heaviest glasses in the shop — solid handle, built to last.',
+      story:'Seven matching heavy glass mugs with handles that mean serious business. The most substantial set we have ever carried. Built for life.',
+      price:'Single Mug — $5',priceLabel:'Per Mug',
+      btn:'Add One — $5',btnBg:'linear-gradient(135deg,#14532d,#15803d,#16a34a)',btnColor:'#f0fff4',
+      tag:'🏋️ Heaviest in Shop',tagBg:'rgba(22,163,74,.32)',tagColor:'rgba(160,255,190,1)',
+      stock:'✓ 4 Available',stockColor:'rgba(100,220,120,.9)',
+      productId:'heavy-glass-beer-mugs',optionId:'single',
+      img:'https://i.imgur.com/4NE9vQB.jpeg',
+    },
+    {
+      bg:'linear-gradient(160deg,#130320 0%,#200538 40%,#130320 100%)',
+      imgBg:'linear-gradient(160deg,#0f0218,#1a0428)',
+      textBg:'linear-gradient(180deg,rgba(19,3,32,.0) 0%,rgba(19,3,32,.97) 100%)',
+      accent:'#d084ff',accentBorder:'rgba(190,80,255,.38)',
+      kicker:'⚡ Breaking From The Shop',kickerColor:'rgba(220,170,255,.9)',
+      title:'Budweiser Beerstein 1999',
+      subtitle:'A genuine vintage collector stein — heavy ceramic, detailed artwork.',
+      story:'A genuine 1999 Budweiser collector beerstein. The kind of piece that belongs in a display case, not a thrift store. One of a kind.',
+      price:'Single Stein — $20',priceLabel:'Collector\'s Price',
+      btn:'Add One — $20',btnBg:'linear-gradient(135deg,#4c1d95,#7c3aed,#9333ea)',btnColor:'#fdf4ff',
+      tag:'⚠️ Only 1 Left',tagBg:'rgba(180,20,20,.42)',tagColor:'rgba(255,180,180,1)',
+      stock:'⚠️ Only 1',stockColor:'rgba(255,160,160,.95)',
+      productId:'budweiser-beerstein',optionId:'single',
+      img:'https://i.imgur.com/z33bLY8.jpeg',
+    },
+  ]
+
+  function _buildRotator(){
+    const slides = FP_SLIDES.map((s,i)=>`
+      <div class="fp-rot-slide">
+        <div class="fp-rot-inner" style="background:${s.bg};position:relative;overflow:hidden">
+          <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,${s.accentBorder.replace('.35','0.08').replace('.38','0.08')} 0%,transparent 65%);pointer-events:none;z-index:0"></div>
+          <div class="fp-rot-img" style="background:${s.imgBg};position:relative;z-index:1">
+            <div style="position:absolute;inset:0;background:radial-gradient(ellipse at center,${s.accentBorder} 0%,transparent 68%);pointer-events:none"></div>
+            <div class="fp-rot-tag" style="background:${s.tagBg};color:${s.tagColor};border:1px solid ${s.accentBorder};box-shadow:0 2px 8px rgba(0,0,0,.35)">${s.tag}</div>
+            <img src="${s.img}" alt="${s.title}" loading="${i===0?'eager':'lazy'}" onerror="this.style.opacity='.2'"/>
+          </div>
+          <div class="fp-rot-text" style="position:relative;z-index:1">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+              <div style="height:2px;width:22px;background:${s.accent};border-radius:2px;flex-shrink:0;box-shadow:0 0 8px ${s.accent}66"></div>
+              <p class="fp-rot-kck" style="color:${s.kickerColor};letter-spacing:.22em">${s.kicker}</p>
+              <div style="height:1px;flex:1;background:${s.accentBorder.replace('.35','0.12').replace('.38','0.12')}"></div>
+            </div>
+            <h2 class="fp-rot-title" style="letter-spacing:-.01em">${s.title}</h2>
+            <p class="fp-rot-sub" style="border-left:3px solid ${s.accent};padding-left:12px;color:rgba(244,236,216,.82)">${s.subtitle}</p>
+            <p class="fp-rot-story">${s.story}</p>
+            <div class="fp-rot-pricebox" style="background:rgba(0,0,0,.32);border:1px solid ${s.accentBorder};box-shadow:0 2px 12px rgba(0,0,0,.25)">
+              <div>
+                <p class="fp-rot-plabel" style="color:${s.kickerColor}">${s.priceLabel}</p>
+                <p class="fp-rot-pval" style="color:${s.accent}">${s.price}</p>
+              </div>
+              <div style="display:flex;align-items:center;gap:5px">
+                <div style="width:6px;height:6px;border-radius:50%;background:${s.stockColor};flex-shrink:0;box-shadow:0 0 6px ${s.stockColor}66"></div>
+                <span style="font-size:10px;font-weight:700;color:${s.stockColor}">${s.stock}</span>
+              </div>
+            </div>
+            <button class="fp-rot-btn" style="background:${s.btnBg};color:${s.btnColor};box-shadow:0 4px 20px rgba(0,0,0,.45);letter-spacing:.02em;font-weight:800"
+              onclick="addToCart('${s.productId}','${s.optionId}')">${s.btn}</button>
+          </div>
+        </div>
+      </div>`).join('');
+
+    const dots = FP_SLIDES.map((_,i)=>
+      `<div class="fp-rot-dot${i===0?' on':''}" onclick="_fpRotGo(${i})"></div>`
+    ).join('');
+
+    return `
+    <div class="fp-rotator" id="fp-rotator">
+      <div class="fp-rot-hdr">
+        <div class="fp-rot-kicker">Today\'s Front Page Stories</div>
+        <div class="fp-rot-dots" id="fp-rot-dots">${dots}</div>
+      </div>
+      <div class="fp-rot-outer">
+        <div class="fp-rot-track" id="fp-rot-track">${slides}</div>
+        <div class="fp-rot-footer">
+          <button class="fp-rot-arr" onclick="_fpRotMove(-1)">← Prev</button>
+          <div class="fp-rot-cnt" id="fp-rot-cnt">1 of ${FP_SLIDES.length}</div>
+          <button class="fp-rot-arr" onclick="_fpRotMove(1)">Next →</button>
+        </div>
+      </div>
+    </div>`;
+  }
+  // Rotator state
+  if(!window._fpRotIdx) window._fpRotIdx = 0;
+  if(window._fpRotTimer) clearInterval(window._fpRotTimer);
+
+  window._fpRotGo = function(i){
+    window._fpRotIdx = i;
+    const track = document.getElementById('fp-rot-track');
+    if(track) track.style.transform = 'translateX(-'+i*100+'%)';
+    document.querySelectorAll('.fp-rot-dot').forEach((d,j)=>d.classList.toggle('on',j===i));
+    const cnt = document.getElementById('fp-rot-cnt');
+    if(cnt) cnt.textContent = (i+1)+' of '+FP_SLIDES.length;
+    clearInterval(window._fpRotTimer);
+    window._fpRotTimer = setInterval(()=>window._fpRotMove(1), 4800);
+  };
+  window._fpRotMove = function(dir){
+    window._fpRotGo((window._fpRotIdx+dir+FP_SLIDES.length)%FP_SLIDES.length);
+  };
+
+  // Swipe support
+  setTimeout(()=>{
+    const outer = document.querySelector('.fp-rot-outer');
+    if(!outer) return;
+    let sx=null;
+    outer.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;},{passive:true});
+    outer.addEventListener('touchend',e=>{
+      if(sx===null)return;
+      if(Math.abs(e.changedTouches[0].clientX-sx)>44) window._fpRotMove(e.changedTouches[0].clientX<sx?1:-1);
+      sx=null;
+    },{passive:true});
+    window._fpRotTimer = setInterval(()=>window._fpRotMove(1), 4800);
+  }, 200);
+
+
+  return _buildRotator() + `
+
+
+<style>
+/* ══ FRONT PAGE ROTATOR ══ */
+.fp-rotator{margin-bottom:22px;}
+.fp-rot-hdr{display:flex;align-items:center;justify-content:space-between;padding:0 0 8px;}
+.fp-rot-kicker{font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:rgba(31,27,22,.48);}
+.fp-rot-dots{display:flex;gap:7px;align-items:center;}
+.fp-rot-dot{
+  width:8px;height:8px;border-radius:50%;
+  border:1.5px solid rgba(31,27,22,.3);background:transparent;
+  cursor:pointer;transition:all .28s;touch-action:manipulation;
+}
+.fp-rot-dot.on{background:var(--ink);border-color:var(--ink);transform:scale(1.3);}
+.fp-rot-outer{
+  overflow:hidden;border:4px solid var(--ink);border-radius:14px;
+  box-shadow:6px 6px 0 var(--ink);position:relative;
+}
+.fp-rot-track{display:flex;transition:transform .52s cubic-bezier(.4,0,.2,1);will-change:transform;}
+.fp-rot-slide{flex:0 0 100%;min-width:0;}
+.fp-rot-inner{display:grid;grid-template-columns:1fr 1fr;min-height:clamp(260px,38vw,310px);}
+@media(max-width:620px){
+  .fp-rot-inner{grid-template-columns:1fr;}
+  .fp-rot-img{border-right:none!important;border-bottom:3px solid rgba(255,255,255,.12)!important;min-height:180px!important;}
+}
+.fp-rot-img{
+  position:relative;display:flex;align-items:center;justify-content:center;
+  padding:clamp(16px,3vw,26px);border-right:3px solid rgba(255,255,255,.1);overflow:hidden;
+}
+.fp-rot-img img{
+  width:100%;max-height:clamp(150px,24vw,230px);object-fit:contain;object-position:center;
+  border-radius:10px;position:relative;z-index:1;
+  filter:drop-shadow(0 8px 28px rgba(0,0,0,.45));
+  transition:transform .5s cubic-bezier(.25,.46,.45,.94);
+}
+.fp-rot-img:hover img{transform:scale(1.06);}
+.fp-rot-tag{
+  position:absolute;top:10px;left:10px;z-index:2;
+  font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 12px;border-radius:999px;box-shadow:0 2px 8px rgba(0,0,0,.35);
+}
+.fp-rot-text{
+  padding:clamp(18px,3vw,26px);display:flex;flex-direction:column;justify-content:center;
+}
+.fp-rot-kck{font-size:9px;letter-spacing:.24em;text-transform:uppercase;margin-bottom:0;}
+.fp-rot-title{
+  font-family:var(--display);font-size:clamp(17px,3.2vw,26px);font-weight:900;
+  text-transform:uppercase;line-height:1.08;margin-bottom:9px;color:#f4ecd8;
+  text-shadow:0 2px 14px rgba(0,0,0,.55);
+}
+.fp-rot-sub{
+  font-style:italic;font-size:12px;line-height:1.6;margin-bottom:10px;opacity:.78;
+}
+.fp-rot-story{font-size:11px;line-height:1.8;margin-bottom:13px;flex:1;color:rgba(244,236,216,.6);}
+.fp-rot-pricebox{
+  border-radius:10px;padding:11px 15px;margin-bottom:13px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;
+}
+.fp-rot-plabel{font-size:8px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:3px;opacity:.75;}
+.fp-rot-pval{font-size:clamp(16px,3.2vw,21px);font-weight:900;font-family:var(--display);}
+.fp-rot-btn{
+  display:flex;align-items:center;justify-content:center;
+  padding:clamp(12px,2vw,14px) clamp(14px,3vw,20px);
+  font-size:clamp(12px,1.8vw,13px);
+  border:none;border-radius:10px;font-family:var(--serif);
+  cursor:pointer;width:100%;touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+  transition:opacity .15s,transform .12s;min-height:48px;
+}
+.fp-rot-btn:hover{opacity:.87;}
+.fp-rot-btn:active{transform:scale(.97);}
+.fp-rot-footer{
+  padding:9px 14px;border-top:4px solid var(--ink);
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--cream);
+}
+.fp-rot-arr{
+  padding:8px 18px;font-size:12px;font-weight:700;
+  border:2px solid var(--ink);border-radius:8px;
+  background:transparent;color:var(--ink);font-family:var(--serif);
+  cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+  transition:background .15s,transform .1s;min-height:40px;min-width:72px;
+}
+.fp-rot-arr:hover{background:rgba(0,0,0,.08);}
+.fp-rot-arr:active{transform:scale(.96);}
+.fp-rot-cnt{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(31,27,22,.4);}
+</style>
+
   <style>
     /* ── Front page specific ── */
     .fp-hero{display:grid;grid-template-columns:1fr 1fr}
@@ -1309,111 +1589,6 @@ function renderFrontPage(){
     .fp-story-price{font-size:12px;font-weight:700;color:#92400e;font-family:var(--serif);margin-bottom:8px}
     .fp-story-actions{display:flex;gap:5px;margin-top:auto}
   </style>
-
-  <!-- ═══ HERO — Front Page Pick ═══ -->
-  <div class="fp-section-box" style="background:#1c0e04;border-color:#2d1608;overflow:hidden">
-
-    <!-- Masthead banner — newspaper edition bar -->
-    <div style="background:linear-gradient(90deg,#2d1200,#5c2a08,#2d1200);padding:7px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(210,130,40,.2)">
-      <div style="display:flex;align-items:center;gap:10px">
-        <div style="width:3px;height:16px;background:#d4863a;border-radius:2px"></div>
-        <p style="font-family:var(--serif);font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:rgba(210,160,80,.6)">☀️ Morning Edition Pick</p>
-      </div>
-      <div style="display:flex;align-items:center;gap:7px">
-        <div style="width:6px;height:6px;border-radius:50%;background:#d4863a;opacity:.9"></div>
-        <p style="font-family:var(--serif);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(210,160,80,.4)">Today's Front Page · Set of 4</p>
-      </div>
-    </div>
-
-    <div class="fp-hero">
-
-      <!-- ── IMAGE SIDE ── -->
-      <div style="position:relative;display:flex;flex-direction:column;background:linear-gradient(150deg,#200e02,#3d1c06,#2a1204)">
-
-        <!-- Halftone texture -->
-        <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(210,140,40,.06) 1px,transparent 1px);background-size:12px 12px;pointer-events:none;z-index:0"></div>
-
-        <!-- Deep glow -->
-        <div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(180,90,20,.2) 0%,transparent 68%);pointer-events:none;z-index:0"></div>
-
-        <!-- Corner marks + swirling decorative SVG -->
-        <div style="position:absolute;top:12px;left:12px;width:20px;height:20px;border-top:1.5px solid rgba(210,140,40,.45);border-left:1.5px solid rgba(210,140,40,.45);z-index:3"></div>
-        <div style="position:absolute;top:12px;right:12px;width:20px;height:20px;border-top:1.5px solid rgba(210,140,40,.45);border-right:1.5px solid rgba(210,140,40,.45);z-index:3"></div>
-        <div style="position:absolute;bottom:32px;left:12px;width:20px;height:20px;border-bottom:1.5px solid rgba(210,140,40,.45);border-left:1.5px solid rgba(210,140,40,.45);z-index:3"></div>
-        <div style="position:absolute;bottom:32px;right:12px;width:20px;height:20px;border-bottom:1.5px solid rgba(210,140,40,.45);border-right:1.5px solid rgba(210,140,40,.45);z-index:3"></div>
-
-        <!-- Refined editorial glow + framing -->
-        <div style="position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(circle at 50% 42%, rgba(200,110,30,.2), transparent 32%);"></div>
-        <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(76%,320px);height:min(76%,320px);border-radius:28px;border:1px solid rgba(210,140,40,.22);box-shadow:0 0 0 8px rgba(255,200,80,.03),0 24px 60px rgba(20,6,0,.5);z-index:1;pointer-events:none"></div>
-
-        <!-- Image wrapper — cleaner luxury presentation -->
-        <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:clamp(20px,5vw,34px) 24px 28px;position:relative;z-index:2;min-height:clamp(240px,34vw,340px)">
-          <div style="position:absolute;inset:0;background:radial-gradient(ellipse 64% 70% at 50% 52%,transparent 30%,rgba(20,8,2,.4) 70%,rgba(20,8,2,.78) 100%);z-index:0;pointer-events:none"></div>
-          <div style="position:relative;width:min(92%,360px);padding:18px;border-radius:28px;background:linear-gradient(180deg,rgba(255,220,160,.16),rgba(200,120,40,.06));border:1px solid rgba(210,140,40,.22);box-shadow:0 20px 44px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,180,80,.1)">
-            <div style="position:absolute;inset:10px;border-radius:22px;border:1px solid rgba(210,140,40,.1);pointer-events:none"></div>
-            <img src="https://i.imgur.com/JuChz2X.jpeg"
-              style="width:100%;max-height:290px;object-fit:contain;object-position:center;display:block;opacity:.99;filter:brightness(1.1) contrast(1.04) saturate(1.06) drop-shadow(0 18px 32px rgba(15,23,42,.28));transition:transform .45s cubic-bezier(.25,.46,.45,.94),filter .35s ease"
-              onmouseover="this.style.transform='scale(1.03)';this.style.filter='brightness(1.14) contrast(1.06) saturate(1.08) drop-shadow(0 22px 38px rgba(15,23,42,.32))'"
-              onmouseout="this.style.transform='scale(1)';this.style.filter='brightness(1.1) contrast(1.04) saturate(1.06) drop-shadow(0 18px 32px rgba(15,23,42,.28))'"
-              onerror="this.src='${FALLBACK}'"/>
-          </div>
-        </div>
-
-        <!-- Caption bar pinned to bottom -->
-        <div style="background:rgba(20,8,2,.88);padding:6px 16px;border-top:1px solid rgba(210,140,40,.12);position:relative;z-index:2">
-          <p style="font-family:var(--serif);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(210,160,80,.45);text-align:center">4 Mugs · 4 Designs · One Beautiful Morning Set</p>
-        </div>
-      </div>
-
-      <!-- ── TEXT SIDE ── -->
-      <div style="padding:clamp(16px,4vw,28px);display:flex;flex-direction:column;justify-content:center;gap:0;border-top:1px solid rgba(210,140,40,.15);background:linear-gradient(160deg,rgba(40,18,4,.8),rgba(24,10,2,.92))">
-
-        <!-- Kicker -->
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
-          <div style="height:1px;width:20px;background:rgba(210,160,80,.5)"></div>
-          <p style="font-family:var(--serif);font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:rgba(210,160,80,.65)">☕ Morning Editor's Pick</p>
-          <div style="height:1px;flex:1;background:rgba(210,140,40,.15)"></div>
-        </div>
-
-        <!-- Headline — big and authoritative -->
-        <h2 style="font-family:var(--display);font-size:clamp(20px,4vw,30px);font-weight:900;text-transform:uppercase;color:#f4ecd8;line-height:1.05;margin-bottom:10px;letter-spacing:.02em">${dealOfDay.title}</h2>
-
-        <!-- Column rule + story -->
-        <div style="border-left:2px solid rgba(210,140,40,.28);padding-left:14px;margin-bottom:16px">
-          <p style="font-style:italic;font-size:13px;color:rgba(210,160,80,.85);line-height:1.5;margin-bottom:8px">${dealOfDay.subtitle}</p>
-          <p style="font-size:13px;line-height:1.8;color:rgba(244,236,216,.75)">${dealOfDay.story}</p>
-        </div>
-
-        <!-- Price block — newspaper pricing style -->
-        <div style="border:1px solid rgba(210,140,40,.3);border-radius:10px;padding:14px 18px;background:linear-gradient(135deg,rgba(180,90,20,.18),rgba(120,60,10,.1));margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
-          <div>
-            <p style="font-family:var(--serif);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(210,160,80,.6);margin-bottom:4px">☀️ Today's Price</p>
-            <div style="display:flex;align-items:baseline;gap:7px">
-              <span style="font-family:var(--display);font-size:clamp(44px,7vw,58px);font-weight:900;color:#d4863a;line-height:1;text-shadow:0 0 28px rgba(212,120,40,.3)">$12</span>
-              <span style="font-family:var(--serif);font-size:12px;color:rgba(210,160,80,.6);font-style:italic">for all 4 mugs</span>
-            </div>
-          </div>
-          <div style="text-align:right">
-            <p style="font-size:10px;color:rgba(74,222,128,.8);font-weight:700;letter-spacing:.06em;margin-bottom:3px">✓ 4 Mugs Included</p>
-            <p style="font-size:10px;color:rgba(74,222,128,.65);letter-spacing:.06em">✓ $3 per mug</p>
-          </div>
-        </div>
-
-        <!-- Action buttons -->
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button style="font-family:var(--display);padding:11px 20px;font-size:12px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;border:none;border-radius:8px;background:linear-gradient(135deg,#b45309,#d97706,#f59e0b);color:#fff;cursor:pointer;flex:1;min-width:130px;min-height:48px;box-shadow:0 4px 18px rgba(180,83,9,.4);transition:opacity .15s" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'" onclick="addToCart('${dealOfDay.id}','${dealOfDay.options[0].id}')">☕ Add to Cart — $12</button>
-          <button style="font-family:var(--serif);padding:11px 16px;font-size:13px;font-weight:700;border:1px solid rgba(210,140,40,.35);border-radius:8px;min-height:48px;background:transparent;color:rgba(210,160,80,.9);cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(147,197,253,.5)'" onmouseout="this.style.borderColor='rgba(147,197,253,.25)'" onclick="viewProduct('${dealOfDay.id}')">View Details →</button>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Footer rule -->
-    <div style="padding:6px 20px;background:rgba(20,8,2,.6);border-top:1px solid rgba(210,140,40,.1)">
-      <p style="font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(210,160,80,.28);text-align:center">🗞️ Handpicked by The Daily Dish · Four Fruit Mugs · Just $12 for the Complete Set</p>
-    </div>
-
-  </div>
 
   <!-- ═══ NEW ADDITIONS TEASER ═══ -->
   <div class="fp-section-box" style="background:#1c1208;border-color:#1c1208">
@@ -1582,7 +1757,7 @@ function renderSection(){
     <div class="product-grid">
       ${pageProducts.map(p=>`
         <div class="product-card">
-          ${(()=>{const allSoldOut=p.options.every(o=>isSoldOut(p.id,o.id));const imgHtml=p.image.startsWith("DUAL:")?`<div style="display:grid;grid-template-columns:1fr 1fr;height:200px;border-bottom:var(--border)"><img src="${p.image.split("DUAL:")[1].split("|")[0]}" alt="${p.title}" style="width:100%;height:100%;object-fit:cover;object-position:center;border-right:var(--border)" onerror="this.src='${FALLBACK}'"/><img src="${p.image.split("|")[1]}" alt="${p.title}" style="width:100%;height:100%;object-fit:cover;object-position:center" onerror="this.src='${FALLBACK}'"/></div>`:`<img src="${p.image}" alt="${p.title}" onerror="this.src='${FALLBACK}'" style="${allSoldOut?'filter:grayscale(.6)':''}"/>`;return allSoldOut?`<div class="sold-stamp-wrap">${imgHtml}<div class="sold-stamp">✕ Sold Out</div></div>`:imgHtml;})()}
+          ${(()=>{const allSoldOut=p.options.every(o=>isSoldOut(p.id,o.id))||(p.priceLine&&p.priceLine.toUpperCase().includes("SOLD OUT"));const imgHtml=p.image.startsWith("DUAL:")?`<div style="display:grid;grid-template-columns:1fr 1fr;height:200px;border-bottom:var(--border)"><img src="${p.image.split("DUAL:")[1].split("|")[0]}" alt="${p.title}" style="width:100%;height:100%;object-fit:cover;object-position:center;border-right:var(--border)" onerror="this.src='${FALLBACK}'"/><img src="${p.image.split("|")[1]}" alt="${p.title}" style="width:100%;height:100%;object-fit:cover;object-position:center" onerror="this.src='${FALLBACK}'"/></div>`:`<img src="${p.image}" alt="${p.title}" onerror="this.src='${FALLBACK}'" style="${allSoldOut?'filter:grayscale(.6)':''}"/>`;return allSoldOut?`<div class="sold-stamp-wrap">${imgHtml}<div class="sold-stamp">✕ Sold Out</div></div>`:imgHtml;})()}
           <div class="product-card-body" onclick="viewProduct('${p.id}')">
             <h3 class="product-title">${p.title}</h3>
             ${p.oneOfOne&&!p.options.every(o=>isSoldOut(p.id,o.id))?`<span style="font-size:9px;color:#b45309;font-weight:700;letter-spacing:.05em;display:block;margin-bottom:3px">⚠️ Only 1</span>`:""}
@@ -1748,62 +1923,83 @@ updateCartUI();
 // ─────────────────────────────────────────────
 // STOP THE PRESSES POPUP
 // ─────────────────────────────────────────────
-const HOT_ITEMS = [
-  {id:"fruit-mug-set",img:"https://i.imgur.com/JuChz2X.jpeg",label:"Fruit Mug Set",price:"Set of 4 — $12"},
-  {id:"blue-glass-drinking-pair",img:"https://i.imgur.com/m1mxIlG.jpeg",label:"Blue Glass Drinking Pair",price:"Pair — $7"},
-  {id:"wrought-iron-ipa-glass",img:"https://i.imgur.com/1N7wRro.jpeg",label:"Wrought Iron IPA Glass",price:"$4 — Only 1 Left"},
-  {id:"smooth-black-ceramic-plates",img:"https://i.imgur.com/JTEppD3.jpeg",label:"Smooth Black Ceramic Plates",price:"Pair — $10 | Single — $6"},
-  {id:"murphys-stout-glass",img:"https://i.imgur.com/QYsmhEC.jpeg",label:"Murphy's Irish Stout Glass",price:"Single — $4 · Only 1 Left"},
-  {id:"guinness-beer-glass",img:"https://i.imgur.com/LbESLO3.jpeg",label:"Guinness Beer Glass",price:"Single — $4 · Only 1 Left"},
-];
-
-function buildPopup(){
-  const grid = document.getElementById("stp-items");
-  if(!grid) return;
-  grid.innerHTML = HOT_ITEMS.map(item=>`
-    <div class="stp-item" onclick="closePopupAndGo('${item.id}')">
-      <div class="stp-hot-ring"></div>
-      <div class="stp-pulse"></div>
-      <img src="${item.img}" alt="${item.label}" onerror="this.src='${FALLBACK}'"/>
-      <div class="stp-item-info">
-        <p class="stp-item-title">${item.label}</p>
-        <p class="stp-item-price">${item.price}</p>
-      </div>
-    </div>
-  `).join("");
-}
-
 let gamesPopupShown = false;
 
-function closePopup(){
-  const overlay = document.getElementById("stp-overlay");
-  if(overlay){
-    overlay.style.animation="fadeOutOverlay .25s ease forwards";
-    setTimeout(()=>{
-      overlay.remove();
-      if(!gamesPopupShown){
+// ══════════════════════════════════════════════════════════════
+// INK PRINT ANIMATION — runs on every page load
+// ══════════════════════════════════════════════════════════════
+(function _runInkAnimation(){
+  const inkScreen = document.getElementById('ink-screen');
+  const inkCols   = document.getElementById('ink-cols');
+  if(!inkScreen || !inkCols){
+    startTypewriter(false);
+    setTimeout(()=>{ showGamesPopup(); gamesPopupShown=true; }, 800);
+    return;
+  }
+  const cols = Array.from(inkCols.querySelectorAll('.ink-col'));
+  const iw   = document.getElementById('ink-welcome');
+  const il   = document.getElementById('ink-logo');
+  const ir   = document.getElementById('ink-rule');
+  const ibw  = document.getElementById('ink-bar-wrap');
+  const ibf  = document.getElementById('ink-bar-fill');
+  const isub = document.getElementById('ink-sub');
+
+  cols.forEach(c=>{ c.style.transition='none'; c.style.transform='scaleY(1)'; });
+  inkScreen.style.opacity = '1';
+  inkScreen.style.pointerEvents = 'auto';
+  document.body.style.overflow = 'hidden';
+
+  let pct = 0, fillInt = null;
+  const T = (fn, ms) => setTimeout(fn, ms);
+
+  T(()=>{ iw.style.opacity='1'; iw.style.transform='translateY(0)'; }, 150);
+  T(()=>{ il.style.opacity='1'; il.style.transform='translateY(0)'; }, 520);
+  T(()=>{ ir.style.width='190px'; }, 840);
+  T(()=>{
+    ibw.style.opacity='1';
+    isub.style.opacity='1';
+    fillInt = setInterval(()=>{
+      pct += 2.2;
+      ibf.style.width = Math.min(pct,100)+'%';
+      if(pct >= 100){ clearInterval(fillInt); _wipeAndReveal(); }
+    }, 22);
+  }, 1050);
+
+  function _wipeAndReveal(){
+    T(()=>{
+      cols.forEach((c,i)=>{
+        T(()=>{
+          c.style.transition = 'transform .50s cubic-bezier(.4,0,.2,1)';
+          c.style.transform  = 'scaleY(0)';
+        }, i * 52);
+      });
+      T(()=>{
+        inkScreen.style.transition = 'opacity .38s ease';
+        inkScreen.style.opacity = '0';
+        inkScreen.style.pointerEvents = 'none';
+        setTimeout(()=>{
+          inkScreen.style.display='none';
+          if(inkCols) inkCols.style.display='none';
+        }, 420);
+      }, 280);
+      T(()=>{
+        document.body.style.overflow = '';
+        startTypewriter(false);
+      }, 400);
+      T(()=>{
         showGamesPopup();
         gamesPopupShown = true;
-      }
-    },250);
-  } else if(!gamesPopupShown){
-    showGamesPopup();
-    gamesPopupShown = true;
+      }, 2600);
+    }, 120);
   }
+})();
+
+function closePopup(){
   startTypewriter();
 }
 
-function closePopupAndGo(productId){
-  closePopup();
-  setTimeout(()=>{
-    const p = products.find(x=>x.id===productId);
-    if(p) goToPage(getPageForProduct(p));
-  }, 320);
-}
 
-function handleOverlayClick(e){
-  if(e.target.id==="stp-overlay") closePopup();
-}
+
 
 function showGamesPopup(){
   const overlay = document.getElementById("games-popup-overlay");
@@ -1829,11 +2025,9 @@ function openGamesPopupPage(){
 }
 
 // Add fadeOut keyframe dynamically
-const styleSheet = document.createElement("style");
-styleSheet.textContent = "@keyframes fadeOutOverlay{to{opacity:0}}";
-document.head.appendChild(styleSheet);
+// fadeOutOverlay removed (unused)
 
-buildPopup(); // show on all devices
+// STP popup removed — arcade popup shows directly
 
 // ─────────────────────────────────────────────
 // TYPEWRITER — runs after popup closes
@@ -2022,6 +2216,75 @@ function renderGamesPage(){
         <div class="cabinet-play" style="background:linear-gradient(90deg,#1c1a06,#3a3005);color:#fcd34d;border-top:2px solid rgba(212,168,67,.35)">▶ PLAY NOW</div>
       </div>
 
+
+      <div class="cabinet" onclick="startGoFish()">
+        <div class="cabinet-screen" style="background:linear-gradient(160deg,#0a0f2a,#101a4a,#0a0f2a)">
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.28) 0%,transparent 70%);pointer-events:none"></div>
+          <span class="cabinet-emoji" style="filter:drop-shadow(0 0 14px rgba(99,102,241,.75))">🐟</span>
+          <p class="cabinet-name">Go Fish</p>
+          <p class="cabinet-tagline" style="color:rgba(165,180,252,.65)">Got Any Plates?</p>
+        </div>
+        <div class="cabinet-body">
+          <p class="cabinet-rules">Ask the AI for cards by dish type. Match 4 of a kind to score a book. Go Fish when they don't have what you need.</p>
+          <div class="cabinet-chips">
+            <span class="chip" style="background:rgba(99,102,241,.15);color:#a5b4fc;border:1px solid rgba(99,102,241,.3)">🐟 Go Fish!</span>
+            <span class="chip" style="background:rgba(99,102,241,.15);color:#a5b4fc;border:1px solid rgba(99,102,241,.3)">📚 Collect books</span>
+          </div>
+        </div>
+        <div class="cabinet-play" style="background:linear-gradient(90deg,#1e1b4b,#3730a3);color:#a5b4fc;border-top:2px solid rgba(99,102,241,.35)">▶ PLAY NOW</div>
+      </div>
+
+      <div class="cabinet" onclick="startDishWar()">
+        <div class="cabinet-screen" style="background:linear-gradient(160deg,#1a0a0a,#3a0a0a,#1a0a0a)">
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(239,68,68,.28) 0%,transparent 70%);pointer-events:none"></div>
+          <span class="cabinet-emoji" style="filter:drop-shadow(0 0 14px rgba(239,68,68,.75))">⚔️</span>
+          <p class="cabinet-name">Dish War</p>
+          <p class="cabinet-tagline" style="color:rgba(252,165,165,.65)">Flip &amp; Conquer</p>
+        </div>
+        <div class="cabinet-body">
+          <p class="cabinet-rules">Classic War — flip your top card vs the AI. Higher dish wins the pile. Ties trigger WAR. Most cards at the end wins.</p>
+          <div class="cabinet-chips">
+            <span class="chip" style="background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3)">🃏 Real shop dishes</span>
+            <span class="chip" style="background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3)">⚔️ WAR on ties</span>
+          </div>
+        </div>
+        <div class="cabinet-play" style="background:linear-gradient(90deg,#3d0000,#7f1d1d);color:#fca5a5;border-top:2px solid rgba(239,68,68,.35)">▶ PLAY NOW</div>
+      </div>
+
+      <div class="cabinet" onclick="startFlappyDish()">
+        <div class="cabinet-screen" style="background:linear-gradient(160deg,#0a1f0a,#0f3a1a,#0a1f0a)">
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(34,197,94,.28) 0%,transparent 70%);pointer-events:none"></div>
+          <span class="cabinet-emoji" style="filter:drop-shadow(0 0 14px rgba(34,197,94,.75))">🪁</span>
+          <p class="cabinet-name">Flappy Dish</p>
+          <p class="cabinet-tagline" style="color:rgba(134,239,172,.65)">Tap to Stay Alive</p>
+        </div>
+        <div class="cabinet-body">
+          <p class="cabinet-rules">Pick any dish and flap through the pipes. Tap or press Space to flap. How far can your dish fly?</p>
+          <div class="cabinet-chips">
+            <span class="chip" style="background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.3)">👆 Tap to flap</span>
+            <span class="chip" style="background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.3)">🎯 Beat the high score</span>
+          </div>
+        </div>
+        <div class="cabinet-play" style="background:linear-gradient(90deg,#052e16,#15803d);color:#86efac;border-top:2px solid rgba(34,197,94,.35)">▶ PLAY NOW</div>
+      </div>
+
+      <div class="cabinet" onclick="startDishCheckers()">
+        <div class="cabinet-screen" style="background:linear-gradient(160deg,#0a1a2e,#0f2d4a,#0a1a2e)">
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,.28) 0%,transparent 70%);pointer-events:none"></div>
+          <span class="cabinet-emoji" style="filter:drop-shadow(0 0 14px rgba(59,130,246,.75))">🍽️</span>
+          <p class="cabinet-name">Dish Checkers</p>
+          <p class="cabinet-tagline" style="color:rgba(147,197,253,.65)">Plates vs Bowls</p>
+        </div>
+        <div class="cabinet-body">
+          <p class="cabinet-rules">Classic checkers — you play as Plates, the AI plays as Bowls. Jump opponent pieces. King a piece to rule the board.</p>
+          <div class="cabinet-chips">
+            <span class="chip" style="background:rgba(59,130,246,.15);color:#93c5fd;border:1px solid rgba(59,130,246,.3)">🍽️ Plates vs 🥣 Bowls</span>
+            <span class="chip" style="background:rgba(59,130,246,.15);color:#93c5fd;border:1px solid rgba(59,130,246,.3)">🤖 AI Opponent</span>
+          </div>
+        </div>
+        <div class="cabinet-play" style="background:linear-gradient(90deg,#1e3a5f,#1d4ed8);color:#93c5fd;border-top:2px solid rgba(59,130,246,.35)">▶ PLAY NOW</div>
+      </div>
+
       <div class="cabinet" onclick="launchDishDash()">
         <div class="cabinet-screen" style="background:linear-gradient(160deg,#0a1a08,#1a4a0a,#0a1a08)">
           <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(74,222,128,.28) 0%,transparent 70%);pointer-events:none"></div>
@@ -2050,7 +2313,7 @@ function renderGamesPage(){
           <span id="game-title" style="font-family:var(--display);color:var(--cream);font-size:14px;font-weight:900;text-transform:uppercase;letter-spacing:.08em">Dish Games</span>
           <div style="display:flex;align-items:center;gap:12px">
             <span id="game-score" style="color:#f4ecd8;font-size:13px;font-weight:700">Score: 0</span>
-            <button onclick="stopGame(true)" style="font-family:var(--serif);background:transparent;color:var(--cream);border:2px solid rgba(255,255,255,.35);border-radius:999px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer">✕ Close</button>
+            <button onclick="stopGame(true)" style="font-family:var(--serif);background:rgba(255,255,255,.1);color:var(--cream);border:2px solid rgba(255,255,255,.4);border-radius:999px;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;min-height:44px;-webkit-tap-highlight-color:transparent;touch-action:manipulation">✕ Close</button>
           </div>
         </div>
         <canvas id="game-canvas" style="display:block;width:100%;background:#0d1117;touch-action:none;user-select:none;-webkit-tap-highlight-color:transparent"></canvas>
@@ -2073,6 +2336,10 @@ function renderGamesPage(){
             <div id="lb-block-crossy">${renderLeaderboardBlock('crossy','🐔 Dish Crossy Road')}</div>
             <div id="lb-block-pong">${renderLeaderboardBlock('pong','🏓 Dish Pong')}</div>
             <div id="lb-block-stack">${renderLeaderboardBlock('stack','🍽️ Stack The Dishes')}</div>
+            <div id="lb-block-gofish">${renderLeaderboardBlock('gofish','🐟 Go Fish')}</div>
+            <div id="lb-block-war">${renderLeaderboardBlock('war','⚔️ Dish War')}</div>
+            <div id="lb-block-flappy">${renderLeaderboardBlock('flappy','🪁 Flappy Dish')}</div>
+            <div id="lb-block-checkers">${renderLeaderboardBlock('checkers','🍽️ Dish Checkers')}</div>
             <div id="lb-block-ninja">${renderLeaderboardBlock('ninja','⚔️ Dish Ninja')}</div>
           </div>
         </div>
@@ -3289,53 +3556,60 @@ function stopGame(hideArea=false){
   _gRunning=false;
   gameRunning=false;
   window.__currentInlineGame='';
-  const area=document.getElementById("game-area");
-  // Stop Dish 21
-  if(window.__dish21 && typeof stopDish21==='function'){
-    try{ stopDish21(false); }catch(e){}
-  }
-  // Stop Poker — nuke its state so mid-hand timeouts do nothing
-  if(window.__pokerActive){
-    window.__pokerActive = false;
-  }
-  // Restore game-area if Dish Dash was running
-  if(area && area.dataset && area.dataset.mode==='dishdash' && _gameAreaBaseMarkup){
-    area.innerHTML=_gameAreaBaseMarkup;
-    area.dataset.mode='';
-  }
-  // Restore game-area if Poker was running
-  if(area && area.dataset && (area.dataset.mode==='poker') && _pokerMarkup){
-    area.innerHTML=_pokerMarkup;
-    area.dataset.mode='';
-  }
+
+  // Kill all timers and animation loops first
   if(_gl){ cancelAnimationFrame(_gl); _gl=null; }
   if(gameLoop){ clearInterval(gameLoop); gameLoop=null; }
   if(_gKH){ window.removeEventListener("keydown",_gKH); _gKH=null; }
   if(_gMH){ window.removeEventListener("mousemove",_gMH); _gMH=null; }
-  const canvas=document.getElementById("game-canvas");
+
+  // Stop Dish 21
+  if(window.__dish21 && typeof stopDish21==='function'){
+    try{ stopDish21(false); }catch(e){}
+  }
+  // Stop Poker
+  if(window.__pokerActive) window.__pokerActive = false;
+
+  const area = document.getElementById("game-area");
+  if(!area) return;
+
+  // Clear canvas event listeners if canvas exists
+  const canvas = document.getElementById("game-canvas");
   if(canvas){ canvas.onclick=null; canvas.ontouchmove=null; canvas.ontouchend=null; canvas.ontouchstart=null; canvas.onpointerdown=null; }
+
+  // ALWAYS restore game-area to base markup if a new-style game replaced it
+  // (checkers, flappy, war, gofish, dishdash, poker all set area.dataset.mode)
+  const mode = area.dataset ? area.dataset.mode : '';
+  // Clean up game-content-zone (used by checkers/flappy/war/gofish)
+  const _gcz = document.getElementById('game-content-zone');
+  if(_gcz){ _gcz.remove(); }
+  // Restore canvas and dish-reveal visibility
+  const _gc2 = document.getElementById('game-canvas');
+  if(_gc2) _gc2.style.display = 'block';
+  const _dr2 = document.getElementById('dish-reveal');
+  if(_dr2) _dr2.style.display = '';
+  area.dataset.mode = '';
+  // Restore full area markup only for dishdash/poker which replace innerHTML directly
+  const fullReplaceGames = ['dishdash','poker','dish21'];
+  if(fullReplaceGames.includes(mode) && _gameAreaBaseMarkup){
+    area.innerHTML = _gameAreaBaseMarkup;
+  } else if(!document.getElementById('game-canvas') && _gameAreaBaseMarkup){
+    area.innerHTML = _gameAreaBaseMarkup;
+  }
+
   if(hideArea){
-    const area=document.getElementById("game-area"); 
-    if(area){
-      area.style.display="none";
-      if(_gameAreaBaseMarkup && !document.getElementById('game-canvas')){
-        area.innerHTML=_gameAreaBaseMarkup;
-      }
-    }
-    // Also exit fullscreen if active
-    const fc=document.getElementById("game-fullscreen-container");
-    if(fc&&fc.classList.contains("active")){
+    area.style.display = "none";
+    // Exit fullscreen if active
+    const fc = document.getElementById("game-fullscreen-container");
+    if(fc && fc.classList.contains("active")){
       fc.classList.remove("active");
-      const wrap=document.getElementById("game-fullscreen-canvas-wrap");
-      if(wrap) wrap.innerHTML="";
+      const wrap = document.getElementById("game-fullscreen-canvas-wrap");
+      if(wrap) wrap.innerHTML = "";
       document.body.classList.remove("game-fullscreen");
-      // Restore placeholder canvas
-      if(area&&!document.getElementById("game-canvas")){
-        const c=document.createElement("canvas");
-        c.id="game-canvas";
-        c.style.cssText="display:block;width:100%;background:#0d1117;touch-action:none;user-select:none;-webkit-tap-highlight-color:transparent";
-        area.insertBefore(c,document.getElementById("dish-reveal"));
-      }
+    }
+    // Ensure canvas exists for next game
+    if(_gameAreaBaseMarkup && !document.getElementById('game-canvas')){
+      area.innerHTML = _gameAreaBaseMarkup;
     }
   }
 }
@@ -3465,7 +3739,12 @@ function _gameSetup(title){
     const t=document.getElementById("game-title");
     if(t) t.textContent=titleMap[title]||"Dish Games";
     const dr=document.getElementById("dish-reveal");if(dr) dr.style.display="none";
-    const canvas=document.getElementById("game-canvas");
+    // Ensure canvas exists (may have been replaced by a new-style game)
+    let canvas=document.getElementById("game-canvas");
+    if(!canvas && _gameAreaBaseMarkup){
+      area.innerHTML=_gameAreaBaseMarkup;
+      canvas=document.getElementById("game-canvas");
+    }
     if(!canvas) return null;
     const W=area.clientWidth||Math.min(window.innerWidth-32,700);
     setTimeout(()=>{
@@ -4315,7 +4594,7 @@ function startDish21(){
   if(!_dish21Markup) _dish21Markup=area.innerHTML;
   const inv=_dish21Inventory();
   area.dataset.mode='dish21';
-  area.style.display='block';
+  area.style.display='flex';
   window.__currentInlineGame='dish21';
   const titleEl=document.getElementById('game-title'); if(titleEl) titleEl.textContent='🃏 Dish 21';
   const scoreEl=document.getElementById('game-score'); if(scoreEl) scoreEl.textContent='Score: 0';
@@ -4333,7 +4612,7 @@ function startDish21(){
       .d21-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:14px auto 0;max-width:980px}.d21-actions button{pointer-events:auto}.d21-actions button:disabled{opacity:.45;cursor:not-allowed}
       .d21-fair{margin:12px auto 0;max-width:980px;padding:11px 13px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);font-size:12px;line-height:1.45}
       .d21-session{position:absolute;inset:0;background:rgba(10,10,10,.52);display:none;align-items:center;justify-content:center;padding:20px;z-index:40}.d21-session.show{display:flex}.d21-sessioncard{max-width:420px;width:100%;background:#fffdf8;color:#171717;border-radius:22px;border:2px solid var(--ink);padding:22px;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,.22)}
-      .d21-side{display:block}.d21-sidepanel{display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:12px;max-width:980px;margin:12px auto 0}.d21-panel{background:#fffdf8;color:#171717;border:2px solid var(--ink);border-radius:16px;padding:14px;box-shadow:4px 4px 0 var(--ink)}
+      .d21-side{display:block}.d21-sidepanel{display:grid;grid-template-columns:repeat(2,minmax(160px,1fr));gap:12px;max-width:980px;margin:12px auto 0}.d21-panel{background:#fffdf8;color:#171717;border:2px solid var(--ink);border-radius:16px;padding:14px;box-shadow:4px 4px 0 var(--ink)}
       .card{position:relative;width:88px;height:126px;border-radius:18px;background:#fffefb;border:2px solid #111;box-shadow:0 8px 18px rgba(0,0,0,.2);overflow:hidden;flex:0 0 auto;opacity:0;transform:translateY(10px) scale(.98);animation:dealIn .2s ease forwards;color:#111}.card.red{color:#b01d30}.card-corner{position:absolute;top:7px;left:9px;display:flex;flex-direction:column;align-items:center;line-height:1;font-weight:900}.card-corner .rank{font-size:20px}.card-corner .suit{margin-top:2px;font-size:16px}.card-corner.bottom{top:auto;left:auto;right:9px;bottom:7px;transform:rotate(180deg)}.card-center{position:absolute;inset:28px 12px 28px 12px;border-radius:12px;border:1px solid #d8ccba;background:linear-gradient(180deg,#f7f2e8 0%,#ece2d2 100%);display:flex;align-items:center;justify-content:center;overflow:hidden}.card-center img{width:86%;height:86%;object-fit:contain}.hidden-card{background:linear-gradient(135deg,#161616,#353535);border:2px solid #ededed}.hidden-card:before{content:'';position:absolute;inset:10px;border-radius:12px;border:2px solid rgba(255,255,255,.18);background:repeating-linear-gradient(45deg,rgba(255,255,255,.08) 0,rgba(255,255,255,.08) 8px,rgba(255,255,255,.02) 8px,rgba(255,255,255,.02) 16px)}
       .d21-confetti{position:absolute;width:12px;height:20px;border-radius:5px;opacity:0;pointer-events:none;z-index:30;animation:d21conf 1450ms ease-out forwards}.d21-fireball{position:absolute;width:14px;height:14px;border-radius:50%;box-shadow:0 0 18px currentColor,0 0 36px currentColor;pointer-events:none;z-index:31;animation:d21burst 760ms ease-out forwards}@keyframes d21conf{0%{opacity:1;transform:translate(0,0) rotate(0deg) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(.7)}}@keyframes d21burst{0%{opacity:1;transform:translate(0,0) scale(.65)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0)}}@keyframes dealIn{to{opacity:1;transform:translateY(0) scale(1)}}
       @media(max-width:960px){.d21-sidepanel{grid-template-columns:1fr 1fr}.d21-split{grid-template-columns:1fr}.d21-stage{max-width:100%}}
@@ -4396,7 +4675,7 @@ function dish21EnsureDeck(){ const {state}=window.__dish21; if(!state.deck.lengt
 function dish21Draw(hand){ const {state}=window.__dish21; if(!state.deck.length){ state.deck=_dish21MakeDeck(state.inv); state.roundsSinceShuffle=0; } hand.push(state.deck.pop()); }
 function dish21Fireworks(){ const g=window.__dish21; if(!g) return; const table=document.querySelector('.d21-table'); const colors=['#f6d56a','#ffffff','#e45c5c','#5cc7ff','#7ee08f','#f28cff']; const bursts=[0.18,0.5,0.82]; bursts.forEach((pos,idx)=>{ const originX=table.clientWidth*pos; const originY=60 + (idx%2)*16; for(let i=0;i<26;i++){ const piece=document.createElement('div'); piece.className='d21-confetti'; piece.style.background=colors[Math.floor(Math.random()*colors.length)]; piece.style.left=`${originX}px`; piece.style.top=`${originY}px`; piece.style.setProperty('--dx', `${(Math.random()-.5)*360}px`); piece.style.setProperty('--dy', `${90+Math.random()*180}px`); piece.style.setProperty('--rot', `${Math.random()*720-360}deg`); table.appendChild(piece); setTimeout(()=>piece.remove(),1500); } for(let i=0;i<14;i++){ const spark=document.createElement('div'); spark.className='d21-fireball'; spark.style.color=colors[Math.floor(Math.random()*colors.length)]; spark.style.background='currentColor'; spark.style.left=`${originX}px`; spark.style.top=`${originY}px`; const angle=(Math.PI*2*i)/14; const radius=55 + Math.random()*42; spark.style.setProperty('--dx', `${Math.cos(angle)*radius}px`); spark.style.setProperty('--dy', `${Math.sin(angle)*radius}px`); table.appendChild(spark); setTimeout(()=>spark.remove(),800); } }); }
 function dish21MaybeLeave(){ const g=window.__dish21; const {state}=g; if(state.points>0) return false; state.points=0; state.roundActive=false; state.gameState='tableLeft'; dish21SetStatus('You are out of points and must leave the table.', 'lose'); dish21Render(); return true; }
-function dish21UpdateSummaryWin(){ const {state}=window.__dish21; state.summary.totalWins += 1; state.summary.bestRun = Math.max(state.summary.bestRun, state.points); state.summary.bestStreak = Math.max(state.summary.bestStreak, state.streak); saveDish21Summary(state.summary); refreshLeaderboards(); }
+function dish21UpdateSummaryWin(){ const {state}=window.__dish21; state.summary.totalWins += 1; state.summary.bestRun = Math.max(state.summary.bestRun, state.points); state.summary.bestStreak = Math.max(state.summary.bestStreak, state.streak); saveDish21Summary(state.summary); saveLeaderboard('dish21','Player',state.summary.bestRun); refreshLeaderboards(); }
 function dish21UpdateBestRun(){ const {state}=window.__dish21; state.summary.bestRun = Math.max(state.summary.bestRun, state.points); saveDish21Summary(state.summary); refreshLeaderboards(); }
 async function dish21Deal(){ const g=window.__dish21; if(!g || _dish21Locked) return; const {state}=g; if(!((state.gameState==='idle'||state.gameState==='roundOver') && state.points>=20)) return; _dish21Locked=true; dish21EnsureDeck(); state.points-=20; state.currentCost=20; state.round+=1; state.dealerHand=[]; state.playerHands=[[]]; state.currentHandIndex=0; state.dealerHidden=true; state.roundActive=true; state.doubleUsed=false; state.splitUsed=false; state.gameState='dealing'; dish21UpdateBestRun(); dish21SetStatus(state.roundsSinceShuffle===0?`Round ${state.round} started. Freshly shuffled deck.`:`Round ${state.round} started. Good luck.`); dish21Render(); dish21Draw(state.playerHands[0]); dish21Render(); await new Promise(r=>setTimeout(r,160)); dish21Draw(state.dealerHand); dish21Render(); await new Promise(r=>setTimeout(r,160)); dish21Draw(state.playerHands[0]); dish21Render(); await new Promise(r=>setTimeout(r,160)); dish21Draw(state.dealerHand); dish21Render();
 if(_dish21Blackjack(state.dealerHand) && !_dish21Blackjack(state.playerHands[0])){
@@ -5775,7 +6054,7 @@ function _pokerInit(inv){
       const bustedPlayers = state.players.filter(p => p.stack <= 0);
       if(state.players[0].stack <= 0){
         // Player busted
-        saveLeaderboard('poker', 'Player', state.handNum);
+        saveLeaderboard('poker', 'Player', state.summary.bestRun);
         el.actions.innerHTML = `<button class="poker-btn poker-btn-raise" onclick="_pokerNewGame()">New Game</button>`;
         setStatus(`You're out of chips! You lasted ${state.handNum} hands.`);
       } else {
@@ -5968,6 +6247,959 @@ function _pokerInit(inv){
 
   // Start first hand
   setTimeout(() => { if(window.__pokerActive) dealHand(); }, 600);
+}
+
+
+// ══════════════════════════════════════════════════════════════════════
+// 🍽️ DISH CHECKERS — Plates vs Bowls, AI opponent, unique dish pieces
+// ══════════════════════════════════════════════════════════════════════
+const _CK_PLATES=[
+  "https://i.imgur.com/EdI3INH.jpeg","https://i.imgur.com/SRb1eG2.jpeg",
+  "https://i.imgur.com/j8d3d1H.jpeg","https://i.imgur.com/6ZJb0Jk.jpeg",
+  "https://i.imgur.com/NAYrNYp.jpeg","https://i.imgur.com/WwVyCxT.jpeg",
+  "https://i.imgur.com/Dsw1Z6c.jpeg","https://i.imgur.com/SLXy3Fd.jpeg",
+  "https://i.imgur.com/hdDJXtD.jpeg","https://i.imgur.com/qOiIkFT.jpeg",
+  "https://i.imgur.com/us8luRh.jpeg","https://i.imgur.com/0ie0rvR.jpeg",
+];
+const _CK_BOWLS=[
+  "https://i.imgur.com/ZPXaQFI.jpeg","https://i.imgur.com/MEFyLMQ.jpeg",
+  "https://i.imgur.com/5ct0WgG.jpeg","https://i.imgur.com/y5KsKKz.jpeg",
+  "https://i.imgur.com/uZcXT2e.jpeg","https://i.imgur.com/RQbW9iN.jpeg",
+  "https://i.imgur.com/LMlPbiJ.jpeg","https://i.imgur.com/pU437LJ.jpeg",
+  "https://i.imgur.com/wdgMrf2.jpeg","https://i.imgur.com/dhJP8Gz.jpeg",
+  "https://i.imgur.com/pU4fkqU.jpeg","https://i.imgur.com/uQbpbBb.jpeg",
+];
+
+function startDishCheckers(){
+  if(activePage!=="Dish Games"){goToPage("Dish Games");setTimeout(()=>startDishCheckers(),300);return;}
+  stopGame(false);
+  const area=document.getElementById('game-area');if(!area)return;
+  area.dataset.mode='checkers';area.style.display='flex';
+  window.__currentInlineGame='checkers';
+  const te=document.getElementById('game-title');if(te)te.textContent='Dish Checkers';
+  // Hide canvas, inject game UI below header
+  const _ckCanvas=document.getElementById('game-canvas');
+  if(_ckCanvas) _ckCanvas.style.display='none';
+  const _ckDr=document.getElementById('dish-reveal');
+  if(_ckDr) _ckDr.style.display='none';
+  let _ckZone=document.getElementById('game-content-zone');
+  if(!_ckZone){_ckZone=document.createElement('div');_ckZone.id='game-content-zone';area.appendChild(_ckZone);}
+  _ckZone.innerHTML=_ckHTML();
+  [..._CK_PLATES,..._CK_BOWLS].forEach(u=>{const i=new Image();i.crossOrigin='anonymous';i.src=u;});
+  setTimeout(()=>{try{area.scrollIntoView({behavior:'smooth',block:'nearest'});}catch(e){}_ckInit();},80);
+}
+
+function _ckHTML(){return `
+<style>
+  .ck-wrap{background:linear-gradient(180deg,#0d1824,#162030);padding:14px;display:flex;flex-direction:column;align-items:center;gap:10px;min-height:500px;border-radius:0 0 14px 14px}
+  .ck-top{display:flex;justify-content:space-between;align-items:center;width:100%;max-width:480px;flex-wrap:wrap;gap:8px}
+  .ck-pbox{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:2px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);transition:all .2s}
+  .ck-pbox.on{border-color:rgba(59,130,246,.8);background:rgba(59,130,246,.12);box-shadow:0 0 16px rgba(59,130,246,.2)}
+  .ck-pbox.ai.on{border-color:rgba(239,68,68,.8);background:rgba(239,68,68,.12);box-shadow:0 0 16px rgba(239,68,68,.2)}
+  .ck-pname{font-size:11px;font-weight:700;color:rgba(255,255,255,.8);letter-spacing:.06em;text-transform:uppercase}
+  .ck-pcount{font-size:10px;color:rgba(255,255,255,.4);margin-top:2px}
+  .ck-badge{font-family:var(--display);font-size:12px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#fbbf24;text-align:center}
+  #ck-board{display:grid;grid-template-columns:repeat(8,1fr);border:3px solid rgba(255,255,255,.2);border-radius:12px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.5);width:100%;max-width:min(480px,100%);aspect-ratio:1;touch-action:manipulation}
+  .ck-sq{display:flex;align-items:center;justify-content:center;aspect-ratio:1;position:relative;transition:background .1s;-webkit-tap-highlight-color:transparent}
+  .ck-sq.dark{background:#1a3352}.ck-sq.light{background:#091625}
+  .ck-sq.sel{background:rgba(59,130,246,.55)!important}
+  .ck-sq.vm::after{content:'';position:absolute;width:36%;height:36%;border-radius:50%;background:rgba(74,222,128,.6);pointer-events:none;box-shadow:0 0 8px rgba(74,222,128,.4)}
+  .ck-sq.vm{background:rgba(74,222,128,.18)!important}
+  .ck-pc{width:78%;height:78%;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;transition:transform .15s;box-shadow:0 3px 12px rgba(0,0,0,.7);overflow:hidden;cursor:pointer;flex-shrink:0}
+  .ck-pc img{width:100%;height:100%;object-fit:cover;pointer-events:none;display:block}
+  .ck-pc.pr{border:3px solid #60a5fa;box-shadow:0 0 0 2px #1d4ed8,0 3px 12px rgba(0,0,0,.7)}
+  .ck-pc.br{border:3px solid #f87171;box-shadow:0 0 0 2px #991b1b,0 3px 12px rgba(0,0,0,.7)}
+  .ck-pc.kc::after{content:'👑';position:absolute;top:-2px;right:-2px;font-size:clamp(8px,1.6vw,12px);line-height:1;pointer-events:none}
+  .ck-pc:hover{transform:scale(1.08)}
+  .ck-status{font-size:13px;color:rgba(255,255,255,.65);text-align:center;min-height:18px;font-style:italic;max-width:480px;padding:0 8px}
+  .ck-acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  .ck-btn{font-family:var(--serif);padding:9px 22px;font-size:13px;font-weight:700;border:2px solid rgba(255,255,255,.2);border-radius:8px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.9);cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .ck-btn.p{background:rgba(59,130,246,.3);border-color:rgba(59,130,246,.6);color:#93c5fd}
+</style>
+<div class="ck-wrap">
+  <div class="ck-top">
+    <div class="ck-pbox on" id="ck-b1">
+      <div style="width:34px;height:34px;border-radius:50%;overflow:hidden;border:2px solid #60a5fa;flex-shrink:0"><img id="ck-p1icon" src="${_CK_PLATES[0]}" style="width:100%;height:100%;object-fit:cover" crossorigin="anonymous"></div>
+      <div><div class="ck-pname">You — Plates</div><div class="ck-pcount" id="ck-c1">12 pieces</div></div>
+    </div>
+    <div class="ck-badge" id="ck-badge">YOUR TURN</div>
+    <div class="ck-pbox ai" id="ck-b2">
+      <div style="width:34px;height:34px;border-radius:50%;overflow:hidden;border:2px solid #f87171;flex-shrink:0"><img id="ck-p2icon" src="${_CK_BOWLS[0]}" style="width:100%;height:100%;object-fit:cover" crossorigin="anonymous"></div>
+      <div><div class="ck-pname">AI — Bowls</div><div class="ck-pcount" id="ck-c2">12 pieces</div></div>
+    </div>
+  </div>
+  <div id="ck-board"></div>
+  <div class="ck-status" id="ck-st">Click a plate to select it, then click a highlighted square to move.</div>
+  <div class="ck-acts">
+    <button class="ck-btn p" onclick="startDishCheckers()">New Game</button>
+    <button class="ck-btn" onclick="stopGame(true)">Close</button>
+  </div>
+</div>`;}
+
+function _ckInit(){
+  let board=[],sel=null,validMoves=[],turn='player',gameOver=false,aiTmr=null,multiJump=null;
+  const pImgs=[..._CK_PLATES].sort(()=>Math.random()-.5);
+  const bImgs=[..._CK_BOWLS].sort(()=>Math.random()-.5);
+  let pi=0,bi=0;
+
+  function freshBoard(){
+    board=Array.from({length:8},()=>Array(8).fill(null));pi=0;bi=0;
+    for(let r=0;r<3;r++)for(let c=0;c<8;c++)if((r+c)%2===1)board[r][c]={t:'b',img:bImgs[bi++%bImgs.length],k:false};
+    for(let r=5;r<8;r++)for(let c=0;c<8;c++)if((r+c)%2===1)board[r][c]={t:'p',img:pImgs[pi++%pImgs.length],k:false};
+  }
+
+  function getJumps(r,c,brd){
+    const p=brd[r][c];if(!p)return[];
+    const dirs=[];
+    if(p.t==='p'||p.k)dirs.push([-1,-1],[-1,1]);
+    if(p.t==='b'||p.k)dirs.push([1,-1],[1,1]);
+    return dirs.reduce((acc,[dr,dc])=>{
+      const mr=r+dr,mc=c+dc,lr=r+2*dr,lc=c+2*dc;
+      if(lr>=0&&lr<8&&lc>=0&&lc<8){const mid=brd[mr][mc],land=brd[lr][lc];if(mid&&mid.t!==p.t&&!land)acc.push({row:lr,col:lc,over:{row:mr,col:mc}});}
+      return acc;
+    },[]);
+  }
+
+  function getMoves(r,c,brd){
+    const p=brd[r][c];if(!p)return[];
+    const dirs=[];
+    if(p.t==='p'||p.k)dirs.push([-1,-1],[-1,1]);
+    if(p.t==='b'||p.k)dirs.push([1,-1],[1,1]);
+    return dirs.reduce((acc,[dr,dc])=>{
+      const nr=r+dr,nc=c+dc;
+      if(nr>=0&&nr<8&&nc>=0&&nc<8&&!brd[nr][nc])acc.push({row:nr,col:nc,over:null});
+      return acc;
+    },[]);
+  }
+
+  function getAllMoves(team,brd){
+    const jumps=[],normals=[];
+    for(let r=0;r<8;r++)for(let c=0;c<8;c++){
+      const p=brd[r][c];if(!p||p.t!==team)continue;
+      getJumps(r,c,brd).forEach(m=>jumps.push({...m,fr:{row:r,col:c}}));
+      getMoves(r,c,brd).forEach(m=>normals.push({...m,fr:{row:r,col:c}}));
+    }
+    return{jumps,normals,all:jumps.length?[...jumps,...normals]:[...normals]};
+  }
+
+  function applyMove(brd,fr,to,over){
+    const nb=brd.map(row=>row.map(p=>p?{...p}:null));
+    nb[to.row][to.col]={...nb[fr.row][fr.col]};nb[fr.row][fr.col]=null;
+    if(over)nb[over.row][over.col]=null;
+    if(nb[to.row][to.col].t==='p'&&to.row===0)nb[to.row][to.col].k=true;
+    if(nb[to.row][to.col].t==='b'&&to.row===7)nb[to.row][to.col].k=true;
+    return nb;
+  }
+
+  function score(brd){let s=0;for(let r=0;r<8;r++)for(let c=0;c<8;c++){const p=brd[r][c];if(!p)continue;if(p.t==='b')s+=p.k?5:3;else s-=p.k?5:3;}return s;}
+
+  function minimax(brd,depth,isMax,a,b){
+    const{all}=getAllMoves(isMax?'b':'p',brd);
+    if(depth===0||!all.length)return score(brd);
+    if(isMax){let best=-Infinity;for(const mv of all){const nb=applyMove(brd,mv.fr,{row:mv.row,col:mv.col},mv.over);best=Math.max(best,minimax(nb,depth-1,false,a,b));a=Math.max(a,best);if(b<=a)break;}return best;}
+    else{let best=Infinity;for(const mv of all){const nb=applyMove(brd,mv.fr,{row:mv.row,col:mv.col},mv.over);best=Math.min(best,minimax(nb,depth-1,true,a,b));b=Math.min(b,best);if(b<=a)break;}return best;}
+  }
+
+  function aiBest(){
+    const{all}=getAllMoves('b',board);if(!all.length)return null;
+    let bS=-Infinity,bMv=null;
+    for(const mv of all){const nb=applyMove(board,mv.fr,{row:mv.row,col:mv.col},mv.over);const s2=minimax(nb,3,false,-Infinity,Infinity);if(s2>bS){bS=s2;bMv=mv;}}
+    return bMv;
+  }
+
+  function render(){
+    const el=document.getElementById('ck-board');if(!el)return;
+    el.innerHTML='';
+    for(let r=0;r<8;r++)for(let c=0;c<8;c++){
+      const sq=document.createElement('div');
+      sq.className='ck-sq '+((r+c)%2===1?'dark':'light');
+      if(sel&&sel.row===r&&sel.col===c)sq.classList.add('sel');
+      if(validMoves.some(m=>m.row===r&&m.col===c))sq.classList.add('vm');
+      const p=board[r][c];
+      if(p){
+        const pc=document.createElement('div');
+        pc.className='ck-pc '+(p.t==='p'?'pr':'br')+(p.k?' kc':'');
+        const img=document.createElement('img');
+        img.src=p.img;img.alt='';img.crossOrigin='anonymous';
+        img.loading='lazy';
+        pc.appendChild(img);sq.appendChild(pc);
+      }
+      sq.addEventListener('click',()=>handleClick(r,c),{passive:true});
+      el.appendChild(sq);
+    }
+    let p1=0,p2=0;
+    for(let r=0;r<8;r++)for(let c=0;c<8;c++){if(board[r][c]?.t==='p')p1++;if(board[r][c]?.t==='b')p2++;}
+    const c1=document.getElementById('ck-c1'),c2=document.getElementById('ck-c2');
+    if(c1)c1.textContent=p1+' piece'+(p1!==1?'s':'');
+    if(c2)c2.textContent=p2+' piece'+(p2!==1?'s':'');
+    const b1=document.getElementById('ck-b1'),b2=document.getElementById('ck-b2');
+    if(b1)b1.classList.toggle('on',turn==='player'&&!gameOver);
+    if(b2)b2.classList.toggle('on',turn==='ai'&&!gameOver);
+    const badge=document.getElementById('ck-badge');
+    if(badge)badge.textContent=gameOver?'GAME OVER':turn==='player'?'YOUR TURN':'AI THINKING...';
+    // Update header icons
+    const pi2=document.getElementById('ck-p1icon'),bi2=document.getElementById('ck-p2icon');
+    const plateImgs=[];const bowlImgs=[];
+    for(let r=0;r<8;r++)for(let c=0;c<8;c++){if(board[r][c]?.t==='p')plateImgs.push(board[r][c].img);if(board[r][c]?.t==='b')bowlImgs.push(board[r][c].img);}
+    if(pi2&&plateImgs.length)pi2.src=plateImgs[0];
+    if(bi2&&bowlImgs.length)bi2.src=bowlImgs[0];
+  }
+
+  function setStatus(msg){const el=document.getElementById('ck-st');if(el)el.textContent=msg;}
+
+  function handleClick(r,c){
+    if(gameOver||turn!=='player')return;
+    const p=board[r][c];
+    if(multiJump){
+      if(validMoves.some(m=>m.row===r&&m.col===c))doMove(multiJump,{row:r,col:c});
+      return;
+    }
+    if(sel&&validMoves.some(m=>m.row===r&&m.col===c)){doMove(sel,{row:r,col:c});return;}
+    if(p&&p.t==='p'){
+      sel={row:r,col:c};
+      validMoves=[...getJumps(r,c,board),...getMoves(r,c,board)];
+      setStatus(validMoves.length?'Click a green dot to move.':'No moves for this piece — pick another.');
+      render();return;
+    }
+    sel=null;validMoves=[];render();
+  }
+
+  function doMove(from,to){
+    const {all}=getAllMoves('player',board);
+    const mv=all.find(m=>m.fr.row===from.row&&m.fr.col===from.col&&m.row===to.row&&m.col===to.col)
+      ||{fr:from,row:to.row,col:to.col,over:validMoves.find(m=>m.row===to.row&&m.col===to.col)?.over||null};
+    board=applyMove(board,from,to,mv.over);
+    sel=null;validMoves=[];
+    if(mv.over){
+      const justKinged=(board[to.row][to.col].t==='p'&&to.row===0);
+      const more=getJumps(to.row,to.col,board);
+      if(more.length&&!justKinged){multiJump={row:to.row,col:to.col};sel={row:to.row,col:to.col};validMoves=more;setStatus('Chain jump! Keep going or stop — click any other piece to end.');render();return;}
+    }
+    multiJump=null;render();checkWin();
+    if(!gameOver){turn='ai';render();doAI();}
+  }
+
+  function doAI(){
+    if(aiTmr)clearTimeout(aiTmr);
+    aiTmr=setTimeout(()=>{
+      if(!document.getElementById('ck-board')||turn!=='ai')return;
+      const mv=aiBest();
+      if(!mv){
+        // Count remaining plates for consistent scoring with capture-win
+        let plateCt=0;for(let r=0;r<8;r++)for(let c=0;c<8;c++)if(board[r][c]?.t==='p')plateCt++;
+        gameOver=true;setStatus('You win — the AI has no moves!');render();
+        saveLeaderboard('checkers','Player',plateCt*10);refreshLeaderboards();return;
+      }
+      board=applyMove(board,mv.fr,{row:mv.row,col:mv.col},mv.over);
+      let cur={row:mv.row,col:mv.col};
+      for(let i=0;i<6;i++){
+        if(!mv.over)break;
+        const more=getJumps(cur.row,cur.col,board);if(!more.length)break;
+        let bS=-Infinity,bJ=null;
+        for(const j of more){const nb=applyMove(board,cur,{row:j.row,col:j.col},j.over);const s2=score(nb);if(s2>bS){bS=s2;bJ=j;}}
+        if(!bJ)break;
+        board=applyMove(board,cur,{row:bJ.row,col:bJ.col},bJ.over);cur={row:bJ.row,col:bJ.col};
+      }
+      render();checkWin();
+      if(!gameOver){turn='player';setStatus('Your turn — click a plate.');render();}
+    },420);
+  }
+
+  function checkWin(){
+    let p1=0,p2=0;
+    for(let r=0;r<8;r++)for(let c=0;c<8;c++){if(board[r][c]?.t==='p')p1++;if(board[r][c]?.t==='b')p2++;}
+    if(!p2||!getAllMoves('b',board).all.length){gameOver=true;turn='';setStatus('You win — all bowls captured!');saveLeaderboard('checkers','Player',p1*10);_setScore(p1*10,'checkers');refreshLeaderboards();render();}
+    else if(!p1||!getAllMoves('p',board).all.length){gameOver=true;turn='';setStatus('AI wins — your plates are gone. Try again!');render();}
+  }
+
+  freshBoard();render();
+  setStatus('Click a plate to select it — green dots show available moves.');
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// 🪁 FLAPPY DISH — Flappy Bird clone with dish character select
+// ══════════════════════════════════════════════════════════════════════
+function startFlappyDish(){
+  if(activePage!=="Dish Games"){goToPage("Dish Games");setTimeout(()=>startFlappyDish(),300);return;}
+  stopGame(false);
+  const area=document.getElementById('game-area');if(!area)return;
+  area.dataset.mode='flappy';area.style.display='flex';
+  window.__currentInlineGame='flappy';
+  const te=document.getElementById('game-title');if(te)te.textContent='Flappy Dish';
+  const inv=_dish21Inventory();
+  const _flCanvas=document.getElementById('game-canvas');
+  if(_flCanvas) _flCanvas.style.display='none';
+  const _flDr=document.getElementById('dish-reveal');
+  if(_flDr) _flDr.style.display='none';
+  let _flZone=document.getElementById('game-content-zone');
+  if(!_flZone){_flZone=document.createElement('div');_flZone.id='game-content-zone';area.appendChild(_flZone);}
+  _flZone.innerHTML=_flappyHTML(inv);
+  setTimeout(()=>{try{area.scrollIntoView({behavior:'smooth',block:'nearest'});}catch(e){}_flappyInit(inv);},80);
+}
+
+function _flappyHTML(inv){
+  const opts=inv.slice(0,30).map((d,i)=>`<option value="${i}">${d.name.split(' ').slice(0,3).join(' ')}</option>`).join('');
+  return `
+<style>
+  .fl-wrap{background:#000;border-radius:0 0 14px 14px;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+  .fl-bar{width:100%;background:#071a0a;padding:8px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-bottom:2px solid rgba(34,197,94,.2);box-sizing:border-box}
+  .fl-bar select{flex:1;min-width:0;height:36px;border-radius:7px;border:2px solid rgba(34,197,94,.35);padding:0 8px;background:#0a1f0d;color:#86efac;font-size:12px;font-family:var(--serif);cursor:pointer}
+  .fl-bar button{height:36px;padding:0 14px;border-radius:7px;font-size:12px;font-weight:700;font-family:var(--serif);cursor:pointer;-webkit-tap-highlight-color:transparent;white-space:nowrap;border:2px solid rgba(34,197,94,.4);background:rgba(34,197,94,.15);color:#86efac}
+  .fl-bar .fl-cls{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.6)}
+  #fl-canvas{display:block;width:100%;touch-action:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+</style>
+<div class="fl-wrap">
+  <div class="fl-bar">
+    <span style="font-size:11px;font-weight:700;color:rgba(134,239,172,.8);white-space:nowrap">Your Dish:</span>
+    <select id="fl-sel">${opts}</select>
+    <button id="fl-rnd-btn">🎲</button>
+    <button class="fl-cls" onclick="stopGame(true)">✕</button>
+  </div>
+  <canvas id="fl-canvas"></canvas>
+</div>`;}
+
+function _flappyInit(inv){
+  const canvas=document.getElementById('fl-canvas');if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const sel=document.getElementById('fl-sel');
+  const rndBtn=document.getElementById('fl-rnd-btn');
+
+  function resize(){
+    const shell=canvas.parentElement;
+    const W=shell?shell.clientWidth:400;
+    canvas.width=W;
+    canvas.height=Math.min(460,Math.max(320,W*0.75));
+  }
+  resize();
+  const W=()=>canvas.width,H=()=>canvas.height;
+
+  const GRAVITY=1500,FLAP_V=-490,PIPE_W=58,PIPE_COLOR_LIST=['#16a34a','#1d4ed8','#7c3aed','#b45309','#0f766e','#be123c'];
+  let dishImg=null,score=0,best=0,alive=false,started=false,gameOver=false;
+  let bird={x:0,y:0,vy:0};
+  let pipes=[],lastTs=0,spawnT=0,pipeColorI=0;
+  let deathPuffs=[];
+  let selectedIdx=0;
+
+  try{best=parseInt(localStorage.getItem('flappy-best')||'0');}catch(e){}
+
+  function loadDish(idx){
+    selectedIdx=idx;
+    const d=inv[idx];if(!d)return;
+    const img=new Image();img.crossOrigin='anonymous';
+    img.onload=()=>{dishImg=img;if(!alive&&!gameOver)drawFrame(0);};
+    img.onerror=()=>{dishImg=null;if(!alive&&!gameOver)drawFrame(0);};
+    img.src=d.image||FALLBACK;
+  }
+
+  const BIRD_R=()=>Math.max(22,H()*0.048);
+  const GROUND=()=>H()-50;
+  const GAP=()=>Math.max(135,H()*0.29);
+  const PIPE_SPD=()=>150+score*2.2;
+
+  function resetBird(){bird={x:W()*0.20,y:H()*0.43,vy:0};}
+
+  function resetGame(){
+    pipes=[];score=0;deathPuffs=[];spawnT=0;pipeColorI=0;
+    resetBird();gameOver=false;alive=false;started=false;
+    drawFrame(0);
+  }
+
+  function spawnPipe(){
+    const gap=GAP();
+    const topH=H()*0.12+Math.random()*(GROUND()-gap-H()*0.22);
+    pipes.push({x:W()+PIPE_W,topH,botY:topH+gap,col:PIPE_COLOR_LIST[pipeColorI++%PIPE_COLOR_LIST.length],scored:false});
+  }
+
+  function drawPipe(p){
+    const cap=16,capW=PIPE_W+10,h2=GROUND();
+    // top pipe
+    ctx.fillStyle=p.col;ctx.fillRect(p.x,0,PIPE_W,p.topH-cap);
+    // top cap
+    ctx.fillStyle=_ck_shade(p.col,-28);ctx.fillRect(p.x-5,p.topH-cap,capW,cap);
+    // highlight
+    ctx.fillStyle='rgba(255,255,255,.16)';ctx.fillRect(p.x+4,0,7,p.topH-cap);
+    // bottom pipe
+    ctx.fillStyle=p.col;ctx.fillRect(p.x,p.botY+cap,PIPE_W,h2-p.botY-cap);
+    ctx.fillStyle=_ck_shade(p.col,-28);ctx.fillRect(p.x-5,p.botY,capW,cap);
+    ctx.fillStyle='rgba(255,255,255,.16)';ctx.fillRect(p.x+4,p.botY+cap,7,h2-p.botY-cap);
+  }
+
+  function _ck_shade(hex,amt){
+    const r=Math.max(0,Math.min(255,parseInt(hex.slice(1,3),16)+amt));
+    const g=Math.max(0,Math.min(255,parseInt(hex.slice(3,5),16)+amt));
+    const b2=Math.max(0,Math.min(255,parseInt(hex.slice(5,7),16)+amt));
+    return '#'+[r,g,b2].map(x=>x.toString(16).padStart(2,'0')).join('');
+  }
+
+  function drawSky(){
+    const W2=W(),H2=H(),G=GROUND();
+    // Sky
+    const sky=ctx.createLinearGradient(0,0,0,G);
+    sky.addColorStop(0,'#5ec9d8');sky.addColorStop(0.7,'#b3eef7');sky.addColorStop(1,'#d8f5fc');
+    ctx.fillStyle=sky;ctx.fillRect(0,0,W2,G);
+    // Static clouds (no text, just shapes)
+    ctx.fillStyle='rgba(255,255,255,.88)';
+    [[W2*.15,G*.1,24],[W2*.5,G*.07,20],[W2*.78,G*.14,16],[W2*.35,G*.2,14]].forEach(([cx,cy,r])=>{
+      [[-0.55,0,1],[0,-.32,.72],[0.55,0,1],[-.3,.28,.62],[.3,.28,.62]].forEach(([ox,oy,rs])=>{
+        ctx.beginPath();ctx.arc(cx+ox*r,cy+oy*r,r*rs,0,Math.PI*2);ctx.fill();
+      });
+    });
+    // Ground
+    ctx.fillStyle='#c8b35a';ctx.fillRect(0,G,W2,H2-G);
+    ctx.fillStyle='#5ab552';ctx.fillRect(0,G,W2,12);
+    // Ground stripe
+    ctx.fillStyle='rgba(0,0,0,.1)';
+    for(let x=0;x<W2;x+=22)ctx.fillRect(x,G,11,12);
+  }
+
+  function drawBird(){
+    const R=BIRD_R(),cx=bird.x,cy=bird.y;
+    const maxRot=Math.PI*0.36;
+    const rot=Math.max(-maxRot,Math.min(maxRot,bird.vy/650));
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(rot);
+    // Shadow
+    ctx.save();ctx.globalAlpha=0.22;ctx.fillStyle='#000';
+    ctx.beginPath();ctx.ellipse(3,R*.75,R*.65,R*.2,0,0,Math.PI*2);ctx.fill();ctx.restore();
+    // Dish image — large and clear
+    ctx.save();ctx.beginPath();ctx.arc(0,0,R,0,Math.PI*2);ctx.clip();
+    if(dishImg&&dishImg.complete&&dishImg.naturalWidth>0){
+      ctx.drawImage(dishImg,-R,-R,R*2,R*2);
+    }else{
+      ctx.fillStyle='#d4a843';ctx.fillRect(-R,-R,R*2,R*2);
+    }
+    ctx.restore();
+    // Rim
+    ctx.strokeStyle='rgba(255,255,255,.85)';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.arc(0,0,R,0,Math.PI*2);ctx.stroke();
+    // Wing
+    const wFlap=alive?Math.sin(lastTs*0.016)*5:0;
+    ctx.fillStyle='rgba(255,255,255,.5)';ctx.save();ctx.translate(-R*.55,wFlap);ctx.rotate(-.3);
+    ctx.beginPath();ctx.ellipse(0,0,R*.38,R*.2,0,0,Math.PI*2);ctx.fill();ctx.restore();
+    ctx.restore();
+  }
+
+  function drawHUD(){
+    // Score — centered, clean, no stray characters
+    const W2=W(),H2=H();
+    ctx.save();
+    ctx.font=`bold ${Math.max(28,H2*.068)}px Arial,sans-serif`;
+    ctx.textAlign='center';ctx.textBaseline='top';
+    ctx.strokeStyle='rgba(0,0,0,.55)';ctx.lineWidth=3;
+    ctx.strokeText(String(score),W2/2,H2*.04);
+    ctx.fillStyle='#ffffff';
+    ctx.fillText(String(score),W2/2,H2*.04);
+    ctx.restore();
+  }
+
+  function drawIdleScreen(){
+    drawSky();
+    drawBird();
+    const W2=W(),H2=H();
+    // Prompt panel
+    ctx.fillStyle='rgba(0,0,0,.48)';ctx.beginPath();ctx.roundRect(W2/2-115,H2*.52,230,62,12);ctx.fill();
+    ctx.fillStyle='white';ctx.font=`bold ${Math.max(14,H2*.038)}px Arial,sans-serif`;
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('TAP or SPACE to fly!',W2/2,H2*.545);
+    ctx.fillStyle='rgba(255,255,255,.6)';ctx.font=`${Math.max(11,H2*.029)}px Arial,sans-serif`;
+    ctx.fillText('Choose your dish above',W2/2,H2*.575);
+    if(best>0){
+      ctx.fillStyle='#fbbf24';ctx.font=`bold ${Math.max(12,H2*.032)}px Arial,sans-serif`;
+      ctx.fillText('Best: '+String(best),W2/2,H2*.51);
+    }
+    ctx.textBaseline='alphabetic';ctx.textAlign='left';
+  }
+
+  function drawDeathScreen(){
+    drawSky();
+    pipes.forEach(p=>drawPipe(p));
+    // Death puffs
+    deathPuffs.forEach(pf=>{
+      ctx.save();ctx.globalAlpha=Math.max(0,pf.life/pf.maxLife);ctx.fillStyle=pf.col;
+      ctx.beginPath();ctx.arc(pf.x,pf.y,pf.r,0,Math.PI*2);ctx.fill();ctx.restore();
+    });
+    drawBird();
+    const W2=W(),H2=H();
+    // Game over panel
+    ctx.fillStyle='rgba(0,0,0,.58)';ctx.beginPath();ctx.roundRect(W2/2-130,H2*.32,260,130,16);ctx.fill();
+    ctx.save();
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillStyle='#ef4444';ctx.font=`bold ${Math.max(20,H2*.056)}px Arial,sans-serif`;
+    ctx.fillText('GAME OVER',W2/2,H2*.38);
+    ctx.fillStyle='white';ctx.font=`bold ${Math.max(17,H2*.048)}px Arial,sans-serif`;
+    ctx.fillText('Score: '+String(score),W2/2,H2*.43);
+    const isNew=score>0&&score===best;
+    if(isNew){ctx.fillStyle='#fbbf24';ctx.font=`bold ${Math.max(13,H2*.035)}px Arial,sans-serif`;ctx.fillText('New Best!',W2/2,H2*.475);}
+    else{ctx.fillStyle='rgba(255,255,255,.55)';ctx.font=`${Math.max(12,H2*.032)}px Arial,sans-serif`;ctx.fillText('Best: '+String(best),W2/2,H2*.475);}
+    ctx.fillStyle='rgba(255,255,255,.7)';ctx.font=`${Math.max(11,H2*.03)}px Arial,sans-serif`;
+    ctx.fillText('Tap to play again',W2/2,H2*.515);
+    ctx.textBaseline='alphabetic';ctx.textAlign='left';
+    ctx.restore();
+  }
+
+  function drawFrame(dt){
+    if(gameOver){drawDeathScreen();return;}
+    if(!alive){drawIdleScreen();return;}
+    const W2=W(),H2=H(),G=GROUND();
+    drawSky();
+    pipes.forEach(p=>drawPipe(p));
+    drawBird();
+    drawHUD();
+  }
+
+  function flap(){
+    if(gameOver){resetGame();return;}
+    if(!started){
+      started=true;alive=true;lastTs=performance.now();
+      bird.vy=FLAP_V;
+      _gl=requestAnimationFrame(loop);
+      return;
+    }
+    if(alive)bird.vy=FLAP_V;
+  }
+
+  function die(){
+    if(!alive)return;
+    alive=false;gameOver=true;
+    if(score>best){best=score;try{localStorage.setItem('flappy-best',best);}catch(e){}}
+    saveLeaderboard('flappy',inv[selectedIdx]?.name?.split(' ').slice(0,2).join(' ')||'Dish',score);
+    refreshLeaderboards();
+    for(let i=0;i<14;i++){
+      deathPuffs.push({
+        x:bird.x,y:bird.y,
+        vx:(Math.random()-.5)*160,vy:-80-Math.random()*130,
+        r:3+Math.random()*7,life:.9,maxLife:.9,
+        col:['#fbbf24','#ef4444','#fff','#86efac','#f97316'][i%5]
+      });
+    }
+    _setScore(score,'flappy');
+    drawDeathScreen();
+  }
+
+  function loop(ts){
+    if(!window.__currentInlineGame||window.__currentInlineGame!=='flappy')return;
+    if(!alive){if(gameOver)drawDeathScreen();else drawIdleScreen();return;}
+    _gl=requestAnimationFrame(loop);
+    const dt=Math.min((ts-lastTs)/1000,0.05);lastTs=ts;
+    const G=GROUND(),R=BIRD_R();
+    // Physics
+    bird.vy+=GRAVITY*dt;bird.y+=bird.vy*dt;
+    // Ground
+    if(bird.y+R>G){bird.y=G-R;die();return;}
+    // Ceiling
+    if(bird.y-R<0){bird.y=R;bird.vy=Math.max(0,bird.vy);}
+    // Pipes
+    const spd=PIPE_SPD();
+    spawnT+=dt;if(spawnT>1.55){spawnT=0;spawnPipe();}
+    for(let i=pipes.length-1;i>=0;i--){
+      const p=pipes[i];p.x-=spd*dt;
+      if(p.x+PIPE_W<0){pipes.splice(i,1);continue;}
+      if(!p.scored&&p.x+PIPE_W<bird.x){p.scored=true;score++;_setScore(score,'flappy');}
+      if(bird.x+R*.8>p.x&&bird.x-R*.8<p.x+PIPE_W){
+        if(bird.y-R<p.topH||bird.y+R>p.botY){die();return;}
+      }
+    }
+    // Puffs (update even when alive for visual smoothness)
+    deathPuffs=deathPuffs.filter(pf=>pf.life>0);
+    deathPuffs.forEach(pf=>{pf.x+=pf.vx*dt;pf.y+=pf.vy*dt;pf.vy+=420*dt;pf.life-=dt;});
+    drawFrame(dt);
+  }
+
+  // Input
+  canvas.addEventListener('pointerdown',e=>{e.preventDefault();flap();},{passive:false});
+  _gKH=(e)=>{if(!canvas.isConnected)return;if(e.code==='Space'||e.code==='ArrowUp'){e.preventDefault();flap();}};
+  window.addEventListener('keydown',_gKH);
+  window.addEventListener('resize',()=>{resize();if(!alive)drawFrame(0);});
+  sel.addEventListener('change',e=>loadDish(Number(e.target.value)));
+  rndBtn.addEventListener('click',()=>{const i=Math.floor(Math.random()*Math.min(inv.length,30));sel.value=i;loadDish(i);});
+
+  loadDish(0);
+  _setScore(0,'flappy');
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// ⚔️ DISH WAR — Fair shuffled War card game
+// ══════════════════════════════════════════════════════════════════════
+function startDishWar(){
+  if(activePage!=="Dish Games"){goToPage("Dish Games");setTimeout(()=>startDishWar(),300);return;}
+  stopGame(false);
+  const area=document.getElementById('game-area');if(!area)return;
+  area.dataset.mode='war';area.style.display='flex';
+  window.__currentInlineGame='war';
+  const te=document.getElementById('game-title');if(te)te.textContent='Dish War';
+  const inv=_dish21Inventory();
+  const _warCanvas=document.getElementById('game-canvas');
+  if(_warCanvas) _warCanvas.style.display='none';
+  const _warDr=document.getElementById('dish-reveal');
+  if(_warDr) _warDr.style.display='none';
+  let _warZone=document.getElementById('game-content-zone');
+  if(!_warZone){_warZone=document.createElement('div');_warZone.id='game-content-zone';area.appendChild(_warZone);}
+  _warZone.innerHTML=_warHTML();
+  setTimeout(()=>{try{area.scrollIntoView({behavior:'smooth',block:'nearest'});}catch(e){}_warInit(inv);},80);
+}
+
+function _warHTML(){return `
+<style>
+  .war-wrap{background:linear-gradient(180deg,#1a0505,#2d0a0a);padding:16px;display:flex;flex-direction:column;align-items:center;gap:12px;min-height:480px;border-radius:0 0 14px 14px;font-family:var(--serif)}
+  .war-top{display:flex;justify-content:space-between;align-items:center;width:100%;max-width:500px;flex-wrap:wrap;gap:8px}
+  .war-pbox{padding:10px 14px;border-radius:10px;border:2px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);text-align:center;min-width:100px;transition:all .2s}
+  .war-pbox.lead{border-color:rgba(74,222,128,.6);background:rgba(74,222,128,.08)}
+  .war-pbox.trail{border-color:rgba(239,68,68,.3)}
+  .war-lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+  .war-cnt{font-family:var(--display);font-size:28px;font-weight:900;color:#fbbf24;line-height:1;margin:2px 0}
+  .war-mid{text-align:center}
+  .war-arena{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;width:100%;max-width:500px}
+  .war-slot{display:flex;justify-content:center;min-height:150px;align-items:center}
+  .war-card{width:clamp(70px,18vw,90px);height:clamp(100px,26vw,130px);border-radius:12px;border:3px solid rgba(255,255,255,.2);background:#fffefb;box-shadow:0 6px 20px rgba(0,0,0,.5);overflow:hidden;position:relative;animation:warIn .22s ease;flex-shrink:0}
+  @keyframes warIn{from{transform:translateY(-18px) scale(.8);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+  .war-card-rank{position:absolute;top:5px;left:7px;font-size:14px;font-weight:900;color:#111;line-height:1;z-index:1}
+  .war-card-rank.red{color:#b01d30}
+  .war-card-img{position:absolute;inset:22px 4px 4px;overflow:hidden;border-radius:6px}
+  .war-card-img img{width:100%;height:100%;object-fit:cover;display:block}
+  .war-card.back{background:repeating-linear-gradient(45deg,#7f1d1d 0,#7f1d1d 5px,#991b1b 5px,#991b1b 10px);border-color:rgba(252,165,165,.3)}
+  .war-empty{width:90px;height:130px;border-radius:12px;border:2px dashed rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:30px}
+  .war-vs{font-family:var(--display);font-size:24px;font-weight:900;color:#fbbf24;text-align:center}
+  .war-warzone{width:100%;max-width:500px;min-height:44px;display:flex;justify-content:center;align-items:center;gap:6px;flex-wrap:wrap}
+  .war-mini{width:38px;height:55px;border-radius:6px;background:repeating-linear-gradient(45deg,#7f1d1d 0,#7f1d1d 3px,#991b1b 3px,#991b1b 6px);border:1.5px solid rgba(252,165,165,.3);flex-shrink:0}
+  .war-result{font-size:14px;font-weight:700;text-align:center;min-height:22px;color:rgba(255,255,255,.8)}
+  .war-result.win{color:#4ade80}.war-result.lose{color:#ef4444}.war-result.tie{color:#fbbf24}
+  .war-acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  .war-btn{font-family:var(--serif);padding:11px 24px;font-size:14px;font-weight:700;border-radius:8px;cursor:pointer;-webkit-tap-highlight-color:transparent;border:none}
+  .war-flip{background:linear-gradient(135deg,#7f1d1d,#ef4444);color:white}
+  .war-flip:disabled{opacity:.35;cursor:default}
+  .war-sec{background:transparent;border:2px solid rgba(255,255,255,.2)!important;color:rgba(255,255,255,.7)}
+</style>
+<div class="war-wrap">
+  <div class="war-top">
+    <div class="war-pbox" id="war-b1">
+      <div class="war-lbl">You</div>
+      <div class="war-cnt" id="war-p1c">26</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.35)">cards</div>
+    </div>
+    <div class="war-mid">
+      <div style="font-family:var(--display);font-size:13px;font-weight:900;text-transform:uppercase;color:rgba(252,165,165,.7);letter-spacing:.08em">Dish War</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:3px" id="war-rnd">Round 0</div>
+    </div>
+    <div class="war-pbox" id="war-b2">
+      <div class="war-lbl">AI</div>
+      <div class="war-cnt" id="war-p2c">26</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.35)">cards</div>
+    </div>
+  </div>
+  <div class="war-arena">
+    <div class="war-slot" id="war-s1"><div class="war-empty">🃏</div></div>
+    <div class="war-vs" id="war-vs">VS</div>
+    <div class="war-slot" id="war-s2"><div class="war-empty">🃏</div></div>
+  </div>
+  <div class="war-warzone" id="war-zone"></div>
+  <div class="war-result" id="war-res">Flip a card to start the battle!</div>
+  <div class="war-acts">
+    <button class="war-btn war-flip" id="war-flip" onclick="_warFlip()">Flip!</button>
+    <button class="war-btn war-sec" style="border:2px solid rgba(255,255,255,.2)" onclick="startDishWar()">New Game</button>
+    <button class="war-btn war-sec" style="border:2px solid rgba(255,255,255,.15);color:rgba(255,255,255,.5)" onclick="stopGame(true)">Close</button>
+  </div>
+</div>`;}
+
+function _warInit(inv){
+  const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+  const RVAL={2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,J:11,Q:12,K:13,A:14};
+  const SUITS=[['♠','black'],['♥','red'],['♦','red'],['♣','black']];
+
+  // Fair deck: shuffle once, split evenly
+  function makeDeck(){
+    const deck=[];
+    const si=[...inv].sort(()=>Math.random()-.5);
+    let di=0;
+    for(const[suit,color]of SUITS)for(const rank of RANKS){
+      const d=si[di++%si.length]||{image:FALLBACK,name:'Dish'};
+      deck.push({rank,suit,color,val:RVAL[Number(rank)||rank],img:d.image,dish:d.name});
+    }
+    // Fisher-Yates — truly random
+    for(let i=deck.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]];}
+    return deck;
+  }
+
+  const deck=makeDeck();
+  let p1=[...deck.slice(0,26)],p2=[...deck.slice(26)];
+  let warPile=[],roundN=0,busy=false,gone=false;
+
+  function cardHTML(c){
+    return `<div class="war-card">
+      <div class="war-card-rank${c.color==='red'?' red':''}">${c.rank}${c.suit}</div>
+      <div class="war-card-img"><img src="${c.img}" alt="" crossorigin="anonymous" onerror="this.style.display='none'"></div>
+    </div>`;
+  }
+
+  function update(){
+    const c1=document.getElementById('war-p1c'),c2=document.getElementById('war-p2c');
+    if(c1)c1.textContent=p1.length;if(c2)c2.textContent=p2.length;
+    const rn=document.getElementById('war-rnd');if(rn)rn.textContent='Round '+roundN;
+    const b1=document.getElementById('war-b1'),b2=document.getElementById('war-b2');
+    if(b1)b1.className='war-pbox'+(p1.length>p2.length?' lead':p1.length<p2.length?' trail':'');
+    if(b2)b2.className='war-pbox'+(p2.length>p1.length?' lead':p2.length<p1.length?' trail':'');
+  }
+
+  window._warFlip=function(){
+    if(busy||gone)return;
+    if(!p1.length||!p2.length){endWar();return;}
+    busy=true;roundN++;
+    const c1=p1.shift(),c2=p2.shift();
+    warPile.push(c1,c2);
+    document.getElementById('war-s1').innerHTML=cardHTML(c1);
+    document.getElementById('war-s2').innerHTML=cardHTML(c2);
+    document.getElementById('war-zone').innerHTML='';
+    update();
+    const res=document.getElementById('war-res'),vs=document.getElementById('war-vs');
+    if(vs)vs.textContent='VS';
+    setTimeout(()=>{
+      if(c1.val>c2.val){
+        p1.push(...warPile.sort(()=>Math.random()-.5));warPile=[];
+        if(res){res.className='war-result win';res.textContent=`You win! ${c1.rank}${c1.suit} beats ${c2.rank}${c2.suit}`;}
+        if(vs)vs.textContent='You Win!';
+        update();_setScore(p1.length,'war');busy=false;if(!p1.length||!p2.length)endWar();
+      }else if(c2.val>c1.val){
+        p2.push(...warPile.sort(()=>Math.random()-.5));warPile=[];
+        if(res){res.className='war-result lose';res.textContent=`AI wins! ${c2.rank}${c2.suit} beats ${c1.rank}${c1.suit}`;}
+        if(vs)vs.textContent='AI Wins!';
+        update();busy=false;if(!p1.length||!p2.length)endWar();
+      }else{
+        // WAR
+        if(res){res.className='war-result tie';res.textContent='WAR! 3 cards face down...';}
+        if(vs)vs.textContent='WAR!';
+        setTimeout(()=>{
+          const take=Math.min(3,p1.length,p2.length);
+          if(!take){if(p1.length>=p2.length)p1.push(...warPile.sort(()=>Math.random()-.5));else p2.push(...warPile.sort(()=>Math.random()-.5));warPile=[];update();busy=false;if(!p1.length||!p2.length)endWar();return;}
+          for(let i=0;i<take;i++){warPile.push(p1.shift(),p2.shift());}
+          const zone=document.getElementById('war-zone');
+          if(zone)zone.innerHTML=`<div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:center"><span style="font-size:11px;color:#fbbf24;font-weight:700;margin-right:4px">WAR (${warPile.length})</span>${Array(take*2).fill('<div class="war-mini"></div>').join('')}</div>`;
+          update();
+          if(res)res.textContent=`${take} cards face down — flip to resolve!`;
+          busy=false;
+        },550);
+      }
+    },650);
+  };
+
+  function endWar(){
+    gone=true;
+    const won=p1.length>=p2.length;
+    const res=document.getElementById('war-res');
+    if(res){res.className='war-result '+(won?'win':'lose');res.textContent=won?`You win the war! ${p1.length} vs ${p2.length} cards`:`AI wins the war! ${p2.length} vs ${p1.length} cards`;}
+    const fb=document.getElementById('war-flip');if(fb)fb.disabled=true;
+    if(won){saveLeaderboard('war','Player',p1.length);refreshLeaderboards();}
+    _setScore(p1.length,'war');
+  }
+
+  update();
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// 🐟 GO FISH — Full Go Fish with dish-themed cards
+// ══════════════════════════════════════════════════════════════════════
+function startGoFish(){
+  if(activePage!=="Dish Games"){goToPage("Dish Games");setTimeout(()=>startGoFish(),300);return;}
+  stopGame(false);
+  const area=document.getElementById('game-area');if(!area)return;
+  area.dataset.mode='gofish';area.style.display='flex';
+  window.__currentInlineGame='gofish';
+  const te=document.getElementById('game-title');if(te)te.textContent='Go Fish';
+  const inv=_dish21Inventory();
+  const _gfCanvas=document.getElementById('game-canvas');
+  if(_gfCanvas) _gfCanvas.style.display='none';
+  const _gfDr=document.getElementById('dish-reveal');
+  if(_gfDr) _gfDr.style.display='none';
+  let _gfZone=document.getElementById('game-content-zone');
+  if(!_gfZone){_gfZone=document.createElement('div');_gfZone.id='game-content-zone';area.appendChild(_gfZone);}
+  _gfZone.innerHTML=_gfHTML();
+  setTimeout(()=>{try{area.scrollIntoView({behavior:'smooth',block:'nearest'});}catch(e){}_gfInit(inv);},80);
+}
+
+function _gfHTML(){return `
+<style>
+  .gf-wrap{background:linear-gradient(180deg,#030d1f,#061428);padding:14px;display:flex;flex-direction:column;gap:10px;min-height:500px;border-radius:0 0 14px 14px;font-family:var(--serif)}
+  .gf-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+  .gf-pbox{padding:8px 14px;border-radius:10px;border:2px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);text-align:center;transition:all .2s}
+  .gf-pbox.on{border-color:rgba(99,102,241,.7);background:rgba(99,102,241,.1)}
+  .gf-plbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+  .gf-bk{font-family:var(--display);font-size:24px;font-weight:900;color:#a5b4fc;line-height:1}
+  .gf-hc{font-size:10px;color:rgba(255,255,255,.35);margin-top:2px}
+  .gf-books{display:flex;flex-wrap:wrap;gap:5px;min-height:26px}
+  .gf-book{display:flex;align-items:center;gap:3px;background:rgba(99,102,241,.18);border:1.5px solid rgba(99,102,241,.4);border-radius:6px;padding:3px 7px;font-size:11px;font-weight:700;color:#a5b4fc}
+  .gf-book img{width:18px;height:18px;border-radius:50%;object-fit:cover;border:1px solid rgba(99,102,241,.5)}
+  .gf-log{background:rgba(0,0,0,.3);border:1.5px solid rgba(255,255,255,.07);border-radius:8px;padding:7px 10px;min-height:42px;font-size:12px;line-height:1.55;color:rgba(255,255,255,.7);max-height:72px;overflow-y:auto}
+  .gf-hlbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(165,180,252,.6);margin-bottom:5px}
+  .gf-hand{display:flex;flex-wrap:wrap;gap:6px;min-height:82px}
+  .gf-card{width:clamp(46px,13vw,56px);height:clamp(68px,19vw,82px);border-radius:10px;border:2px solid rgba(255,255,255,.14);background:#fffefb;overflow:hidden;cursor:pointer;transition:transform .15s,border-color .15s;position:relative;box-shadow:0 3px 10px rgba(0,0,0,.4);flex-shrink:0;-webkit-tap-highlight-color:transparent}
+  .gf-card:hover,.gf-card:active{transform:translateY(-8px);border-color:#818cf8}
+  .gf-card.sel{transform:translateY(-12px);border-color:#6366f1;box-shadow:0 0 14px rgba(99,102,241,.5)}
+  .gf-card img{width:100%;height:100%;object-fit:cover;display:block}
+  .gf-card.back{background:repeating-linear-gradient(45deg,#1e1b4b 0,#1e1b4b 4px,#3730a3 4px,#3730a3 8px);cursor:default;border-color:rgba(99,102,241,.3)}
+  .gf-info{font-size:12px;color:rgba(165,180,252,.7);font-style:italic;text-align:center;min-height:18px}
+  .gf-acts{display:flex;flex-direction:column;gap:8px;align-items:center}
+  .gf-ask{font-family:var(--serif);padding:11px 28px;font-size:14px;font-weight:700;border-radius:8px;border:none;background:linear-gradient(135deg,#3730a3,#6366f1);color:white;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:opacity .15s}
+  .gf-ask:disabled{opacity:.3;cursor:default}
+  .gf-util{display:flex;gap:8px;justify-content:center}
+  .gf-btn{font-family:var(--serif);padding:8px 18px;font-size:12px;font-weight:700;border-radius:7px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .gf-new{background:rgba(99,102,241,.2);border:2px solid rgba(99,102,241,.45);color:#a5b4fc}
+  .gf-cls{background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.12);color:rgba(255,255,255,.5)}
+</style>
+<div class="gf-wrap">
+  <div class="gf-top">
+    <div class="gf-pbox on" id="gf-b1">
+      <div class="gf-plbl">Your Books</div>
+      <div class="gf-bk" id="gf-bk1">0</div>
+      <div class="gf-hc" id="gf-hc1">7 cards</div>
+    </div>
+    <div style="text-align:center">
+      <div style="font-family:var(--display);font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:rgba(165,180,252,.7)">Go Fish</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px" id="gf-dk">Deck: 38</div>
+    </div>
+    <div class="gf-pbox" id="gf-b2">
+      <div class="gf-plbl">AI Books</div>
+      <div class="gf-bk" id="gf-bk2">0</div>
+      <div class="gf-hc" id="gf-hc2">7 cards</div>
+    </div>
+  </div>
+  <div>
+    <div class="gf-hlbl">Your Completed Books</div>
+    <div class="gf-books" id="gf-brow"></div>
+  </div>
+  <div class="gf-log" id="gf-log">Tap a card to select it, then ask the AI for that dish type.</div>
+  <div>
+    <div class="gf-hlbl">Your Hand — tap a card to select</div>
+    <div class="gf-hand" id="gf-hand"></div>
+  </div>
+  <div class="gf-acts">
+    <div class="gf-info" id="gf-info">Select a card first.</div>
+    <button class="gf-ask" id="gf-ask" onclick="_gfAsk()" disabled>Ask the AI for this dish!</button>
+    <div class="gf-util">
+      <button class="gf-btn gf-new" onclick="startGoFish()">New Game</button>
+      <button class="gf-btn gf-cls" onclick="stopGame(true)">Close</button>
+    </div>
+  </div>
+</div>`;}
+
+function _gfInit(inv){
+  const types=inv.slice(0,13).map((d,i)=>({id:i,name:d.name.split(' ').slice(0,2).join(' '),img:d.image}));
+
+  function makeDeck(){
+    const deck=[];
+    for(const t of types)for(let s=0;s<4;s++)deck.push({tid:t.id,name:t.name,img:t.img,suit:s});
+    return deck.sort(()=>Math.random()-.5);
+  }
+
+  let deck=makeDeck();
+  let p1=[],p2=[],b1=[],b2=[],sel=null,busy=false,gone=false;
+  for(let i=0;i<7;i++){p1.push(deck.pop());p2.push(deck.pop());}
+
+  function log(msg,col='rgba(255,255,255,.75)'){
+    const el=document.getElementById('gf-log');if(!el)return;
+    const d=document.createElement('div');d.style.color=col;d.textContent=msg;
+    el.appendChild(d);el.scrollTop=el.scrollHeight;
+  }
+
+  function checkBooks(hand,books){
+    const cnt={};for(const c of hand)cnt[c.tid]=(cnt[c.tid]||0)+1;
+    let found=false;
+    for(const[tid,n]of Object.entries(cnt)){
+      if(n>=4){
+        const t=types.find(x=>x.id===+tid);
+        if(t){books.push(t);hand.splice(0,hand.length,...hand.filter(c=>c.tid!==+tid));found=true;break;}
+      }
+    }
+    return found;
+  }
+
+  function render(){
+    const hel=document.getElementById('gf-hand');if(!hel)return;
+    hel.innerHTML=p1.map((c,i)=>`
+      <div class="gf-card${sel===i?' sel':''}" onclick="_gfSel(${i})">
+        <img src="${c.img}" alt="" crossorigin="anonymous" onerror="this.style.display='none'">
+      </div>`).join('');
+    const bk1=document.getElementById('gf-bk1'),bk2=document.getElementById('gf-bk2');
+    if(bk1)bk1.textContent=b1.length;if(bk2)bk2.textContent=b2.length;
+    const hc1=document.getElementById('gf-hc1'),hc2=document.getElementById('gf-hc2');
+    if(hc1)hc1.textContent=p1.length+' card'+(p1.length!==1?'s':'');
+    if(hc2)hc2.textContent=p2.length+' card'+(p2.length!==1?'s':'');
+    const dk=document.getElementById('gf-dk');if(dk)dk.textContent='Deck: '+deck.length;
+    const brow=document.getElementById('gf-brow');
+    if(brow)brow.innerHTML=b1.map(t=>`<div class="gf-book"><img src="${t.img}" alt="" crossorigin="anonymous"><span>${t.name}</span></div>`).join('');
+    const info=document.getElementById('gf-info'),ask=document.getElementById('gf-ask');
+    if(sel!==null&&p1[sel]){
+      if(info)info.textContent=`Selected: ${p1[sel].name}`;
+      if(ask)ask.disabled=busy||gone;
+    }else{
+      if(info)info.textContent='Select a card from your hand first.';
+      if(ask)ask.disabled=true;
+    }
+    const pb1=document.getElementById('gf-b1'),pb2=document.getElementById('gf-b2');
+    if(pb1)pb1.classList.toggle('on',!busy&&!gone);
+    if(pb2)pb2.classList.toggle('on',busy);
+  }
+
+  window._gfSel=function(i){if(busy||gone)return;sel=(sel===i)?null:i;render();};
+
+  window._gfAsk=function(){
+    if(busy||gone||sel===null||!p1[sel])return;
+    busy=true;
+    const ac=p1[sel],tid=ac.tid,name=ac.name;
+    log(`You: "Got any ${name}s?"`, '#93c5fd');
+    setTimeout(()=>{
+      const got=p2.filter(c=>c.tid===tid);
+      if(got.length){
+        p1.push(...got);p2=p2.filter(c=>c.tid!==tid);
+        log(`AI: "Yes! Here ${got.length>1?'they are':'it is'}!" (+${got.length})`,'#4ade80');
+        while(checkBooks(p1,b1)){log(`You completed a book of ${name}!`,'#fbbf24');}
+        sel=null;render();checkEnd();
+        if(!gone)log('You get another turn!','#93c5fd');
+        if(!gone)busy=false;
+      }else{
+        log(`AI: "Go Fish!"`, '#f97316');
+        if(deck.length){const drawn=deck.pop();p1.push(drawn);log(`You drew: ${drawn.name}${drawn.tid===tid?' — that\'s the one!':''}`,'rgba(255,255,255,.65)');}
+        while(checkBooks(p1,b1)){log(`Book of ${name}!`,'#fbbf24');}
+        sel=null;render();checkEnd();
+        if(!gone)setTimeout(()=>aiTurn(),600);
+      }
+    },380);
+  };
+
+  function aiTurn(){
+    if(gone||!p2.length){if(!gone)checkEnd();return;}
+    const tids=[...new Set(p2.map(c=>c.tid))];
+    const tid=tids[Math.floor(Math.random()*tids.length)];
+    const t=types.find(x=>x.id===tid);
+    log(`AI: "Got any ${t?.name||'those'}s?"`, '#fca5a5');
+    setTimeout(()=>{
+      const got=p1.filter(c=>c.tid===tid);
+      if(got.length){
+        p2.push(...got);p1=p1.filter(c=>c.tid!==tid);
+        log(`You: "Here you go..." (${got.length} card${got.length>1?'s':''})`,'#f97316');
+        while(checkBooks(p2,b2)){log(`AI completed a book!`,'#fca5a5');}
+        sel=null;render();checkEnd();
+        if(!gone)setTimeout(()=>aiTurn(),550);
+      }else{
+        log('You: "Go Fish!"','#4ade80');
+        if(deck.length){p2.push(deck.pop());log('AI drew a card.','rgba(255,255,255,.3)');}
+        while(checkBooks(p2,b2)){log(`AI completed a book!`,'#fca5a5');}
+        sel=null;render();checkEnd();
+        if(!gone){busy=false;log('Your turn!','#93c5fd');}
+      }
+    },460);
+  }
+
+  function checkEnd(){
+    if(deck.length&&(p1.length||p2.length))return;
+    if(!deck.length&&!p1.length&&!p2.length||!deck.length&&!p1.length||!deck.length&&!p2.length){
+      gone=true;busy=false;
+      const won=b1.length>b2.length,tied=b1.length===b2.length;
+      log(tied?`Tie! ${b1.length} books each.`:won?`You win! ${b1.length} vs ${b2.length} books!`:`AI wins! ${b2.length} vs ${b1.length} books.`,won?'#4ade80':tied?'#fbbf24':'#fca5a5');
+      if(won){saveLeaderboard('gofish','Player',b1.length*100);refreshLeaderboards();}
+      _setScore(b1.length,'gofish');
+      render();
+    }
+  }
+
+  render();
+  log('Select a card and ask the AI for that dish type. Collect 4 of a kind to score a book!','#a5b4fc');
 }
 
 </script>
